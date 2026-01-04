@@ -12,24 +12,21 @@ on:
         default: "master"
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # push 事件用当前 ref；手动触发用输入的 ref
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
       - name: Setup pnpm
@@ -48,7 +45,6 @@ jobs:
 
       - name: Build
         env:
-          # 让 vite.config.ts 自动使用 /<repo>/ 作为 base
           GITHUB_PAGES: "true"
           VITE_BASE: /${{ github.event.repository.name }}/
         run: pnpm build
@@ -56,9 +52,18 @@ jobs:
       - name: SPA fallback (404.html)
         run: cp dist/index.html dist/404.html
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: false
+          path: ./dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
