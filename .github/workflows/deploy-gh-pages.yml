@@ -51,9 +51,6 @@ jobs:
           VITE_BASE: /${{ steps.repo.outputs.name }}/
         run: pnpm build
 
-      - name: SPA fallback (404.html)
-        run: cp dist/index.html dist/404.html
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
