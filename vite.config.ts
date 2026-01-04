@@ -22,4 +22,31 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  worker: {
+    format: 'es',
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.wasm')) {
+            return 'pyodide/[name][extname]';
+          }
+          if (assetInfo.name?.includes('pyodide')) {
+            return 'pyodide/[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+        chunkFileNames: (chunkInfo) => {
+          if (chunkInfo.name?.includes('worker')) {
+            return '[name].js';
+          }
+          return 'assets/[name]-[hash].js';
+        },
+      },
+    },
+    copyPublicDir: true,
+    assetsInlineLimit: 0,
+  },
+  publicDir: 'public',
 });
