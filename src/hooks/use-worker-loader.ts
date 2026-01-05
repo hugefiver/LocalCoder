@@ -18,6 +18,7 @@ const languageDisplayNames: Record<Language, string> = {
   typescript: "TypeScript",
   python: "Python",
   racket: "Racket",
+  haskell: "Haskell",
 };
 
 export function useWorkerLoader() {

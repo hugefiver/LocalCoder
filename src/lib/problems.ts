@@ -124,4 +124,8 @@ export const languageInfo = {
     name: 'Racket',
     description: 'Racket Scheme (simulated)',
   },
+  haskell: {
+    name: 'Haskell',
+    description: 'Haskell via WebAssembly runtime (WASI)',
+  },
 };

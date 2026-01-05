@@ -33,7 +33,7 @@ export function EditorView({ problemId, onBack }: EditorViewProps) {
   const [activeTab, setActiveTab] = useState<'description'>('description');
   const [testTab, setTestTab] = useState<'testcases' | 'results'>('testcases');
   const [customTestCases, setCustomTestCases] = useLocalStorageState<CustomTestCase[]>(`problem-${problemId}-custom-tests`, []);
-  const { executeCode, isRunning, result } = useCodeExecution();
+  const { executeCode, cancel, isRunning, result } = useCodeExecution();
   const { preloadWorker, isWorkerReady, isWorkerLoading } = useWorkerLoader();
 
   const language = selectedLanguage || 'javascript';
@@ -103,6 +103,11 @@ export function EditorView({ problemId, onBack }: EditorViewProps) {
     const allTestCases = [...problem.testCases, ...(customTestCases || [])];
     const executionResult = await executeCode(code, language, allTestCases);
 
+    if (!executionResult.success && executionResult.error === 'Execution cancelled') {
+      // User cancelled; don't treat as an execution failure toast here.
+      return;
+    }
+
     if (executionResult.success && executionResult.results) {
       const passedCount = executionResult.results.filter((r) => r.passed).length;
       const totalCount = executionResult.results.length;
@@ -115,6 +120,11 @@ export function EditorView({ problemId, onBack }: EditorViewProps) {
     } else {
       toast.error('Execution failed');
     }
+  };
+
+  const handleStop = () => {
+    cancel();
+    toast.message('已终止执行');
   };
 
   if (!problem) {
@@ -155,17 +165,24 @@ export function EditorView({ problemId, onBack }: EditorViewProps) {
                 <SelectItem value="typescript">TypeScript</SelectItem>
                 <SelectItem value="python">Python</SelectItem>
                 <SelectItem value="racket">Racket</SelectItem>
+                <SelectItem value="haskell">Haskell</SelectItem>
               </SelectContent>
             </Select>
 
-            <Button 
-              onClick={handleRunCode} 
-              disabled={isRunning || isWorkerLoading(language) || !isWorkerReady(language)} 
-              className="gap-2"
-            >
-              <Play size={18} weight="fill" />
-              {isRunning ? 'Running...' : isWorkerLoading(language) ? 'Loading Runtime...' : 'Run Code'}
-            </Button>
+            {isRunning ? (
+              <Button variant="destructive" onClick={handleStop} className="gap-2">
+                Stop
+              </Button>
+            ) : (
+              <Button
+                onClick={handleRunCode}
+                disabled={isWorkerLoading(language) || !isWorkerReady(language)}
+                className="gap-2"
+              >
+                <Play size={18} weight="fill" />
+                {isWorkerLoading(language) ? 'Loading Runtime...' : 'Run Code'}
+              </Button>
+            )}
           </div>
         </div>
       </header>
