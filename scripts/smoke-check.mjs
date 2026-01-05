@@ -25,6 +25,7 @@ function main() {
     "public/js-worker.js",
     "public/python-worker.js",
     "public/racket-worker.js",
+    "public/haskell-worker.js",
     "public/pyodide/pyodide.js",
 
     // Build output
@@ -32,6 +33,7 @@ function main() {
     "dist/js-worker.js",
     "dist/python-worker.js",
     "dist/racket-worker.js",
+    "dist/haskell-worker.js",
     "dist/pyodide/pyodide.js",
   ];
 

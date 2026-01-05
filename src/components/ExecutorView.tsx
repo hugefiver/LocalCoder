@@ -76,7 +76,19 @@ print("Fibonacci(10):", fibonacci(10))`,
       n
       (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))
 
-(displayln (string-append "Fibonacci(10): " (number->string (fibonacci 10))))`
+(displayln (string-append "Fibonacci(10): " (number->string (fibonacci 10))))`,
+
+  haskell: `-- Haskell Executor (WASM)
+--
+-- Notes:
+-- - Haskell execution is powered by a WebAssembly runtime (WASI).
+-- - The runtime must be present at public/haskell/runner.wasm.
+--
+-- Your code will be sent to the runtime as text. What it can run depends on
+-- the runner you bundle (see README).
+
+main :: IO ()
+main = putStrLn "Hello from Haskell (runtime-dependent)!"`
 };
 
 export function ExecutorView({ onBack }: ExecutorViewProps) {
@@ -87,7 +99,7 @@ export function ExecutorView({ onBack }: ExecutorViewProps) {
   const [outputs, setOutputs] = useState<ExecutionOutput[]>([]);
   const [executionTime, setExecutionTime] = useState<number | null>(null);
   const { preloadWorker, isWorkerReady, isWorkerLoading } = useWorkerLoader();
-  const { executeCode } = useCodeExecution();
+  const { executeCode, cancel } = useCodeExecution();
 
   const language = selectedLanguage || 'javascript';
 
@@ -160,6 +172,12 @@ export function ExecutorView({ onBack }: ExecutorViewProps) {
 
     const newOutputs: ExecutionOutput[] = [];
 
+    if (!data.success && data.error === 'Execution cancelled') {
+      toast.message('已终止执行');
+      setIsRunning(false);
+      return;
+    }
+
     if (data.success) {
       if (data.logs) {
         newOutputs.push({ type: 'stdout', content: data.logs });
@@ -195,6 +213,12 @@ export function ExecutorView({ onBack }: ExecutorViewProps) {
     setIsRunning(false);
   };
 
+  const handleStop = () => {
+    cancel();
+    toast.message('已终止执行');
+    setIsRunning(false);
+  };
+
   const handleClearOutput = () => {
     setOutputs([]);
     setExecutionTime(null);
@@ -224,17 +248,24 @@ export function ExecutorView({ onBack }: ExecutorViewProps) {
                 <SelectItem value="typescript">TypeScript</SelectItem>
                 <SelectItem value="python">Python</SelectItem>
                 <SelectItem value="racket">Racket</SelectItem>
+                <SelectItem value="haskell">Haskell</SelectItem>
               </SelectContent>
             </Select>
 
-            <Button 
-              onClick={handleRunCode} 
-              disabled={isRunning || isWorkerLoading(language) || !isWorkerReady(language)} 
-              className="gap-2"
-            >
-              <Play size={18} weight="fill" />
-              {isRunning ? 'Running...' : isWorkerLoading(language) ? 'Loading Runtime...' : 'Execute'}
-            </Button>
+            {isRunning ? (
+              <Button variant="destructive" onClick={handleStop} className="gap-2">
+                Stop
+              </Button>
+            ) : (
+              <Button
+                onClick={handleRunCode}
+                disabled={isWorkerLoading(language) || !isWorkerReady(language)}
+                className="gap-2"
+              >
+                <Play size={18} weight="fill" />
+                {isWorkerLoading(language) ? 'Loading Runtime...' : 'Execute'}
+              </Button>
+            )}
           </div>
         </div>
       </header>

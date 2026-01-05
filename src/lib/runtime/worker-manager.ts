@@ -14,6 +14,7 @@ const workerFilenameMap: Record<Language, string> = {
   typescript: "js-worker.js",
   python: "python-worker.js",
   racket: "racket-worker.js",
+  haskell: "haskell-worker.js",
 };
 
 function getWorkerURL(filename: string): string {
@@ -47,12 +48,20 @@ interface RuntimeEntry {
 const entries = new Map<Language, RuntimeEntry>();
 const listeners = new Set<Listener>();
 
+function isAbortError(err: unknown): boolean {
+  return (
+    (err instanceof DOMException && err.name === "AbortError") ||
+    (typeof err === "object" && err != null && (err as any).name === "AbortError")
+  );
+}
+
 function buildRuntimeStatesSnapshot(): Record<Language, RuntimeState> {
   const result: Record<Language, RuntimeState> = {
     javascript: { status: "idle", error: null },
     typescript: { status: "idle", error: null },
     python: { status: "idle", error: null },
     racket: { status: "idle", error: null },
+    haskell: { status: "idle", error: null },
   };
 
   for (const [lang, entry] of entries.entries()) {
@@ -169,6 +178,51 @@ function ensureEntry(language: Language): RuntimeEntry {
   return entry;
 }
 
+export function terminateRuntime(
+  language: Language,
+  opts?: { reason?: string; nextState?: RuntimeState },
+): void {
+  const entry = entries.get(language);
+  if (!entry) return;
+
+  try {
+    entry.worker.terminate();
+  } catch {
+    // ignore
+  }
+
+  const reason = opts?.reason ?? "Runtime terminated";
+
+  // Reject all pending requests so callers can unblock.
+  for (const pending of entry.pending.values()) {
+    window.clearTimeout(pending.timeoutId);
+    pending.reject(new Error(reason));
+  }
+  entry.pending.clear();
+
+  if (entry.loadTimeoutId != null) {
+    window.clearTimeout(entry.loadTimeoutId);
+    entry.loadTimeoutId = null;
+  }
+
+  // If runtime was loading, ensure readyPromise doesn't hang.
+  try {
+    entry.readyReject(new Error(reason));
+  } catch {
+    // ignore
+  }
+
+  // Remove entry so next request recreates a fresh worker.
+  entries.delete(language);
+
+  // Update snapshot state (idle by default; abort shouldn't be a hard error).
+  runtimeStatesSnapshot = buildRuntimeStatesSnapshot();
+  if (opts?.nextState) {
+    runtimeStatesSnapshot = { ...runtimeStatesSnapshot, [language]: opts.nextState };
+  }
+  notify();
+}
+
 export async function preloadRuntime(language: Language): Promise<void> {
   const entry = ensureEntry(language);
 
@@ -208,7 +262,7 @@ export async function ensureRuntimeReady(language: Language): Promise<void> {
 export async function executeWorkerRequest<T>(
   language: Language,
   payload: Record<string, unknown>,
-  opts?: { timeoutMs?: number },
+  opts?: { timeoutMs?: number; signal?: AbortSignal; terminateOnAbort?: boolean },
 ): Promise<T> {
   const entry = ensureEntry(language);
   await ensureRuntimeReady(language);
@@ -222,9 +276,43 @@ export async function executeWorkerRequest<T>(
       reject(new Error(`Execution timeout (${Math.round(timeoutMs / 1000)} seconds)`));
     }, timeoutMs);
 
+    let aborted = false;
+    const onAbort = () => {
+      aborted = true;
+      entry.pending.delete(requestId);
+      window.clearTimeout(timeoutId);
+
+      const terminate = opts?.terminateOnAbort !== false;
+      if (terminate) {
+        terminateRuntime(language, {
+          reason: "Execution aborted",
+          nextState: { status: "idle", error: null },
+        });
+      }
+
+      const abortErr = new DOMException("Execution aborted", "AbortError");
+      reject(abortErr);
+    };
+
+    if (opts?.signal) {
+      if (opts.signal.aborted) {
+        onAbort();
+        return;
+      }
+      opts.signal.addEventListener("abort", onAbort, { once: true });
+    }
+
     entry.pending.set(requestId, {
-      resolve: (data) => resolve(data as T),
-      reject: (err) => reject(err),
+      resolve: (data) => {
+        if (opts?.signal) opts.signal.removeEventListener("abort", onAbort);
+        if (aborted) return;
+        resolve(data as T);
+      },
+      reject: (err) => {
+        if (opts?.signal) opts.signal.removeEventListener("abort", onAbort);
+        if (aborted) return;
+        reject(err);
+      },
       timeoutId,
     });
 

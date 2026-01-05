@@ -8,7 +8,7 @@ A browser-based code execution platform that mimics LeetCode's interface, allowi
 
 ## Features
 
-- **Multiple Language Support**: JavaScript, TypeScript, Python (via Pyodide), and Racket
+- **Multiple Language Support**: JavaScript, TypeScript, Python (via Pyodide), Racket, and Haskell (via WASM/WASI runtime)
 - **Syntax Highlighting & Autocomplete**: Professional code editing experience with CodeMirror
 - **Resizable Panels**: LeetCode-style layout with problem description, code editor, and test results
 - **Test Cases**: Default and custom test cases with instant feedback
@@ -27,6 +27,38 @@ pnpm run setup
 
 `pnpm run setup` 会把 Pyodide 从 `node_modules` 复制到 `public/pyodide/`，供 Python Worker 加载。
 该步骤也会在安装依赖后通过 `postinstall` 自动执行。
+
+### （可选）启用 Haskell（WASM）
+
+Haskell 的执行由 `public/haskell-worker.js` 驱动，它会加载一个 **WASI 兼容** 的 WebAssembly 模块：
+
+- 将 `runner.wasm` 放到：`public/haskell/runner.wasm`
+
+> 默认已内置一个**轻量 stub runtime**（用于保证 Haskell “可用且可运行”，并输出提示信息）。
+> 如果你想真正执行/编译 Haskell 源码，请用你自己的 `runner.wasm` 覆盖它。
+
+#### Haskell runtime 协议（非常重要）
+
+Worker 会通过 stdin 传入一段 JSON：
+
+- 自由执行模式：`{ "mode": "executor", "code": "..." }`
+- 题目测试模式：`{ "mode": "test", "code": "...", "input": <any> }`
+
+Runtime 需要把结果以 **一段 JSON** 打到 stdout：
+
+`{ "logs": "...", "result": <any> }`
+
+如果 stdout 不是 JSON，平台会把它当作纯日志输出。
+
+#### 推荐实现方式（示例思路）
+
+你可以把 `runner.wasm` 做成一个小的 WASI 程序：
+
+- 从 stdin 读取 JSON
+- 根据 `mode` 选择：执行/测试
+- 把 `{logs,result}` 写回 stdout
+
+这样前端 Worker 不需要懂 Haskell 语法/类型/编译细节，只负责传入 code 和 input。
 
 ## Development
 
@@ -73,7 +105,9 @@ Notes:
 │   ├── pyodide/          # Pyodide files (copied from node_modules)
 │   ├── js-worker.js      # JavaScript/TypeScript execution worker
 │   ├── python-worker.js  # Python execution worker
-│   └── racket-worker.js  # Racket execution worker
+│   ├── racket-worker.js   # Racket execution worker
+│   ├── haskell-worker.js  # Haskell execution worker (WASM/WASI)
+│   └── haskell/           # Place runner.wasm here
 ├── scripts/
 │   └── setup-pyodide.js  # Setup script to copy Pyodide files
 ├── src/

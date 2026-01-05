@@ -4,7 +4,8 @@ import { EditorState, Compartment } from '@codemirror/state';
 import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
 import { python, pythonLanguage } from '@codemirror/lang-python';
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
-import { syntaxHighlighting, HighlightStyle, bracketMatching, indentOnInput, LanguageSupport } from '@codemirror/language';
+import { syntaxHighlighting, HighlightStyle, bracketMatching, indentOnInput, LanguageSupport, StreamLanguage } from '@codemirror/language';
+import { haskell as haskellLegacy } from '@codemirror/legacy-modes/mode/haskell';
 import { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap } from '@codemirror/autocomplete';
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
 import { lintKeymap } from '@codemirror/lint';
@@ -53,6 +54,8 @@ const getLanguageExtension = (language: string) => {
       return python();
     case 'racket':
       return racketSupport();
+    case 'haskell':
+      return StreamLanguage.define(haskellLegacy);
     default:
       return javascript();
   }
