@@ -251,7 +251,9 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
       const precisionType = typeof precision;
       if (precisionType === 'number' && Number.isFinite(precision) && precision > 0) {
         const p = BigInt(Math.floor(precision));
-        ns -= ns % p;
+        if (p > 0n) {
+          ns -= ns % p;
+        }
       } else if (precisionType === 'bigint' && precision > 0n) {
         ns -= ns % precision;
       }
@@ -417,8 +419,7 @@ function buildWasiStdin(config, executorMode, input) {
   return '';
 }
 
-async function handleWasiExecution({ code, testCases, executorMode }) {
-  const config = parseJsonConfig(code, 'WASI');
+function resolveWasiRuntime(config) {
   const hasRuntimePath = typeof config.runtime === 'string' && config.runtime.trim() !== '';
   const hasModulePath = typeof config.module === 'string' && config.module.trim() !== '';
   const hasRuntimeBase64 = typeof config.runtimeBase64 === 'string' && config.runtimeBase64.trim() !== '';
@@ -447,6 +448,13 @@ async function handleWasiExecution({ code, testCases, executorMode }) {
       "WASI config error: missing module reference. Provide 'runtime' or 'runtimeBase64' (preferred), or legacy 'module'/'moduleBase64'."
     );
   }
+
+  return { runtime, runtimeBase64 };
+}
+
+async function handleWasiExecution({ code, testCases, executorMode }) {
+  const config = parseJsonConfig(code, 'WASI');
+  const { runtime, runtimeBase64 } = resolveWasiRuntime(config);
 
   const cacheKey = makeCacheKey({ moduleBase64: runtimeBase64, modulePath: runtime });
   const wasmBytes = await loadBytes({
