@@ -412,7 +412,7 @@ async function handleWasiExecution({ code, testCases, executorMode }) {
   const env = config.env && typeof config.env === 'object' ? config.env : {};
 
   if (executorMode) {
-    const stdin = buildWasiStdin(config, true);
+    const stdin = buildWasiStdin(config, true, null);
     const { stdout, stderr } = await runWasiModule(wasmBytes, stdin, args, env);
     return { stdout, stderr };
   }
