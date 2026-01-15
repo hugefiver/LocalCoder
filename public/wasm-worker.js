@@ -6,6 +6,7 @@
 
 let isReady = false;
 const runtimeCache = new Map();
+const CLOCK_REALTIME = 0;
 
 class WasiExit extends Error {
   constructor(code) {
@@ -239,7 +240,7 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
     clock_time_get(clockId, precision, timePtr) {
       refresh();
       let ns;
-      if (clockId === 0) {
+      if (clockId === CLOCK_REALTIME) {
         ns = BigInt(Date.now()) * 1000000n;
       } else {
         const ms =
@@ -424,17 +425,13 @@ function resolveWasiRuntime(config) {
   const hasModulePath = typeof config.module === 'string' && config.module.trim() !== '';
   const hasRuntimeBase64 = typeof config.runtimeBase64 === 'string' && config.runtimeBase64.trim() !== '';
   const hasModuleBase64 = typeof config.moduleBase64 === 'string' && config.moduleBase64.trim() !== '';
+  const hasRuntime = hasRuntimePath || hasRuntimeBase64;
+  const hasModule = hasModulePath || hasModuleBase64;
 
-  if ((hasRuntimePath || hasRuntimeBase64) && (hasModulePath || hasModuleBase64)) {
-    const runtimePath = hasRuntimePath ? config.runtime.trim() : null;
-    const modulePath = hasModulePath ? config.module.trim() : null;
-    const runtimeBase = hasRuntimeBase64 ? config.runtimeBase64.trim() : null;
-    const moduleBase = hasModuleBase64 ? config.moduleBase64.trim() : null;
-
-    const samePath = runtimePath && modulePath && runtimePath === modulePath;
-    const sameBase64 = runtimeBase && moduleBase && runtimeBase === moduleBase;
-    const hasConflict = !samePath && !sameBase64;
-    if (hasConflict) {
+  if (hasRuntime && hasModule) {
+    const runtimeValue = hasRuntimeBase64 ? config.runtimeBase64.trim() : config.runtime.trim();
+    const moduleValue = hasModuleBase64 ? config.moduleBase64.trim() : config.module.trim();
+    if (runtimeValue && moduleValue && runtimeValue !== moduleValue) {
       throw new Error(
         "WASI config error: specify either 'runtime'/'runtimeBase64' (preferred) or legacy 'module'/'moduleBase64', but not both."
       );
