@@ -110,9 +110,9 @@ main = putStrLn "Hello from Haskell (runtime-dependent)!"`,
   "args": [1, 2]
 }`,
   wasi: `{
-  "_comment": "WASI runner config. Provide runtimeBase64 or runtime path.",
+  "_comment": "WASI runner config. Provide runtimeBase64 or runtime path (stub exits without output).",
   "runtimeBase64": "AGFzbQEAAAABCAJgAX8AYAAAAiQBFndhc2lfc25hcHNob3RfcHJldmlldzEJcHJvY19leGl0AAADAgEBBQMBAAEHEwIGbWVtb3J5AgAGX3N0YXJ0AAEKCAEGAEEAEAAL",
-  "code": "print('Hello from WASI runtime (stdout may be empty)')"
+  "code": "print('Hello from WASI runtime')"
 }`
 };
 

@@ -363,7 +363,7 @@ function normalizeWasmArgs(input) {
   return arr.map((value) => {
     if (typeof value === 'number') {
       if (!Number.isFinite(value)) {
-        throw new Error(`WASM input must be a finite number, got: ${value}`);
+        throw new Error(`WASM input must be a finite number, got: ${value} (${typeof value})`);
       }
       return value;
     }
