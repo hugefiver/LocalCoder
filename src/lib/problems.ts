@@ -132,4 +132,12 @@ export const languageInfo = {
     name: 'Haskell',
     description: 'Haskell via WebAssembly runtime (WASI)',
   },
+  wasm: {
+    name: 'WASM',
+    description: 'Run raw WebAssembly modules (JSON config)',
+  },
+  wasi: {
+    name: 'WASI',
+    description: 'Run WASI-compatible modules (JSON stdin contract)',
+  },
 };

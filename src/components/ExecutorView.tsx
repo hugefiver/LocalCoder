@@ -102,7 +102,18 @@ print("Fibonacci(10):", fibonacci(10))`,
 -- the runner you bundle (see README).
 
 main :: IO ()
-main = putStrLn "Hello from Haskell (runtime-dependent)!"`
+main = putStrLn "Hello from Haskell (runtime-dependent)!"`,
+  wasm: `{
+  "_comment": "WASM module config. Provide moduleBase64 or module path.",
+  "moduleBase64": "AGFzbQEAAAABBwFgAn9/AX8DAgEABwcBA2FkZAAACgkBBwAgACABags=",
+  "entry": "add",
+  "args": [1, 2]
+}`,
+  wasi: `{
+  "_comment": "WASI runner config. Provide runtimeBase64 or runtime path.",
+  "runtimeBase64": "AGFzbQEAAAABCAJgAX8AYAAAAiQBFndhc2lfc25hcHNob3RfcHJldmlldzEJcHJvY19leGl0AAADAgEBBQMBAAEHEwIGbWVtb3J5AgAGX3N0YXJ0AAEKCAEGAEEAEAAL",
+  "code": "print(\\"Hello from WASI runtime (stdout may be empty)\\")"
+}`
 };
 
 export function ExecutorView({ onBack }: ExecutorViewProps) {
@@ -264,6 +275,8 @@ export function ExecutorView({ onBack }: ExecutorViewProps) {
                 <SelectItem value="rustpython">RustPython</SelectItem>
                 <SelectItem value="racket">Racket</SelectItem>
                 <SelectItem value="haskell">Haskell</SelectItem>
+                <SelectItem value="wasm">WASM</SelectItem>
+                <SelectItem value="wasi">WASI</SelectItem>
               </SelectContent>
             </Select>
 

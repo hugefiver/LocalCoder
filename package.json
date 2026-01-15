@@ -13,7 +13,9 @@
         "smoke": "node scripts/smoke-check.mjs",
         "test": "node scripts/racket-worker.test.mjs",
         "test:racket": "node scripts/racket-worker.test.mjs",
+        "test:wasm": "node scripts/wasm-worker.test.mjs",
         "build:runtimes": "node scripts/build-runtimes.mjs",
+        "package:runtimes": "node scripts/build-runtimes.mjs",
         "postinstall": "node scripts/setup-pyodide.js",
         "setup": "node scripts/setup-pyodide.js"
     },

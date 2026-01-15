@@ -8,7 +8,7 @@ A browser-based code execution platform that mimics LeetCode's interface, allowi
 
 ## Features
 
-- **Multiple Language Support**: JavaScript, TypeScript, Python (via Pyodide), Racket, and Haskell (via WASM/WASI runtime)
+- **Multiple Language Support**: JavaScript, TypeScript, Python (via Pyodide), RustPython (WASI), Racket, Haskell, plus WASM/WASI modules
 - **Syntax Highlighting & Autocomplete**: Professional code editing experience with CodeMirror
 - **Resizable Panels**: LeetCode-style layout with problem description, code editor, and test results
 - **Test Cases**: Default and custom test cases with instant feedback
@@ -34,7 +34,7 @@ Haskell 的执行由 `public/haskell-worker.js` 驱动，它会加载一个 **WA
 
 - 将 `runner.wasm` 放到：`public/haskell/runner.wasm`
 
-> 默认已内置一个**轻量 stub runtime**（用于保证 Haskell “可用且可运行”，并输出提示信息）。
+> 默认已内置一个**轻量 stub runtime**（仅用于保证 Haskell 运行时可启动，默认不输出内容）。
 > 如果你想真正执行/编译 Haskell 源码，请用你自己的 `runner.wasm` 覆盖它。
 
 #### Haskell runtime 协议（非常重要）
@@ -71,6 +71,7 @@ RustPython 是另一个 Python 运行时（非 Pyodide），通过 WASI WebAssem
 本地如果你也想编译：
 
 - `pnpm run build:runtimes`
+- `pnpm run package:runtimes`（别名，便于打包进仓库）
 
 > 需要本机安装 Rust，并具备 `wasm32-wasip1`（或 `wasm32-wasi`）target。
 
@@ -112,6 +113,32 @@ Notes:
 - **题库**：从 `src/problems/*.md` 自动加载，每个 Markdown 文件对应一个试题
 - **持久化**：使用浏览器 `localStorage` 保存每个语言/试题下的代码与自定义用例
 
+### WASM/WASI 运行说明（自由执行）
+
+自由执行模式新增 `WASM` / `WASI` 语言：
+
+- `WASM`：通过 JSON 配置指定模块路径或 base64，并调用导出函数。
+- `WASI`：通过 JSON 配置指定 WASI runtime，默认使用 stdin/stdout JSON 协议（同 RustPython/Haskell）。
+
+示例（WASM）：
+
+```json
+{
+  "moduleBase64": "<base64 wasm>",
+  "entry": "add",
+  "args": [1, 2]
+}
+```
+
+示例（WASI）：
+
+```json
+{
+  "runtime": "haskell/runner.wasm",
+  "code": "print(\"hello\")"
+}
+```
+
 ## Project Structure
 
 ```text
@@ -121,6 +148,7 @@ Notes:
 │   ├── python-worker.js  # Python execution worker
 │   ├── racket-worker.js   # Racket execution worker
 │   ├── haskell-worker.js  # Haskell execution worker (WASM/WASI)
+│   ├── wasm-worker.js     # Generic WASM/WASI execution worker
 │   └── haskell/           # Place runner.wasm here
 ├── scripts/
 │   └── setup-pyodide.js  # Setup script to copy Pyodide files

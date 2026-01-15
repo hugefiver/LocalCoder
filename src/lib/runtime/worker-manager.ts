@@ -16,6 +16,8 @@ const workerFilenameMap: Record<Language, string> = {
   racket: "racket-worker.js",
   haskell: "haskell-worker.js",
   rustpython: "rustpython-worker.js",
+  wasm: "wasm-worker.js",
+  wasi: "wasm-worker.js",
 };
 
 function getWorkerURL(filename: string): string {
@@ -64,6 +66,8 @@ function buildRuntimeStatesSnapshot(): Record<Language, RuntimeState> {
     racket: { status: "idle", error: null },
     haskell: { status: "idle", error: null },
     rustpython: { status: "idle", error: null },
+    wasm: { status: "idle", error: null },
+    wasi: { status: "idle", error: null },
   };
 
   for (const [lang, entry] of entries.entries()) {

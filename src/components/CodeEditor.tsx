@@ -58,6 +58,9 @@ const getLanguageExtension = (language: string) => {
       return racketSupport();
     case 'haskell':
       return StreamLanguage.define(haskellLegacy);
+    case 'wasm':
+    case 'wasi':
+      return javascript();
     default:
       return javascript();
   }

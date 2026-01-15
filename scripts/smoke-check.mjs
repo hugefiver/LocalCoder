@@ -27,6 +27,7 @@ function main() {
     "public/rustpython-worker.js",
     "public/racket-worker.js",
     "public/haskell-worker.js",
+    "public/wasm-worker.js",
     "public/pyodide/pyodide.js",
 
     // Build output
@@ -36,6 +37,7 @@ function main() {
     "dist/rustpython-worker.js",
     "dist/racket-worker.js",
     "dist/haskell-worker.js",
+    "dist/wasm-worker.js",
     "dist/pyodide/pyodide.js",
   ];
 
