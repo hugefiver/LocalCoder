@@ -12,9 +12,24 @@ const crypto = globalThis.crypto ?? webcrypto;
 const atob = globalThis.atob ?? ((data) => Buffer.from(data, "base64").toString("latin1"));
 
 // Simple WASM module exporting add(a, b) -> a + b.
+// WAT:
+// (module
+//   (func (export "add") (param i32 i32) (result i32)
+//     local.get 0
+//     local.get 1
+//     i32.add))
 const WASM_ADD_BASE64 = "AGFzbQEAAAABBwFgAn9/AX8DAgEABwcBA2FkZAAACgkBBwAgACABags=";
 
 // Minimal WASI module that immediately exits with code 0.
+// WAT (conceptual equivalent):
+// (module
+//   (import "wasi_snapshot_preview1" "proc_exit"
+//     (func $proc_exit (param i32)))
+//   (memory (export "memory") 1)
+//   (func (export "_start")
+//     i32.const 0
+//     call $proc_exit))
+// Encoded here as base64 for convenience in tests.
 const WASI_STUB_BASE64 =
   "AGFzbQEAAAABCAJgAX8AYAAAAiQBFndhc2lfc25hcHNob3RfcHJldmlldzEJcHJvY19leGl0AAADAgEBBQMBAAEHEwIGbWVtb3J5AgAGX3N0YXJ0AAEKCAEGAEEAEAAL";
 
@@ -139,11 +154,56 @@ async function testWasiTestMode() {
   assert.ok(typeof res.results[0].logs === "string");
 }
 
+async function testInvalidWasmConfig() {
+  const ctx = loadWorker();
+  const res = await runWorkerOnce(ctx, {
+    type: "execute",
+    requestId: "wasm-invalid",
+    language: "wasm",
+    executorMode: true,
+    code: "{ not-json }",
+  });
+
+  assert.equal(res.success, false);
+  assert.ok(res.error);
+}
+
+async function testMissingWasmModule() {
+  const ctx = loadWorker();
+  const res = await runWorkerOnce(ctx, {
+    type: "execute",
+    requestId: "wasm-missing",
+    language: "wasm",
+    executorMode: true,
+    code: "{}",
+  });
+
+  assert.equal(res.success, false);
+  assert.ok(res.error.includes("Missing module"));
+}
+
+async function testMissingWasiRuntime() {
+  const ctx = loadWorker();
+  const res = await runWorkerOnce(ctx, {
+    type: "execute",
+    requestId: "wasi-missing",
+    language: "wasi",
+    executorMode: true,
+    code: "{}",
+  });
+
+  assert.equal(res.success, false);
+  assert.ok(res.error.includes("missing module reference"));
+}
+
 async function main() {
   await testWasmExecutorMode();
   await testWasmTestMode();
   await testWasiExecutorMode();
   await testWasiTestMode();
+  await testInvalidWasmConfig();
+  await testMissingWasmModule();
+  await testMissingWasiRuntime();
   console.log("WASM/WASI worker tests passed");
 }
 

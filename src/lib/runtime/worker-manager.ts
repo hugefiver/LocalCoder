@@ -9,6 +9,8 @@ export interface RuntimeState {
 
 type Listener = () => void;
 
+// WASM/WASI share a unified worker because the runtime selection is based on the
+// language field in the request, while keeping a single cache for WASM modules.
 const workerFilenameMap: Record<Language, string> = {
   javascript: "js-worker.js",
   typescript: "js-worker.js",

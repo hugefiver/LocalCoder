@@ -1,3 +1,4 @@
+// Shared utilities for web workers. Load with: importScripts('./worker-utils.js');
 function stableStringify(value) {
   return JSON.stringify(value, (_k, v) => {
     if (v && typeof v === 'object' && !Array.isArray(v)) {

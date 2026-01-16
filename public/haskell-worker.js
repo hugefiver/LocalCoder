@@ -19,7 +19,9 @@ let runtimeBytes = null;
 let isReady = false;
 
 // Built-in WASI stub so Haskell runtime exists by default.
-// This minimal module simply exits successfully without output.
+// This minimal module simply exits successfully without output (no logs or result).
+// It exists solely as a fallback so the Haskell worker can initialize without errors
+// when haskell/runner.wasm is missing or cannot be loaded.
 const EMBEDDED_WASI_STUB_WASM = new Uint8Array([
   0,97,115,109,1,0,0,0,1,8,2,96,1,127,0,96,0,0,2,36,1,22,119,97,115,105,95,115,110,97,112,115,104,111,116,95,112,114,101,118,105,101,119,49,9,112,114,111,99,95,101,120,105,116,0,0,3,2,1,1,5,3,1,0,1,7,19,2,6,109,101,109,111,114,121,2,0,6,95,115,116,97,114,116,0,1,10,8,1,6,0,65,0,16,0,11,
 ]);

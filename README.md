@@ -134,8 +134,8 @@ Notes:
 
 ```json
 {
-  "runtime": "haskell/runner.wasm",
-  "code": "print(\"hello\")"
+  "runtime": "<your-wasi-runtime.wasm>",
+  "code": "<source code compatible with the chosen runtime>"
 }
 ```
 

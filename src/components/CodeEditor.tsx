@@ -60,6 +60,7 @@ const getLanguageExtension = (language: string) => {
       return StreamLanguage.define(haskellLegacy);
     case 'wasm':
     case 'wasi':
+      // WASM/WASI are edited as JSON configuration files, so JavaScript (JSON) highlighting is appropriate.
       return javascript();
     default:
       return javascript();

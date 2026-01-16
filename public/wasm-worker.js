@@ -62,7 +62,8 @@ async function loadBytes({ cacheKey, moduleBase64, modulePath }) {
 
 function makeCacheKey({ moduleBase64, modulePath }) {
   if (moduleBase64) {
-    return `base64:${moduleBase64.length}:${moduleBase64.slice(0, 64)}`;
+    // Use the full base64 string to avoid collisions between different modules.
+    return `base64:${moduleBase64}`;
   }
   return `path:${modulePath ?? ''}`;
 }
@@ -236,6 +237,7 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
             : Date.now();
         ns = BigInt(Math.floor(ms * 1000000));
       }
+      // WASI exposes precision as a u64; JS bindings may surface it as number or bigint.
       const precisionType = typeof precision;
       if (precisionType === 'number' && Number.isFinite(precision)) {
         const p = BigInt(Math.floor(precision));
@@ -295,9 +297,17 @@ async function runWasiModule(wasmBytes, stdinText, args, env) {
   if (!memory) throw new Error('WASM module has no exported memory');
   wasi.setMemory(memory);
 
+  // WASI entry points are probed in this order:
+  // - `_start`: standard WASI "command" entry.
+  // - `__wasi_unstable_reactor_start`: legacy reactor entry from older preview versions.
+  // - `main`: compatibility fallback for modules exporting a C-style main.
   const start =
     instance.exports._start || instance.exports.__wasi_unstable_reactor_start || instance.exports.main;
-  if (typeof start !== 'function') throw new Error('WASM module does not export _start/main');
+  if (typeof start !== 'function') {
+    throw new Error(
+      'WASM module does not export a supported WASI entry point (_start, __wasi_unstable_reactor_start, or main).'
+    );
+  }
 
   try {
     start();
@@ -339,7 +349,9 @@ async function runPlainWasmModule(wasmBytes, entryName, args) {
     instance.exports.main;
 
   if (typeof entry !== 'function') {
-    throw new Error("WASM module missing entry export. Set 'entry' to a valid export (e.g. '_start').");
+    throw new Error(
+      "WASM module missing entry export. Specify 'entry' in config, or ensure the module exports 'run' or 'main'."
+    );
   }
 
   const result = entry(...args);
@@ -372,8 +384,10 @@ function normalizeWasmArgs(input) {
       }
       return value;
     }
+    if (typeof value === 'bigint') return value;
+    // Booleans are coerced to 0/1 for i32-compatible parameters.
     if (typeof value === 'boolean') return value ? 1 : 0;
-    throw new Error('WASM input must be number/boolean or an array of them');
+    throw new Error('WASM input must be number/boolean/bigint or an array of them');
   });
 }
 
@@ -407,6 +421,8 @@ function buildWasiStdin(config, executorMode, input) {
   return '';
 }
 
+// Prefer runtime/runtimeBase64 for WASI configs, while accepting legacy module/moduleBase64.
+// This preserves backward compatibility while encouraging migration to the runtime naming.
 function resolveWasiRuntime(config) {
   const hasRuntimePath = typeof config.runtime === 'string' && config.runtime.trim() !== '';
   const hasModulePath = typeof config.module === 'string' && config.module.trim() !== '';
@@ -497,6 +513,8 @@ async function handleWasmExecution({ code, testCases, executorMode }) {
   });
 
   if (executorMode) {
+    // Prefer config.args for executor mode arguments; config.input is also supported
+    // for consistency with the test case { input, expected } structure.
     const executorArgs = normalizeWasmArgs(config.args ?? config.input);
     const { result, logs } = await runPlainWasmModule(wasmBytes, entry, executorArgs);
     return { result: normalizeWasmResult(result), logs: logs.join('\n') };

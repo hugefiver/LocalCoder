@@ -26,6 +26,9 @@ interface CustomTestCase {
   expected: any;
 }
 
+// NOTE: This is intentionally a subset of all executor languages.
+// Problem mode relies on per-language templates and stored source code, while
+// JSON-config-based runtimes like WASM/WASI are handled in ExecutorView instead.
 const PROBLEM_LANGUAGES: Language[] = ['javascript', 'typescript', 'python', 'rustpython', 'racket', 'haskell'];
 
 export function EditorView({ problemId, onBack }: EditorViewProps) {
