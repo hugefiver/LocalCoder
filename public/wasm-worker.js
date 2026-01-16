@@ -75,7 +75,10 @@ function makeCacheKey({ moduleBase64, modulePath }) {
   if (moduleBase64) {
     return `base64:${moduleBase64.length}:${hashString(moduleBase64)}`;
   }
-  return `path:${modulePath ?? ''}`;
+  if (modulePath) {
+    return `path:${modulePath}`;
+  }
+  throw new Error('Missing module path or base64 payload for cache key');
 }
 
 function textEncode(s) {
@@ -431,8 +434,8 @@ function buildWasiStdin(config, executorMode, input) {
   return '';
 }
 
-// Prefer runtime/runtimeBase64 for WASI configs, while accepting legacy module/moduleBase64.
-// This preserves backward compatibility while encouraging migration to the runtime naming.
+// Prefer runtime/runtimeBase64 for WASI configs, while also accepting module/moduleBase64
+// for consistency with other WASM configuration options and to support both naming styles.
 function resolveWasiRuntime(config) {
   const hasRuntimePath = typeof config.runtime === 'string' && config.runtime.trim() !== '';
   const hasModulePath = typeof config.module === 'string' && config.module.trim() !== '';

@@ -3,6 +3,8 @@
 // Loads public/rustpython/runner.wasm produced by `pnpm run build:runtimes`.
 // Protocol: stdin JSON {mode, code, input?} -> stdout JSON {logs, result, error?}
 
+importScripts('./worker-utils.js');
+
 let runtimeBytes = null;
 let isReady = false;
 
@@ -12,20 +14,6 @@ class WasiExit extends Error {
     this.name = 'WasiExit';
     this.code = code;
   }
-}
-
-function stableStringify(value) {
-  return JSON.stringify(value, (_k, v) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      return Object.keys(v)
-        .sort()
-        .reduce((acc, key) => {
-          acc[key] = v[key];
-          return acc;
-        }, {});
-    }
-    return v;
-  });
 }
 
 function getBaseURL() {

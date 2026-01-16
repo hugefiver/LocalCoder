@@ -19,6 +19,13 @@ function loadWorker() {
     self: {
       postMessage: (m) => messages.push(m),
     },
+    importScripts: (...scripts) => {
+      for (const script of scripts) {
+        const scriptPath = path.resolve(root, "public", script);
+        const scriptCode = fs.readFileSync(scriptPath, "utf8");
+        vm.runInContext(scriptCode, sandbox, { filename: script });
+      }
+    },
     performance: {
       now: () => 0,
     },

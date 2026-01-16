@@ -34,7 +34,7 @@ Haskell 的执行由 `public/haskell-worker.js` 驱动，它会加载一个 **WA
 
 - 将 `runner.wasm` 放到：`public/haskell/runner.wasm`
 
-> 默认已内置一个**轻量 stub runtime**（仅用于保证 Haskell 运行时可启动，默认不输出内容）。
+> **默认已内置一个轻量 stub runtime（仅用于保证 Haskell 运行时可启动，默认不输出内容）。**
 > 如果你想真正执行/编译 Haskell 源码，请用你自己的 `runner.wasm` 覆盖它。
 
 #### Haskell runtime 协议（非常重要）

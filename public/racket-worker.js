@@ -13,6 +13,8 @@ let isReady = false;
  * - hash / hash-ref (backed by JS Map)
  */
 
+importScripts('./worker-utils.js');
+
 self.onmessage = async (e) => {
   const { type, requestId, code, testCases, executorMode } = e.data;
   
@@ -96,21 +98,6 @@ self.onmessage = async (e) => {
     });
   }
 };
-
-function stableStringify(value) {
-  return JSON.stringify(value, (_k, v) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      // Ensure stable key ordering for objects.
-      return Object.keys(v)
-        .sort()
-        .reduce((acc, key) => {
-          acc[key] = v[key];
-          return acc;
-        }, {});
-    }
-    return v;
-  });
-}
 
 function jsToRacketExpr(value) {
   if (value === null || value === undefined) return "'()";

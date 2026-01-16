@@ -41,6 +41,7 @@ export function EditorView({ problemId, onBack }: EditorViewProps) {
   const { executeCode, cancel, isRunning, result } = useCodeExecution();
   const { preloadWorker, isWorkerReady, isWorkerLoading } = useWorkerLoader();
 
+  // If an executor-only language (e.g. WASM/WASI) is stored, fall back to JavaScript in problem mode.
   const language = PROBLEM_LANGUAGES.includes(selectedLanguage) ? selectedLanguage : 'javascript';
   const [code, setCode] = useState<string>('');
   const [codeLoaded, setCodeLoaded] = useState(false);
