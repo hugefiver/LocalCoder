@@ -38,6 +38,7 @@ function base64ToBytes(base64) {
   return out;
 }
 
+// Lightweight FNV-1a hash for deterministic cache keys.
 function hashString(value) {
   let hash = 2166136261;
   for (let i = 0; i < value.length; i++) {
