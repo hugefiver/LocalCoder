@@ -520,9 +520,18 @@ async function handleWasiExecution({ code, testCases, executorMode }) {
 
 async function handleWasmExecution({ code, testCases, executorMode }) {
   const config = parseJsonConfig(code, 'WASM');
-  const modulePath = config.module || config.runtime;
-  const moduleBase64 = config.moduleBase64 || config.runtimeBase64;
+  const modulePathRaw = config.module || config.runtime;
+  const moduleBase64Raw = config.moduleBase64 || config.runtimeBase64;
+  const modulePath = typeof modulePathRaw === 'string' ? modulePathRaw.trim() : modulePathRaw;
+  const moduleBase64 =
+    typeof moduleBase64Raw === 'string' ? moduleBase64Raw.trim() : moduleBase64Raw;
   const entry = typeof config.entry === 'string' ? config.entry : null;
+
+  if (!modulePath && !moduleBase64) {
+    throw new Error(
+      "Missing module reference for WASM. Provide 'module'/'moduleBase64' (preferred), or 'runtime'/'runtimeBase64'."
+    );
+  }
 
   const cacheKey = makeCacheKey({ moduleBase64, modulePath });
   const wasmBytes = await loadBytes({
