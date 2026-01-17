@@ -437,10 +437,17 @@ function buildWasiStdin(config, executorMode, input) {
 // Prefer runtime/runtimeBase64 for WASI configs, while also accepting module/moduleBase64
 // for consistency with other WASM configuration options and to support both naming styles.
 function resolveWasiRuntime(config) {
-  const hasRuntimePath = typeof config.runtime === 'string' && config.runtime.trim() !== '';
-  const hasModulePath = typeof config.module === 'string' && config.module.trim() !== '';
-  const hasRuntimeBase64 = typeof config.runtimeBase64 === 'string' && config.runtimeBase64.trim() !== '';
-  const hasModuleBase64 = typeof config.moduleBase64 === 'string' && config.moduleBase64.trim() !== '';
+  // Normalize and trim values so that returned values are consistent with validation.
+  const runtimePath = typeof config.runtime === 'string' ? config.runtime.trim() : config.runtime;
+  const modulePath = typeof config.module === 'string' ? config.module.trim() : config.module;
+  const runtimeBase64Value =
+    typeof config.runtimeBase64 === 'string' ? config.runtimeBase64.trim() : config.runtimeBase64;
+  const moduleBase64Value =
+    typeof config.moduleBase64 === 'string' ? config.moduleBase64.trim() : config.moduleBase64;
+  const hasRuntimePath = typeof runtimePath === 'string' && runtimePath !== '';
+  const hasModulePath = typeof modulePath === 'string' && modulePath !== '';
+  const hasRuntimeBase64 = typeof runtimeBase64Value === 'string' && runtimeBase64Value !== '';
+  const hasModuleBase64 = typeof moduleBase64Value === 'string' && moduleBase64Value !== '';
   const hasRuntime = hasRuntimePath || hasRuntimeBase64;
   const hasModule = hasModulePath || hasModuleBase64;
 
@@ -454,8 +461,8 @@ function resolveWasiRuntime(config) {
     }
   }
 
-  const runtime = config.runtime || config.module;
-  const runtimeBase64 = config.runtimeBase64 || config.moduleBase64;
+  const runtime = runtimePath || modulePath;
+  const runtimeBase64 = runtimeBase64Value || moduleBase64Value;
 
   if (!runtime && !runtimeBase64) {
     throw new Error(
