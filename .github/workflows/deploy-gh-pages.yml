@@ -48,8 +48,11 @@ jobs:
         with:
           targets: wasm32-wasip1
 
-      - name: Build WASI runtimes (RustPython + Haskell)
-        run: pnpm build:runtimes
+      - name: Pack runtimes (code runner)
+        run: pnpm pack:runtimes
+
+      - name: Run tests
+        run: pnpm test
 
       - name: Build
         env:

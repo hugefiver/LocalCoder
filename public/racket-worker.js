@@ -11,6 +11,10 @@
 let isReady = false;
 let modulePromise = null;
 
+function getBaseURL() {
+  return self.location.origin + self.location.pathname.replace(/\/[^\/]*$/, '/');
+}
+
 async function loadRacketModule() {
   if (modulePromise) return modulePromise;
 
@@ -43,6 +47,51 @@ async function loadRacketModule() {
   return modulePromise;
 }
 
+async function loadRacketWasmAsset() {
+  const baseURL = getBaseURL();
+  const candidates = [
+    baseURL + 'racket/racket.wasm.gz',
+    baseURL + 'racket/racket.wasm',
+  ];
+
+  let lastErr = null;
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        lastErr = new Error(`HTTP ${res.status} for ${url}`);
+        continue;
+      }
+      if (url.endsWith('.gz')) {
+        if (typeof DecompressionStream === 'undefined') {
+          throw new Error('DecompressionStream not available; cannot load .gz assets');
+        }
+        const stream = res.body.pipeThrough(new DecompressionStream('gzip'));
+        return await new Response(stream).arrayBuffer();
+      }
+      return await res.arrayBuffer();
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+
+  throw new Error(
+    `Racket runtime not found. Expected: ${candidates.join(', ')}.` +
+      (lastErr ? ` (${lastErr.message ?? String(lastErr)})` : ''),
+  );
+}
+
+function installRacketWasmLocator() {
+  const getPreloadedPackage = self.Module?.getPreloadedPackage;
+  self.Module.getPreloadedPackage = async (name, size) => {
+    if (name.endsWith('racket.wasm')) {
+      return await loadRacketWasmAsset();
+    }
+    if (getPreloadedPackage) return await getPreloadedPackage(name, size);
+    throw new Error(`Unknown preloaded package: ${name}`);
+  };
+}
+
 async function runRacketProgram(module, program) {
   if (!module.FS || typeof module.callMain !== 'function') {
     throw new Error('Racket runtime missing FS/callMain (check Emscripten build flags)');
@@ -53,6 +102,11 @@ async function runRacketProgram(module, program) {
   module.print = (text) => outputs.push(String(text));
   module.printErr = (text) => errors.push(String(text));
 
+  try {
+    module.FS.mkdir('/tmp');
+  } catch {
+    // ignore if exists
+  }
   const programPath = `/tmp/run-${Date.now()}-${Math.floor(Math.random() * 1e9)}.rkt`;
   module.FS.writeFile(programPath, program);
 
@@ -120,7 +174,10 @@ self.onmessage = async (e) => {
 
   if (type === 'preload') {
     try {
+      installRacketWasmLocator();
       await loadRacketModule();
+      // Optional: warm up wasm fetch to avoid first-run latency
+      await loadRacketWasmAsset();
       isReady = true;
       self.postMessage({ type: 'ready', requestId });
     } catch (error) {

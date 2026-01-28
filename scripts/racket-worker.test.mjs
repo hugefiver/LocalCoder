@@ -82,7 +82,11 @@ async function testProblemModeTwoSumTemplateStyle() {
 }
 
 async function main() {
-  if (process.env.RACKET_WASM_TESTS !== "1") {
+  const workerPath = path.join(root, "public", "racket", "racket.js");
+  const hasRuntime = fs.existsSync(workerPath);
+  const shouldRun = process.env.RACKET_WASM_TESTS === "1" || hasRuntime;
+
+  if (!shouldRun) {
     console.log("Skipping Racket worker tests (set RACKET_WASM_TESTS=1 to run)");
     return;
   }
