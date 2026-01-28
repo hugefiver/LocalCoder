@@ -113,14 +113,17 @@ function buildWasiShim(outPath) {
 }
 
 function buildRacketRuntime(racketDir) {
+  const distDir = path.join(racketDir, "dist");
+  const jsPath = path.join(distDir, "racket.js");
+  const wasmPath = path.join(distDir, "racket.wasm");
+  if (fs.existsSync(jsPath) && fs.existsSync(wasmPath)) {
+    return { jsPath, wasmPath };
+  }
+
   const buildScript = path.join(racketDir, "build.mjs");
   if (fs.existsSync(buildScript)) {
     exec("node", [buildScript], { cwd: racketDir });
   }
-
-  const distDir = path.join(racketDir, "dist");
-  const jsPath = path.join(distDir, "racket.js");
-  const wasmPath = path.join(distDir, "racket.wasm");
   if (!fs.existsSync(jsPath) || !fs.existsSync(wasmPath)) {
     throw new Error("Cannot find Racket runtime artifacts (dist/racket.js, dist/racket.wasm)");
   }
@@ -195,9 +198,13 @@ async function main() {
     const { jsPath, wasmPath } = buildRacketRuntime(racketDir);
     copyFile(jsPath, path.join(root, "public", "racket", "racket.js"));
     copyFile(wasmPath, path.join(root, "public", "racket", "racket.wasm"));
+    await gzipIfExists(
+      path.join(root, "public", "racket", "racket.wasm"),
+      path.join(root, "public", "racket", "racket.wasm.gz"),
+    );
     racketBuilt = true;
     console.log("  ✓ public/racket/racket.js");
-    console.log("  ✓ public/racket/racket.wasm");
+    console.log("  ✓ public/racket/racket.wasm(.gz)");
   } catch (err) {
     const strict = process.env.RACKET_WASM_STRICT === "1";
     console.error("  ✗ Failed to build Racket runtime:", err.message);

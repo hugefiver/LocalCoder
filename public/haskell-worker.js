@@ -332,7 +332,12 @@ async function runGhci({ config, code, input, executorMode }) {
   const workDir = new Directory(new Map());
   const rootDir = buildFileTree(config, libdir, workDir);
 
-  const args = ['ghci', ...(config.ghciArgs || [])];
+  const args = [
+    'ghci',
+    ...(config.ghciArgs || []),
+    '-B',
+    config.libdirPath,
+  ];
   const stdin = buildGhciStdin({ code, input, executorMode });
 
   return runWasiProgram(ghciWasm, {
@@ -390,6 +395,7 @@ async function runGhcCompile({ config, code, input, executorMode }) {
 
   const source = executorMode ? code : wrapCompileSource(code);
   workDir.contents.set('Main.hs', new File(textEncoder.encode(source)));
+  workDir.contents.set('.ghc', new Directory(new Map()));
 
   const outputPath = `${config.workDir}/app.wasm`;
   const args = [

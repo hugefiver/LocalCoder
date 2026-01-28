@@ -91,6 +91,8 @@ Racket 运行时通过 **Emscripten** 编译官方解释器生成：
 - 产物：`public/racket/racket.js` + `public/racket/racket.wasm`
 - 构建脚本：`runtimes/racket-runtime/build.mjs`
 
+`build:runtimes` 会生成 `racket.wasm.gz`，worker 会优先加载 `.gz`。
+
 运行：
 
 ```
