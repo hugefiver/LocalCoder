@@ -21,7 +21,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build-executors:
+    uses: ./.github/workflows/build-executors.yml
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+
   deploy:
+    needs: build-executors
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,13 +49,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Download executor runtimes
+        uses: actions/download-artifact@v4
         with:
-          targets: wasm32-wasip1
-
-      - name: Pack runtimes (code runner)
-        run: pnpm pack:runtimes
+          name: executor-runtimes
+          path: .
 
       - name: Run tests
         run: pnpm test

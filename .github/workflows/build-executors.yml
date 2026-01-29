@@ -1,0 +1,133 @@
+name: Build executors
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "要构建的分支/标签/提交（例如 master、feature/foo、v1.2.3、或 SHA）"
+        required: true
+        default: "master"
+  workflow_call:
+    inputs:
+      ref:
+        description: "Git ref to build"
+        required: false
+        type: string
+
+jobs:
+  build-runtime:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - haskell
+          - racket
+          - rustpython
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Restore Haskell cache
+        if: ${{ matrix.runtime == 'haskell' }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/haskell
+            runtimes/haskell-ghc/dist
+          key: ${{ runner.os }}-haskell-${{ hashFiles('runtimes/haskell-ghc/**', 'scripts/build-runtimes.mjs') }}
+
+      - name: Restore Racket cache
+        if: ${{ matrix.runtime == 'racket' }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/racket
+            runtimes/racket-runtime/dist
+            ~/.emscripten_cache
+          key: ${{ runner.os }}-racket-${{ hashFiles('runtimes/racket-runtime/**', 'scripts/build-runtimes.mjs') }}
+
+      - name: Restore RustPython cache
+        if: ${{ matrix.runtime == 'rustpython' }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/rustpython
+            runtimes/rustpython-runner/target
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-rustpython-${{ hashFiles('runtimes/rustpython-runner/**', 'scripts/build-runtimes.mjs') }}
+
+      - name: Fetch Racket source (official)
+        if: ${{ matrix.runtime == 'racket' }}
+        run: |
+          if [ ! -d runtimes/racket-runtime/racket-src/.git ]; then
+            git clone --depth 1 https://github.com/racket/racket.git runtimes/racket-runtime/racket-src
+          else
+            git -C runtimes/racket-runtime/racket-src fetch --depth 1 origin master
+            git -C runtimes/racket-runtime/racket-src reset --hard origin/master
+          fi
+
+      - name: Setup Emscripten
+        if: ${{ matrix.runtime == 'racket' }}
+        uses: mymindstorm/setup-emsdk@v14
+
+      - name: Setup Rust
+        if: ${{ matrix.runtime == 'rustpython' }}
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build runtime
+        run: pnpm build:runtimes
+        env:
+          RUNTIME_TARGETS: ${{ matrix.runtime }}
+
+      - name: Upload runtime artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: executor-${{ matrix.runtime }}
+          path: public/${{ matrix.runtime }}
+          if-no-files-found: warn
+
+  bundle:
+    needs: build-runtime
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Download runtime artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: executor-*
+          path: .
+          merge-multiple: true
+
+      - name: Upload executor runtimes
+        uses: actions/upload-artifact@v4
+        with:
+          name: executor-runtimes
+          path: |
+            public/haskell
+            public/racket
+            public/rustpython
+          if-no-files-found: warn
