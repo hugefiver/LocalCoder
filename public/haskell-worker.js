@@ -103,18 +103,14 @@ async function fetchWithFallback(paths) {
 
 async function loadGhcWasm(config) {
   if (ghcWasmBytes) return ghcWasmBytes;
-  const candidates = config.ghcWasm?.endsWith('.gz')
-    ? [config.ghcWasm]
-    : [config.ghcWasm?.replace(/\.wasm$/, '.wasm.gz'), config.ghcWasm];
+  const candidates = expandGzipCandidates(config.ghcWasm, '.wasm');
   ghcWasmBytes = await fetchWithFallback(candidates);
   return ghcWasmBytes;
 }
 
 async function loadGhciWasm(config) {
   if (ghciWasmBytes) return ghciWasmBytes;
-  const candidates = config.ghciWasm?.endsWith('.gz')
-    ? [config.ghciWasm]
-    : [config.ghciWasm?.replace(/\.wasm$/, '.wasm.gz'), config.ghciWasm];
+  const candidates = expandGzipCandidates(config.ghciWasm, '.wasm');
   ghciWasmBytes = await fetchWithFallback(candidates);
   return ghciWasmBytes;
 }
@@ -208,15 +204,25 @@ function mountDirectory(root, absPath, dir) {
 
 async function loadLibdir(config) {
   if (libdirRoot) return libdirRoot;
-  const candidates = config.libdirTar?.endsWith('.gz')
-    ? [config.libdirTar]
-    : [config.libdirTar?.replace(/\.tar$/, '.tar.gz'), config.libdirTar];
+  const candidates = expandGzipCandidates(config.libdirTar, '.tar');
   const tarBytes = await fetchWithFallback(candidates);
   const tarU8 = new Uint8Array(tarBytes);
   const root = new Directory(new Map());
   untarToDirectory(tarU8, root);
   libdirRoot = root;
   return libdirRoot;
+}
+
+function expandGzipCandidates(path, rawExt) {
+  if (!path) return [];
+  if (path.endsWith('.gz')) {
+    const fallback = path.replace(/\.gz$/, '');
+    return fallback === path ? [path] : [path, fallback];
+  }
+  if (rawExt && path.endsWith(rawExt)) {
+    return [path.replace(new RegExp(`${rawExt}$`), `${rawExt}.gz`), path];
+  }
+  return [path];
 }
 
 function buildFileTree(config, libdirDir, workDir) {

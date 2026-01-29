@@ -122,10 +122,7 @@ async function runJavaScript(code, testCases) {
 }
 
 async function runTypeScript(code, testCases) {
-  const jsCode = code
-    .replace(/:\s*\w+(\[\])?/g, '')
-    .replace(/interface\s+\w+\s*{[^}]*}/g, '')
-    .replace(/type\s+\w+\s*=\s*[^;]+;/g, '');
+  const jsCode = stripTypeScript(code);
 
   return runJavaScript(jsCode, testCases);
 }
@@ -182,10 +179,15 @@ async function runJavaScriptExecutor(code) {
 }
 
 async function runTypeScriptExecutor(code) {
-  const jsCode = code
-    .replace(/:\s*\w+(\[\])?/g, '')
-    .replace(/interface\s+\w+\s*{[^}]*}/g, '')
-    .replace(/type\s+\w+\s*=\s*[^;]+;/g, '');
+  const jsCode = stripTypeScript(code);
 
   return runJavaScriptExecutor(jsCode);
+}
+
+function stripTypeScript(code) {
+  return code
+    .replace(/interface\s+\w+\s*{[^}]*}/gs, '')
+    .replace(/type\s+\w+\s*=\s*[^;]+;/gs, '')
+    .replace(/enum\s+\w+\s*{[^}]*}/gs, '')
+    .replace(/:\s*\w+(\[\])?/g, '');
 }
