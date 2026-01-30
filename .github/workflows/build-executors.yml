@@ -93,8 +93,9 @@ jobs:
           ghcup config add-release-channel https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/ghcup-wasm-0.0.9.yaml
           ghcup list
           ghcup install ghc "$WASM_GHC_VERSION" -- $CONFIGURE_ARGS
-          echo "WASM_GHC_BIN=$(ghcup where ghc ${WASM_GHC_VERSION})/bin" >> $GITHUB_ENV
-          echo "WASM_GHC_LIB=$(wasm32-wasi-ghc --print-libdir)" >> $GITHUB_ENV
+          GHC_WASM_ROOT=$(ghcup whereis ghc "${WASM_GHC_VERSION}")
+          echo "WASM_GHC_BIN=${GHC_WASM_ROOT}/bin" >> $GITHUB_ENV
+          echo "WASM_GHC_LIB=$(${GHC_WASM_ROOT}/bin/wasm32-wasi-ghc --print-libdir)" >> $GITHUB_ENV
 
       - name: Stage GHC WASM artifacts
         if: ${{ matrix.runtime == 'haskell' }}
