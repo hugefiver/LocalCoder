@@ -84,10 +84,16 @@ jobs:
       - name: Install GHC WASM toolchain
         if: ${{ matrix.runtime == 'haskell' }}
         run: |
-          ghcup config add-release-channel cross
+          WASM_GHC_VERSION=wasm32-wasi-9.15.20251219
+          sudo apt-get update
+          sudo apt-get install -y zstd
+          curl https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/bootstrap.sh | SKIP_GHC=1 sh
+          source ~/.ghc-wasm/env
+          ~/.ghc-wasm/add_to_github_path.sh
+          ghcup config add-release-channel https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/ghcup-wasm-0.0.9.yaml
           ghcup list
-          ghcup install ghc --target wasm32-wasi 9.14.1
-          echo "WASM_GHC_BIN=$(ghcup where ghc --target wasm32-wasi 9.14.1)/bin" >> $GITHUB_ENV
+          ghcup install ghc "$WASM_GHC_VERSION" -- $CONFIGURE_ARGS
+          echo "WASM_GHC_BIN=$(ghcup where ghc ${WASM_GHC_VERSION})/bin" >> $GITHUB_ENV
           echo "WASM_GHC_LIB=$(wasm32-wasi-ghc --print-libdir)" >> $GITHUB_ENV
 
       - name: Stage GHC WASM artifacts
