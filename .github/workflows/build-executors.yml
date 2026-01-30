@@ -48,6 +48,7 @@ jobs:
           path: |
             public/haskell
             runtimes/haskell-ghc/dist
+            ~/.ghc-wasm
             ~/.ghcup
             ~/.cabal
           key: ${{ runner.os }}-haskell-${{ hashFiles('runtimes/haskell-ghc/**', 'scripts/build-runtimes.mjs') }}
@@ -84,39 +85,42 @@ jobs:
       - name: Install GHC WASM toolchain
         if: ${{ matrix.runtime == 'haskell' }}
         run: |
-          WASM_GHC_VERSION=wasm32-wasi-9.15.20251219
+          WASM_GHC_VERSION=wasm32-wasi-9.14.1.20251219
+          GHC_WASM_BRANCH=ghc-9.14
+          GHC_WASM_SRC=runtimes/haskell-ghc/ghc-src
           sudo apt-get update
-          sudo apt-get install -y zstd
+          sudo apt-get install -y zstd jq unzip git python3 perl autoconf automake libtool pkg-config libgmp-dev libtinfo-dev libncurses-dev
           curl https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/bootstrap.sh | SKIP_GHC=1 sh
           source ~/.ghc-wasm/env
           ~/.ghc-wasm/add_to_github_path.sh
           ghcup config add-release-channel https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/ghcup-wasm-0.0.9.yaml
-          ghcup list
           ghcup install ghc "$WASM_GHC_VERSION" -- $CONFIGURE_ARGS
-          WASM_GHC_EXE=$(ghcup whereis ghc "${WASM_GHC_VERSION}")
-          WASM_GHC_BIN=$(dirname "${WASM_GHC_EXE}")
-          echo "WASM_GHC_BIN=${WASM_GHC_BIN}" >> $GITHUB_ENV
-          echo "WASM_GHC_LIB=$(${WASM_GHC_EXE} --print-libdir)" >> $GITHUB_ENV
+          git clone --depth 1 --recurse-submodules --shallow-submodules --branch "$GHC_WASM_BRANCH" https://gitlab.haskell.org/haskell-wasm/ghc.git "$GHC_WASM_SRC"
+          pushd "$GHC_WASM_SRC"
+          ./boot
+          ./configure $CONFIGURE_ARGS
+          ./hadrian/build -j --flavour=quick --docs=no-sphinx --docs=no-haddock --build-root=_build_wasm --target=wasm32-wasi
+          popd
+          echo "GHC_WASM_SRC=${GHC_WASM_SRC}" >> $GITHUB_ENV
 
       - name: Stage GHC WASM artifacts
         if: ${{ matrix.runtime == 'haskell' }}
         run: |
           mkdir -p runtimes/haskell-ghc/dist
-          echo "WASM_GHC_BIN=$WASM_GHC_BIN"
+          WASM_GHC_EXE=$(command -v wasm32-wasi-ghc)
+          if [ -z "$WASM_GHC_EXE" ]; then
+            echo "wasm32-wasi-ghc not found in PATH"
+            exit 1
+          fi
+          WASM_GHC_LIB=$($WASM_GHC_EXE --print-libdir)
+          echo "GHC_WASM_SRC=$GHC_WASM_SRC"
+          echo "WASM_GHC_EXE=$WASM_GHC_EXE"
           echo "WASM_GHC_LIB=$WASM_GHC_LIB"
-          WASM_GHC_PREFIX=$(dirname "$WASM_GHC_BIN")
-          find "$WASM_GHC_LIB" -maxdepth 6 \( -name 'ghc.wasm' -o -name 'ghci.wasm' \)
-          find "$WASM_GHC_PREFIX" -maxdepth 6 \( -name 'ghc.wasm' -o -name 'ghci.wasm' \)
-          GHC_WASM=$(find "$WASM_GHC_LIB" -name 'ghc.wasm' -print -quit)
-          if [ -z "$GHC_WASM" ]; then
-            GHC_WASM=$(find "$WASM_GHC_PREFIX" -name 'ghc.wasm' -print -quit)
-          fi
-          GHCI_WASM=$(find "$WASM_GHC_LIB" -name 'ghci.wasm' -print -quit)
-          if [ -z "$GHCI_WASM" ]; then
-            GHCI_WASM=$(find "$WASM_GHC_PREFIX" -name 'ghci.wasm' -print -quit)
-          fi
+          find "$GHC_WASM_SRC" -maxdepth 8 \( -name 'ghc.wasm' -o -name 'ghci.wasm' \)
+          GHC_WASM=$(find "$GHC_WASM_SRC" -name 'ghc.wasm' -print -quit)
+          GHCI_WASM=$(find "$GHC_WASM_SRC" -name 'ghci.wasm' -print -quit)
           if [ -z "$GHC_WASM" ] || [ -z "$GHCI_WASM" ]; then
-            echo "Failed to locate ghc.wasm/ghci.wasm under $WASM_GHC_LIB or $WASM_GHC_PREFIX"
+            echo "Failed to locate ghc.wasm/ghci.wasm under $GHC_WASM_SRC"
             exit 1
           fi
           cp "$GHC_WASM" runtimes/haskell-ghc/dist/ghc.wasm
