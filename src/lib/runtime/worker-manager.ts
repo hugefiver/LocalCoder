@@ -36,6 +36,19 @@ function getWorkerURL(filename: string): string {
   return `${normalizedBase}${filename}`.replace(/\/+/g, "/");
 }
 
+function getAssetBaseURL(): string {
+  const base = import.meta.env.BASE_URL || "/";
+  if (typeof window === "undefined") {
+    return base.endsWith("/") ? base : `${base}/`;
+  }
+  try {
+    const url = new URL(base, window.location.href);
+    return url.href.endsWith("/") ? url.href : `${url.href}/`;
+  } catch {
+    return base.endsWith("/") ? base : `${base}/`;
+  }
+}
+
 function makeRequestId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
@@ -293,7 +306,7 @@ export async function preloadRuntime(language: Language): Promise<void> {
     timeoutId: entry.loadTimeoutId,
   });
 
-  entry.worker.postMessage({ type: "preload", requestId, language });
+  entry.worker.postMessage({ type: "preload", requestId, language, baseURL: getAssetBaseURL() });
 
   return entry.readyPromise;
 }
