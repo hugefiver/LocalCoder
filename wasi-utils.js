@@ -9,7 +9,7 @@
 class WasiExit extends Error {
   constructor(code) {
     super(`WASI exit: ${code}`);
-    this.name = 'WasiExit';
+    this.name = "WasiExit";
     this.code = code;
   }
 }
@@ -19,7 +19,7 @@ class WasiExit extends Error {
  */
 function stableStringify(value) {
   return JSON.stringify(value, (_k, v) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
+    if (v && typeof v === "object" && !Array.isArray(v)) {
       return Object.keys(v)
         .sort()
         .reduce((acc, key) => {
@@ -35,7 +35,14 @@ function stableStringify(value) {
  * Get the base URL for the worker's location
  */
 function getBaseURL() {
-  return self.location.origin + self.location.pathname.replace(/\/[^\/]*$/, '/');
+  try {
+    const url = new URL(".", self.location.href);
+    return url.href.endsWith("/") ? url.href : `${url.href}/`;
+  } catch {
+    const origin = self.location.origin || "";
+    const path = self.location.pathname || "";
+    return origin + path.replace(/\/[^\/]*$/, "/");
+  }
 }
 
 /**
@@ -49,7 +56,7 @@ function textEncode(s) {
  * Decode UTF-8 bytes to a string
  */
 function textDecode(bytes) {
-  return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+  return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
 }
 
 /**
@@ -69,14 +76,14 @@ function concatChunks(chunks) {
 
 /**
  * Create a minimal WASI preview1 implementation
- * 
+ *
  * @param {Object} options
  * @param {string[]} options.args - Command line arguments
  * @param {Object} options.env - Environment variables
  * @param {string} options.stdinText - Text to provide on stdin
  * @returns {Object} WASI implementation with imports, setMemory, getStdoutText, getStderrText
  */
-function makeWasi({ args = [], env = {}, stdinText = '' }) {
+function makeWasi({ args = [], env = {}, stdinText = "" }) {
   const envPairs = Object.entries(env).map(([k, v]) => `${k}=${v}`);
   const stdinBytes = textEncode(stdinText);
   let stdinOffset = 0;
@@ -278,11 +285,15 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
     imports: { wasi_snapshot_preview1: wasiImport },
     setMemory,
     getStdoutText() {
-      const all = stdoutChunks.length ? concatChunks(stdoutChunks) : new Uint8Array();
+      const all = stdoutChunks.length
+        ? concatChunks(stdoutChunks)
+        : new Uint8Array();
       return textDecode(all);
     },
     getStderrText() {
-      const all = stderrChunks.length ? concatChunks(stderrChunks) : new Uint8Array();
+      const all = stderrChunks.length
+        ? concatChunks(stderrChunks)
+        : new Uint8Array();
       return textDecode(all);
     },
   };
@@ -290,7 +301,7 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
 
 /**
  * Run a WASI module with the given stdin text
- * 
+ *
  * @param {ArrayBuffer} wasmBytes - The WebAssembly module bytes
  * @param {string} stdinText - Text to provide on stdin
  * @param {Object} options - Additional options
@@ -300,22 +311,25 @@ function makeWasi({ args = [], env = {}, stdinText = '' }) {
  * @returns {Promise<{stdout: string, stderr: string}>}
  */
 async function runWasiModule(wasmBytes, stdinText, options = {}) {
-  const runtimeName = options.runtimeName || 'WASI';
-  const args = Array.isArray(options.args) ? options.args : ['runner.wasm'];
-  const env = options.env && typeof options.env === 'object' ? options.env : {};
+  const runtimeName = options.runtimeName || "WASI";
+  const args = Array.isArray(options.args) ? options.args : ["runner.wasm"];
+  const env = options.env && typeof options.env === "object" ? options.env : {};
   const wasi = makeWasi({ args, env, stdinText });
 
   const mod = await WebAssembly.compile(wasmBytes);
   const instance = await WebAssembly.instantiate(mod, wasi.imports);
 
   const memory = instance.exports.memory;
-  if (!memory) throw new Error('WASM module has no exported memory');
+  if (!memory) throw new Error("WASM module has no exported memory");
   wasi.setMemory(memory);
 
   // Start function naming varies.
-  const start = instance.exports._start || instance.exports.__wasi_unstable_reactor_start || instance.exports.main;
-  if (typeof start !== 'function') {
-    throw new Error('WASM module does not export _start/main');
+  const start =
+    instance.exports._start ||
+    instance.exports.__wasi_unstable_reactor_start ||
+    instance.exports.main;
+  if (typeof start !== "function") {
+    throw new Error("WASM module does not export _start/main");
   }
 
   try {
@@ -325,8 +339,10 @@ async function runWasiModule(wasmBytes, stdinText, options = {}) {
     // exit code 0 -> normal
     if (err.code !== 0) {
       const stderr = wasi.getStderrText();
-      const extra = stderr ? `\n${stderr}` : '';
-      throw new Error(`${runtimeName} runtime exited with code ${err.code}.${extra}`);
+      const extra = stderr ? `\n${stderr}` : "";
+      throw new Error(
+        `${runtimeName} runtime exited with code ${err.code}.${extra}`,
+      );
     }
   }
 
@@ -349,7 +365,7 @@ function tryParseJson(text) {
 
 // Export utilities for use by workers via importScripts
 // Note: In worker context, these become global when imported via importScripts
-if (typeof self !== 'undefined') {
+if (typeof self !== "undefined") {
   self.WasiExit = WasiExit;
   self.stableStringify = stableStringify;
   self.getBaseURL = getBaseURL;

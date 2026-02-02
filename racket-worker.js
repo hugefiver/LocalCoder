@@ -10,9 +10,28 @@
 
 let isReady = false;
 let modulePromise = null;
+let assetBaseURL = null;
 
 function getBaseURL() {
-  return self.location.origin + self.location.pathname.replace(/\/[^\/]*$/, '/');
+  if (assetBaseURL) return assetBaseURL;
+  try {
+    const url = new URL(".", self.location.href);
+    return url.href.endsWith("/") ? url.href : `${url.href}/`;
+  } catch {
+    const origin = self.location.origin || "";
+    const path = self.location.pathname || "";
+    return origin + path.replace(/\/[^\/]*$/, "/");
+  }
+}
+
+function normalizeBaseURL(baseURL) {
+  if (!baseURL) return null;
+  try {
+    const url = new URL(baseURL, self.location.href);
+    return url.href.endsWith("/") ? url.href : `${url.href}/`;
+  } catch {
+    return baseURL.endsWith("/") ? baseURL : `${baseURL}/`;
+  }
 }
 
 async function loadRacketModule() {
@@ -28,12 +47,14 @@ async function loadRacketModule() {
       },
     };
 
+    installRacketWasmLocator(moduleConfig);
+
     self.Module = moduleConfig;
 
     try {
-      importScripts('./racket/racket.js');
+      importScripts("./racket/racket.js");
 
-      if (typeof self.Module === 'function') {
+      if (typeof self.Module === "function") {
         const factory = self.Module;
         factory(moduleConfig)
           .then((instance) => resolve(instance))
@@ -50,8 +71,8 @@ async function loadRacketModule() {
 async function loadRacketWasmAsset() {
   const baseURL = getBaseURL();
   const candidates = [
-    baseURL + 'racket/racket.wasm.gz',
-    baseURL + 'racket/racket.wasm',
+    baseURL + "racket/racket.wasm.gz",
+    baseURL + "racket/racket.wasm",
   ];
 
   let lastErr = null;
@@ -62,11 +83,13 @@ async function loadRacketWasmAsset() {
         lastErr = new Error(`HTTP ${res.status} for ${url}`);
         continue;
       }
-      if (url.endsWith('.gz')) {
-        if (typeof DecompressionStream === 'undefined') {
-          throw new Error('DecompressionStream not available; cannot load .gz assets');
+      if (url.endsWith(".gz")) {
+        if (typeof DecompressionStream === "undefined") {
+          throw new Error(
+            "DecompressionStream not available; cannot load .gz assets",
+          );
         }
-        const stream = res.body.pipeThrough(new DecompressionStream('gzip'));
+        const stream = res.body.pipeThrough(new DecompressionStream("gzip"));
         return await new Response(stream).arrayBuffer();
       }
       return await res.arrayBuffer();
@@ -76,15 +99,21 @@ async function loadRacketWasmAsset() {
   }
 
   throw new Error(
-    `Racket runtime not found. Expected: ${candidates.join(', ')}.` +
-      (lastErr ? ` (${lastErr.message ?? String(lastErr)})` : ''),
+    `Racket runtime not found. Expected: ${candidates.join(", ")}.` +
+      (lastErr ? ` (${lastErr.message ?? String(lastErr)})` : ""),
   );
 }
 
-function installRacketWasmLocator() {
-  const getPreloadedPackage = self.Module?.getPreloadedPackage;
-  self.Module.getPreloadedPackage = async (name, size) => {
-    if (name.endsWith('racket.wasm')) {
+function installRacketWasmLocator(targetModule) {
+  const moduleTarget =
+    targetModule && typeof targetModule === "object"
+      ? targetModule
+      : typeof self.Module === "object" && self.Module != null
+        ? self.Module
+        : (self.Module = {});
+  const getPreloadedPackage = moduleTarget.getPreloadedPackage;
+  moduleTarget.getPreloadedPackage = async (name, size) => {
+    if (name.endsWith("racket.wasm")) {
       return await loadRacketWasmAsset();
     }
     if (getPreloadedPackage) return await getPreloadedPackage(name, size);
@@ -93,8 +122,10 @@ function installRacketWasmLocator() {
 }
 
 async function runRacketProgram(module, program) {
-  if (!module.FS || typeof module.callMain !== 'function') {
-    throw new Error('Racket runtime missing FS/callMain (check Emscripten build flags)');
+  if (!module.FS || typeof module.callMain !== "function") {
+    throw new Error(
+      "Racket runtime missing FS/callMain (check Emscripten build flags)",
+    );
   }
 
   const outputs = [];
@@ -103,7 +134,7 @@ async function runRacketProgram(module, program) {
   module.printErr = (text) => errors.push(String(text));
 
   try {
-    module.FS.mkdir('/tmp');
+    module.FS.mkdir("/tmp");
   } catch {
     // ignore if exists
   }
@@ -121,8 +152,8 @@ async function runRacketProgram(module, program) {
   }
 
   return {
-    stdout: outputs.join('\n'),
-    stderr: errors.join('\n'),
+    stdout: outputs.join("\n"),
+    stderr: errors.join("\n"),
   };
 }
 
@@ -170,16 +201,16 @@ function buildTestProgram(code, inputExpr) {
 }
 
 self.onmessage = async (e) => {
-  const { type, requestId, code, testCases, executorMode } = e.data;
+  const { type, requestId, code, testCases, executorMode, baseURL } = e.data;
 
-  if (type === 'preload') {
+  if (type === "preload") {
     try {
-      installRacketWasmLocator();
+      if (baseURL) assetBaseURL = normalizeBaseURL(baseURL);
       await loadRacketModule();
       // Optional: warm up wasm fetch to avoid first-run latency
       await loadRacketWasmAsset();
       isReady = true;
-      self.postMessage({ type: 'ready', requestId });
+      self.postMessage({ type: "ready", requestId });
     } catch (error) {
       self.postMessage({
         success: false,
@@ -197,7 +228,7 @@ self.onmessage = async (e) => {
     const module = await loadRacketModule();
     if (!isReady) {
       isReady = true;
-      self.postMessage({ type: 'ready' });
+      self.postMessage({ type: "ready" });
     }
 
     if (executorMode) {
@@ -211,7 +242,7 @@ self.onmessage = async (e) => {
       if (parsed.ok) {
         self.postMessage({
           success: parsed.value.error ? false : true,
-          logs: String(parsed.value.logs ?? '') + (stderr ? `\n${stderr}` : ''),
+          logs: String(parsed.value.logs ?? "") + (stderr ? `\n${stderr}` : ""),
           result: parsed.value.result ?? null,
           error: parsed.value.error ?? undefined,
           executionTime,
@@ -220,7 +251,7 @@ self.onmessage = async (e) => {
       } else {
         self.postMessage({
           success: true,
-          logs: stdout + (stderr ? `\n${stderr}` : ''),
+          logs: stdout + (stderr ? `\n${stderr}` : ""),
           result: null,
           executionTime,
           requestId,
@@ -238,7 +269,9 @@ self.onmessage = async (e) => {
 
         const parsed = tryParseJson(stdout.trim());
         if (!parsed.ok) {
-          throw new Error(`Runtime did not return JSON. stdout: ${stdout}${stderr ? `\nstderr: ${stderr}` : ''}`);
+          throw new Error(
+            `Runtime did not return JSON. stdout: ${stdout}${stderr ? `\nstderr: ${stderr}` : ""}`,
+          );
         }
 
         if (parsed.value.error) {
@@ -254,7 +287,7 @@ self.onmessage = async (e) => {
           expected,
           actual,
           passed,
-          logs: String(parsed.value.logs ?? ''),
+          logs: String(parsed.value.logs ?? ""),
         });
       } catch (error) {
         results.push({
@@ -288,7 +321,7 @@ self.onmessage = async (e) => {
 
 function stableStringify(value) {
   return JSON.stringify(value, (_k, v) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
+    if (v && typeof v === "object" && !Array.isArray(v)) {
       return Object.keys(v)
         .sort()
         .reduce((acc, key) => {
@@ -302,16 +335,17 @@ function stableStringify(value) {
 
 function jsToRacketExpr(value) {
   if (value === null || value === undefined) return "'()";
-  if (typeof value === 'number') {
-    if (!Number.isFinite(value)) throw new Error('Non-finite number is not supported');
+  if (typeof value === "number") {
+    if (!Number.isFinite(value))
+      throw new Error("Non-finite number is not supported");
     return String(value);
   }
-  if (typeof value === 'boolean') return value ? '#t' : '#f';
-  if (typeof value === 'string') return `"${escapeRacketString(value)}"`;
+  if (typeof value === "boolean") return value ? "#t" : "#f";
+  if (typeof value === "string") return `"${escapeRacketString(value)}"`;
   if (Array.isArray(value)) {
-    return `(list ${value.map(jsToRacketExpr).join(' ')})`;
+    return `(list ${value.map(jsToRacketExpr).join(" ")})`;
   }
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     const entries = Object.entries(value);
     const parts = [];
     for (const [k, v] of entries) {
@@ -321,7 +355,7 @@ function jsToRacketExpr(value) {
         parts.push(`'${k}`, jsToRacketExpr(v));
       }
     }
-    return `(hash ${parts.join(' ')})`;
+    return `(hash ${parts.join(" ")})`;
   }
   throw new Error(`Unsupported input type: ${typeof value}`);
 }
@@ -332,11 +366,11 @@ function isValidSymbolName(name) {
 
 function escapeRacketString(s) {
   return s
-    .replace(/\\/g, '\\\\')
+    .replace(/\\/g, "\\\\")
     .replace(/"/g, '\\"')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t');
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t");
 }
 
 function tryParseJson(text) {

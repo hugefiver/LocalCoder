@@ -3,26 +3,41 @@
 // Loads public/rustpython/runner.wasm produced by `pnpm run build:runtimes`.
 // Protocol: stdin JSON {mode, code, input?} -> stdout JSON {logs, result, error?}
 
-importScripts('./wasi-utils.js');
+importScripts("./wasi-utils.js");
 
 async function maybeDecompressGzip(buffer) {
-  if (typeof DecompressionStream === 'undefined') {
-    throw new Error('DecompressionStream not available; cannot load .gz assets');
+  if (typeof DecompressionStream === "undefined") {
+    throw new Error(
+      "DecompressionStream not available; cannot load .gz assets",
+    );
   }
-  const stream = new Response(buffer).body.pipeThrough(new DecompressionStream('gzip'));
+  const stream = new Response(buffer).body.pipeThrough(
+    new DecompressionStream("gzip"),
+  );
   return await new Response(stream).arrayBuffer();
 }
 
 let runtimeBytes = null;
 let isReady = false;
+let assetBaseURL = null;
+
+function normalizeBaseURL(baseURL) {
+  if (!baseURL) return null;
+  try {
+    const url = new URL(baseURL, self.location.href);
+    return url.href.endsWith("/") ? url.href : `${url.href}/`;
+  } catch {
+    return baseURL.endsWith("/") ? baseURL : `${baseURL}/`;
+  }
+}
 
 async function loadRuntimeWasm() {
   if (runtimeBytes) return runtimeBytes;
 
-  const baseURL = getBaseURL();
+  const baseURL = assetBaseURL || getBaseURL();
   const wasmCandidates = [
-    baseURL + 'rustpython/runner.wasm.gz',
-    baseURL + 'rustpython/runner.wasm',
+    baseURL + "rustpython/runner.wasm.gz",
+    baseURL + "rustpython/runner.wasm",
   ];
 
   let lastErr = null;
@@ -34,7 +49,9 @@ async function loadRuntimeWasm() {
         continue;
       }
       const buffer = await res.arrayBuffer();
-      runtimeBytes = url.endsWith('.gz') ? await maybeDecompressGzip(buffer) : buffer;
+      runtimeBytes = url.endsWith(".gz")
+        ? await maybeDecompressGzip(buffer)
+        : buffer;
       return runtimeBytes;
     } catch (err) {
       lastErr = err;
@@ -42,21 +59,27 @@ async function loadRuntimeWasm() {
   }
 
   throw new Error(
-    `RustPython runtime not found. Expected: ${wasmCandidates.join(', ')}. Run: pnpm run build:runtimes` +
-      (lastErr ? ` (${lastErr.message ?? String(lastErr)})` : ''),
+    `RustPython runtime not found. Expected: ${wasmCandidates.join(", ")}. Run: pnpm run build:runtimes` +
+      (lastErr ? ` (${lastErr.message ?? String(lastErr)})` : ""),
   );
 }
 
 self.onmessage = async (e) => {
-  const { type, requestId, code, testCases, executorMode } = e.data;
+  const { type, requestId, code, testCases, executorMode, baseURL } = e.data;
 
-  if (type === 'preload') {
+  if (type === "preload") {
     try {
+      if (baseURL) assetBaseURL = normalizeBaseURL(baseURL);
       await loadRuntimeWasm();
       isReady = true;
-      self.postMessage({ type: 'ready', requestId });
+      self.postMessage({ type: "ready", requestId });
     } catch (error) {
-      self.postMessage({ success: false, error: error?.message ?? String(error), stack: error?.stack, requestId });
+      self.postMessage({
+        success: false,
+        error: error?.message ?? String(error),
+        stack: error?.stack,
+        requestId,
+      });
     }
     return;
   }
@@ -67,15 +90,21 @@ self.onmessage = async (e) => {
     const wasmBytes = await loadRuntimeWasm();
     if (!isReady) {
       isReady = true;
-      self.postMessage({ type: 'ready' });
+      self.postMessage({ type: "ready" });
     }
 
     if (executorMode) {
-      const payload = { mode: 'executor', code };
-      const { stdout, stderr } = await runWasiModule(wasmBytes, JSON.stringify(payload), { runtimeName: 'RustPython' });
+      const payload = { mode: "executor", code };
+      const { stdout, stderr } = await runWasiModule(
+        wasmBytes,
+        JSON.stringify(payload),
+        { runtimeName: "RustPython" },
+      );
 
       const parsed = tryParseJson(stdout.trim());
-      const logs = parsed.ok ? String(parsed.value.logs ?? '') : stdout + (stderr ? `\n${stderr}` : '');
+      const logs = parsed.ok
+        ? String(parsed.value.logs ?? "")
+        : stdout + (stderr ? `\n${stderr}` : "");
       const result = parsed.ok ? (parsed.value.result ?? null) : null;
       const error = parsed.ok ? (parsed.value.error ?? null) : null;
 
@@ -83,22 +112,39 @@ self.onmessage = async (e) => {
       const executionTime = Math.round(endTime - startTime);
 
       if (error) {
-        self.postMessage({ success: false, error: String(error), stack: stderr || '', requestId });
+        self.postMessage({
+          success: false,
+          error: String(error),
+          stack: stderr || "",
+          requestId,
+        });
         return;
       }
 
-      self.postMessage({ success: true, logs, result, executionTime, requestId });
+      self.postMessage({
+        success: true,
+        logs,
+        result,
+        executionTime,
+        requestId,
+      });
       return;
     }
 
     const results = [];
     for (const testCase of testCases) {
       try {
-        const payload = { mode: 'test', code, input: testCase.input };
-        const { stdout, stderr } = await runWasiModule(wasmBytes, JSON.stringify(payload), { runtimeName: 'RustPython' });
+        const payload = { mode: "test", code, input: testCase.input };
+        const { stdout, stderr } = await runWasiModule(
+          wasmBytes,
+          JSON.stringify(payload),
+          { runtimeName: "RustPython" },
+        );
         const parsed = tryParseJson(stdout.trim());
         if (!parsed.ok) {
-          throw new Error(`Runtime did not return JSON. stdout: ${stdout}${stderr ? `\nstderr: ${stderr}` : ''}`);
+          throw new Error(
+            `Runtime did not return JSON. stdout: ${stdout}${stderr ? `\nstderr: ${stderr}` : ""}`,
+          );
         }
         if (parsed.value.error) {
           throw new Error(String(parsed.value.error));
@@ -113,10 +159,16 @@ self.onmessage = async (e) => {
           expected,
           actual,
           passed,
-          logs: String(parsed.value.logs ?? ''),
+          logs: String(parsed.value.logs ?? ""),
         });
       } catch (error) {
-        results.push({ input: testCase.input, expected: testCase.expected, actual: null, passed: false, error: error?.message ?? String(error) });
+        results.push({
+          input: testCase.input,
+          expected: testCase.expected,
+          actual: null,
+          passed: false,
+          error: error?.message ?? String(error),
+        });
       }
     }
 
@@ -124,6 +176,11 @@ self.onmessage = async (e) => {
     const executionTime = Math.round(endTime - startTime);
     self.postMessage({ success: true, results, executionTime, requestId });
   } catch (error) {
-    self.postMessage({ success: false, error: error?.message ?? String(error), stack: error?.stack, requestId });
+    self.postMessage({
+      success: false,
+      error: error?.message ?? String(error),
+      stack: error?.stack,
+      requestId,
+    });
   }
 };
