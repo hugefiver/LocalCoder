@@ -28,6 +28,18 @@ The build script will:
 3. Produce `dist/racket.js` + `dist/racket.wasm`
 4. Copy them to `public/racket/`
 
+It also enforces runtime flags so the worker can execute programs:
+
+- `-sFORCE_FILESYSTEM=1`
+- `-sEXPORTED_FUNCTIONS=['_main']`
+- `-sEXPORTED_RUNTIME_METHODS=['callMain','FS']`
+
+You can append extra flags via:
+
+```
+RACKET_EMCC_FLAGS="..."
+```
+
 If your binary name differs, set:
 
 ```

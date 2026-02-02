@@ -60,6 +60,12 @@ function copyFile(src, dest) {
   fs.copyFileSync(src, dest);
 }
 
+function hasRacketRuntimeMethods(jsPath) {
+  if (!fs.existsSync(jsPath)) return false;
+  const contents = fs.readFileSync(jsPath, "utf8");
+  return contents.includes("callMain") && contents.includes("FS");
+}
+
 function findWasmArtifact(crateDir, target) {
   const candidate = path.join(
     crateDir,
@@ -155,7 +161,12 @@ function buildRacketRuntime(racketDir) {
   const jsPath = path.join(distDir, "racket.js");
   const wasmPath = path.join(distDir, "racket.wasm");
   if (fs.existsSync(jsPath) && fs.existsSync(wasmPath)) {
-    return { jsPath, wasmPath };
+    if (hasRacketRuntimeMethods(jsPath)) {
+      return { jsPath, wasmPath };
+    }
+    console.warn(
+      "  ℹ Existing Racket runtime missing FS/callMain; rebuilding...",
+    );
   }
 
   const buildScript = path.join(racketDir, "build.mjs");
@@ -165,6 +176,13 @@ function buildRacketRuntime(racketDir) {
   if (!fs.existsSync(jsPath) || !fs.existsSync(wasmPath)) {
     throw new Error(
       "Cannot find Racket runtime artifacts (dist/racket.js, dist/racket.wasm)",
+    );
+  }
+
+  if (!hasRacketRuntimeMethods(jsPath)) {
+    throw new Error(
+      "Racket runtime missing FS/callMain after rebuild. " +
+        "Ensure Emscripten flags include FORCE_FILESYSTEM and EXPORTED_RUNTIME_METHODS.",
     );
   }
 

@@ -55,7 +55,26 @@ except Exception as e:
     _result = None
     _err = repr(e)
 
-sys.stdout, sys.stderr = _old_out, _old_err
+def _lc_pick_stream(primary, fallback):
+    return primary if primary is not None else fallback
+
+_out = _lc_pick_stream(getattr(sys, "__stdout__", None), _old_out)
+_err_out = _lc_pick_stream(getattr(sys, "__stderr__", None), _old_err)
+
+class _LCNull:
+    def write(self, s):
+        if s is None:
+            return 0
+        return len(str(s))
+    def flush(self):
+        return None
+
+if _out is None:
+    _out = _LCNull()
+if _err_out is None:
+    _err_out = _out
+
+sys.stdout, sys.stderr = _out, _err_out
 
 print(json.dumps({{"logs": "\\n".join(_logs), "result": _result, "error": _err}}))
 "#,
@@ -94,7 +113,26 @@ except Exception as e:
     _result = None
     _err = repr(e)
 
-sys.stdout, sys.stderr = _old_out, _old_err
+def _lc_pick_stream(primary, fallback):
+    return primary if primary is not None else fallback
+
+_out = _lc_pick_stream(getattr(sys, "__stdout__", None), _old_out)
+_err_out = _lc_pick_stream(getattr(sys, "__stderr__", None), _old_err)
+
+class _LCNull:
+    def write(self, s):
+        if s is None:
+            return 0
+        return len(str(s))
+    def flush(self):
+        return None
+
+if _out is None:
+    _out = _LCNull()
+if _err_out is None:
+    _err_out = _out
+
+sys.stdout, sys.stderr = _out, _err_out
 
 print(json.dumps({{"logs": "\\n".join(_logs), "result": _result, "error": _err}}))
 "#,

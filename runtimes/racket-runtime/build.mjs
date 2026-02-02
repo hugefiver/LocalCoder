@@ -18,13 +18,43 @@ fs.writeFileSync(
     "#endif\n",
 );
 
-const platformDefines = `-DSCHEME_OS=\\\"emscripten\\\" -DSCHEME_ARCH=\\\"wasm32\\\" -DSYSTEM_TYPE_NAME=\\\"emscripten\\\" -include ${defsPath}`;
+const platformDefines = `-DSCHEME_OS=\\"emscripten\\" -DSCHEME_ARCH=\\"wasm32\\" -DSYSTEM_TYPE_NAME=\\"emscripten\\" -include ${defsPath}`;
 const hostEnv = {
   CC_FOR_BUILD: process.env.CC_FOR_BUILD ?? "cc",
 };
+const requiredEmccFlags = [
+  "-sFORCE_FILESYSTEM=1",
+  "-sEXPORTED_FUNCTIONS=['_main']",
+  "-sEXPORTED_RUNTIME_METHODS=['FS','callMain']",
+  "-sALLOW_MEMORY_GROWTH=1",
+];
+
+const requiredEmccFlagsStr = requiredEmccFlags.join(" ");
+const extraEmccFlags = process.env.RACKET_EMCC_FLAGS;
+const combinedEmccFlags = [requiredEmccFlagsStr, extraEmccFlags]
+  .filter(Boolean)
+  .join(" ")
+  .trim();
+
 const targetEnv = {
   CC_FOR_BUILD: process.env.CC_FOR_BUILD ?? "cc",
   CPPFLAGS: [process.env.CPPFLAGS, platformDefines]
+    .filter(Boolean)
+    .join(" ")
+    .trim(),
+  CFLAGS: [process.env.CFLAGS, combinedEmccFlags]
+    .filter(Boolean)
+    .join(" ")
+    .trim(),
+  LDFLAGS: [process.env.LDFLAGS, combinedEmccFlags]
+    .filter(Boolean)
+    .join(" ")
+    .trim(),
+  EMCC_CFLAGS: [process.env.EMCC_CFLAGS, combinedEmccFlags]
+    .filter(Boolean)
+    .join(" ")
+    .trim(),
+  EMCC_LDFLAGS: [process.env.EMCC_LDFLAGS, combinedEmccFlags]
     .filter(Boolean)
     .join(" ")
     .trim(),
@@ -106,17 +136,53 @@ function rewriteWasmReference(jsPath, fromBase, toBase) {
   fs.writeFileSync(jsPath, content.split(fromName).join(toName));
 }
 
-if (!fs.existsSync(srcDir)) {
-  throw new Error(
-    "Missing racket-src. Clone official Racket sources into runtimes/racket-runtime/racket-src before building.",
-  );
+function isDirEmpty(dirPath) {
+  if (!fs.existsSync(dirPath)) return true;
+  return fs.readdirSync(dirPath).length === 0;
 }
 
-if (!fs.existsSync(configureScript)) {
-  throw new Error(
-    "Missing racket-src/racket/src. Ensure the Racket repository is cloned correctly before building.",
+function ensureRacketSource() {
+  if (fs.existsSync(configureScript)) return;
+
+  const repoUrl =
+    process.env.RACKET_REPO_URL ?? "https://github.com/racket/racket.git";
+  const repoRef =
+    process.env.RACKET_REPO_REF ?? process.env.RACKET_REPO_BRANCH ?? "master";
+  const repoDepth = process.env.RACKET_GIT_DEPTH ?? "1";
+
+  if (fs.existsSync(srcDir)) {
+    if (isDirEmpty(srcDir)) {
+      fs.rmSync(srcDir, { recursive: true, force: true });
+    } else {
+      throw new Error(
+        "Missing racket-src/racket/src. Existing racket-src is not a valid Racket clone. " +
+          "Remove it or set RACKET_REPO_URL/RACKET_REPO_REF to re-clone.",
+      );
+    }
+  }
+
+  const cloneArgs = ["clone"];
+  if (repoDepth && repoDepth !== "0") {
+    cloneArgs.push("--depth", repoDepth);
+  }
+  if (repoRef) {
+    cloneArgs.push("--branch", repoRef, "--single-branch");
+  }
+  cloneArgs.push(repoUrl, srcDir);
+
+  console.log(
+    `[racket-runtime] Cloning Racket sources from ${repoUrl} (${repoRef})...`,
   );
+  exec("git", cloneArgs, { cwd: root });
+
+  if (!fs.existsSync(configureScript)) {
+    throw new Error(
+      "Missing racket-src/racket/src after clone. Verify repository URL/ref.",
+    );
+  }
 }
+
+ensureRacketSource();
 
 const pbDir = path.join(racketDir, "src", "ChezScheme", "boot", "pb");
 if (!fs.existsSync(pbDir)) {
@@ -188,4 +254,12 @@ if (!fs.existsSync(outJs)) {
 
 if (!fs.existsSync(outWasm)) {
   throw new Error("Racket output missing: dist/racket.wasm");
+}
+
+const jsContents = fs.readFileSync(outJs, "utf8");
+if (!jsContents.includes("callMain") || !jsContents.includes("FS")) {
+  console.warn(
+    "[racket-runtime] Warning: Generated runtime lacks callMain/FS. " +
+      "Ensure Emscripten flags include FORCE_FILESYSTEM and EXPORTED_RUNTIME_METHODS.",
+  );
 }
