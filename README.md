@@ -49,6 +49,19 @@ GHCI_WASM=/abs/path/to/ghci.wasm
 GHC_LIBDIR_TAR=/abs/path/to/libdir.tar
 ```
 
+#### 生成 ghc.wasm / libdir.tar（推荐）
+
+使用 ghc-wasm-meta 安装 `wasm32-wasi-ghc` 后，可通过脚本生成运行时产物：
+
+- 设置 GHC 源码路径：`GHC_WASM_SRC=/abs/path/to/ghc`
+- 可选：`WASM_GHC_EXE=/abs/path/to/wasm32-wasi-ghc`
+- 可选：`GHC_WASM_META_HOME=~/.ghc-wasm`
+
+运行：
+
+- `pnpm run build:ghc-wasm`
+- `pnpm run build:runtimes`
+
 **压缩建议**：
 
 - `build:runtimes` 会生成 `*.wasm.gz` 与 `libdir.tar.gz`

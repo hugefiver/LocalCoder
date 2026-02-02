@@ -28,6 +28,27 @@ GHC_LIBDIR=/absolute/path/to/ghc/libdir
 WASM_GHC_EXE=/absolute/path/to/wasm32-wasi-ghc
 ```
 
+## Build ghc.wasm / libdir.tar (recommended)
+
+Install the GHC wasm backend via **ghc-wasm-meta** so `wasm32-wasi-ghc` is available.
+Then set your GHC source root and run the helper script:
+
+```
+GHC_WASM_SRC=/absolute/path/to/ghc
+pnpm run build:ghc-wasm
+```
+
+This will generate:
+
+- `runtimes/haskell-ghc/dist/ghc.wasm`
+- `runtimes/haskell-ghc/dist/libdir.tar`
+
+Then run:
+
+```
+pnpm run build:runtimes
+```
+
 Then run:
 
 ```
