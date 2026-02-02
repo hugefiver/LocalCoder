@@ -38,6 +38,13 @@ GHC_WASM_SRC=/absolute/path/to/ghc
 pnpm run build:ghc-wasm
 ```
 
+If `GHC_WASM_SRC` is not set, the script will auto-clone GHC into:
+
+- `GHC_WASM_CLONE_DIR` (if provided)
+- otherwise `./.cache/ghc`
+
+You can set `GHC_WASM_GIT_URL` to use a mirror.
+
 **Version note**: the GHC source version must match `wasm32-wasi-ghc --numeric-version`.
 To bypass the check, set `GHC_WASM_SKIP_VERSION_CHECK=1`.
 

@@ -22,6 +22,16 @@ function exec(cmd, args, opts = {}) {
   }
 }
 
+function tryExec(cmd, args, opts = {}) {
+  const res = spawnSync(cmd, args, {
+    stdio: "inherit",
+    cwd: opts.cwd ?? root,
+    env: { ...process.env, ...(opts.env ?? {}) },
+    shell: process.platform === "win32",
+  });
+  return res.status === 0;
+}
+
 function resolveOnPath(name) {
   const res = spawnSync("which", [name], { encoding: "utf8" });
   if (res.status === 0 && res.stdout) {
@@ -62,6 +72,102 @@ function findGhcSourceRoot() {
     if (isGhcSourceRoot(candidate)) return candidate;
   }
   return null;
+}
+
+function versionCandidates(version) {
+  if (!version) return [];
+  const parts = version.split(".");
+  const major = parts[0] ?? "";
+  const minor = parts[1] ?? "";
+  const patch = parts[2] ?? "";
+  const majorMinor = major && minor ? `${major}.${minor}` : null;
+  const majorMinorPatch = major && minor && patch ? `${major}.${minor}.${patch}` : null;
+
+  const out = [];
+  out.push(`ghc-${version}`);
+  if (majorMinorPatch) out.push(`ghc-${majorMinorPatch}`);
+  if (majorMinor) out.push(`ghc-${majorMinor}`);
+  return out;
+}
+
+function cloneGhcSource(targetDir, compilerVersion) {
+  const gitBin = resolveOnPath("git");
+  if (!gitBin) {
+    throw new Error("git not found in PATH; cannot auto-clone GHC source.");
+  }
+
+  if (fs.existsSync(targetDir)) {
+    throw new Error(
+      `Auto-clone target already exists: ${targetDir}. Set GHC_WASM_SRC to an existing repo or remove the directory.`,
+    );
+  }
+
+  const repoUrl =
+    process.env.GHC_WASM_GIT_URL ?? "https://gitlab.haskell.org/ghc/ghc.git";
+  const refs = versionCandidates(compilerVersion);
+
+  ensureDir(path.dirname(targetDir));
+
+  for (const ref of refs) {
+    console.log(`Auto-cloning GHC (${ref}) to ${targetDir}...`);
+    if (
+      tryExec("git", [
+        "clone",
+        "--depth",
+        "1",
+        "--filter=blob:none",
+        "--branch",
+        ref,
+        repoUrl,
+        targetDir,
+      ])
+    ) {
+      return;
+    }
+    if (fs.existsSync(targetDir)) {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+    }
+  }
+
+  console.log(`Auto-cloning GHC (default branch) to ${targetDir}...`);
+  if (
+    tryExec("git", [
+      "clone",
+      "--depth",
+      "1",
+      "--filter=blob:none",
+      repoUrl,
+      targetDir,
+    ])
+  ) {
+    return;
+  }
+
+  if (fs.existsSync(targetDir)) {
+    fs.rmSync(targetDir, { recursive: true, force: true });
+  }
+
+  throw new Error(`Failed to clone GHC source from ${repoUrl}`);
+}
+
+function ensureGhcSourceRoot(compilerVersion) {
+  const existing = findGhcSourceRoot();
+  if (existing) return existing;
+
+  const requested = process.env.GHC_WASM_SRC || process.env.GHC_SRC;
+  const targetDir =
+    requested ??
+    process.env.GHC_WASM_CLONE_DIR ??
+    path.join(root, ".cache", "ghc");
+
+  cloneGhcSource(targetDir, compilerVersion);
+
+  if (!isGhcSourceRoot(targetDir)) {
+    throw new Error(
+      `Cloned repo does not contain ghc/Main.hs: ${targetDir}. Set GHC_WASM_SRC to a valid GHC source root.`,
+    );
+  }
+  return targetDir;
 }
 
 function getLibdir(wasmGhcExe) {
@@ -147,13 +253,6 @@ function ensureVersionCompatible(ghcSrc, wasmGhcExe) {
 }
 
 function main() {
-  const ghcSrc = findGhcSourceRoot();
-  if (!ghcSrc) {
-    throw new Error(
-      "GHC source not found. Set GHC_WASM_SRC to the GHC source root (containing ghc/Main.hs).",
-    );
-  }
-
   const ghcMetaHome =
     process.env.GHC_WASM_META_HOME ?? path.join(os.homedir(), ".ghc-wasm");
   const ghcMetaExe = path.join(
@@ -174,6 +273,9 @@ function main() {
       "wasm32-wasi-ghc not found. Install the GHC wasm backend via ghc-wasm-meta and ensure it is on PATH.",
     );
   }
+
+  const compilerVersion = getCompilerNumericVersion(wasmGhcExe);
+  const ghcSrc = ensureGhcSourceRoot(compilerVersion);
 
   ensureVersionCompatible(ghcSrc, wasmGhcExe);
 

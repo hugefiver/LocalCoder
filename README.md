@@ -57,6 +57,13 @@ GHC_LIBDIR_TAR=/abs/path/to/libdir.tar
 - 可选：`WASM_GHC_EXE=/abs/path/to/wasm32-wasi-ghc`
 - 可选：`GHC_WASM_META_HOME=~/.ghc-wasm`
 
+若未设置 `GHC_WASM_SRC`，脚本会尝试自动 clone 源码到：
+
+- `GHC_WASM_CLONE_DIR`（若设置）
+- 否则 `./.cache/ghc`
+
+可通过 `GHC_WASM_GIT_URL` 指定镜像地址。
+
 运行：
 
 - `pnpm run build:ghc-wasm`
