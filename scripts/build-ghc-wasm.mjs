@@ -81,7 +81,8 @@ function versionCandidates(version) {
   const minor = parts[1] ?? "";
   const patch = parts[2] ?? "";
   const majorMinor = major && minor ? `${major}.${minor}` : null;
-  const majorMinorPatch = major && minor && patch ? `${major}.${minor}.${patch}` : null;
+  const majorMinorPatch =
+    major && minor && patch ? `${major}.${minor}.${patch}` : null;
 
   const out = [];
   out.push(`ghc-${version}`);
@@ -90,7 +91,10 @@ function versionCandidates(version) {
   return out;
 }
 
-function cloneGhcSource(targetDir, compilerVersion) {
+function cloneGhcSource(
+  targetDir,
+  { compilerVersion, gitRef, useVersionCandidates },
+) {
   const gitBin = resolveOnPath("git");
   if (!gitBin) {
     throw new Error("git not found in PATH; cannot auto-clone GHC source.");
@@ -104,9 +108,31 @@ function cloneGhcSource(targetDir, compilerVersion) {
 
   const repoUrl =
     process.env.GHC_WASM_GIT_URL ?? "https://gitlab.haskell.org/ghc/ghc.git";
-  const refs = versionCandidates(compilerVersion);
+  const refs = useVersionCandidates ? versionCandidates(compilerVersion) : [];
 
   ensureDir(path.dirname(targetDir));
+
+  if (gitRef) {
+    console.log(`Auto-cloning GHC (${gitRef}) to ${targetDir}...`);
+    if (
+      tryExec("git", [
+        "clone",
+        "--depth",
+        "1",
+        "--filter=blob:none",
+        "--branch",
+        gitRef,
+        repoUrl,
+        targetDir,
+      ])
+    ) {
+      return;
+    }
+    if (fs.existsSync(targetDir)) {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+    }
+    throw new Error(`Failed to clone GHC ref ${gitRef} from ${repoUrl}`);
+  }
 
   for (const ref of refs) {
     console.log(`Auto-cloning GHC (${ref}) to ${targetDir}...`);
@@ -150,17 +176,18 @@ function cloneGhcSource(targetDir, compilerVersion) {
   throw new Error(`Failed to clone GHC source from ${repoUrl}`);
 }
 
-function ensureGhcSourceRoot(compilerVersion) {
+function ensureGhcSourceRoot(compilerVersion, options = {}) {
   const existing = findGhcSourceRoot();
   if (existing) return existing;
 
+  const { gitRef, useVersionCandidates } = options;
   const requested = process.env.GHC_WASM_SRC || process.env.GHC_SRC;
   const targetDir =
     requested ??
     process.env.GHC_WASM_CLONE_DIR ??
     path.join(root, ".cache", "ghc");
 
-  cloneGhcSource(targetDir, compilerVersion);
+  cloneGhcSource(targetDir, { compilerVersion, gitRef, useVersionCandidates });
 
   if (!isGhcSourceRoot(targetDir)) {
     throw new Error(
@@ -253,6 +280,11 @@ function ensureVersionCompatible(ghcSrc, wasmGhcExe) {
 }
 
 function main() {
+  const gitRef = process.env.GHC_WASM_GIT_REF ?? process.env.GHC_WASM_REF;
+  const useVersionCandidates = process.env.GHC_WASM_USE_VERSION === "1";
+  const enforceVersion =
+    process.env.GHC_WASM_ENFORCE_VERSION === "1" || useVersionCandidates;
+  const skipVersionCheck = process.env.GHC_WASM_SKIP_VERSION_CHECK === "1";
   const ghcMetaHome =
     process.env.GHC_WASM_META_HOME ?? path.join(os.homedir(), ".ghc-wasm");
   const ghcMetaExe = path.join(
@@ -275,9 +307,14 @@ function main() {
   }
 
   const compilerVersion = getCompilerNumericVersion(wasmGhcExe);
-  const ghcSrc = ensureGhcSourceRoot(compilerVersion);
+  const ghcSrc = ensureGhcSourceRoot(compilerVersion, {
+    gitRef,
+    useVersionCandidates,
+  });
 
-  ensureVersionCompatible(ghcSrc, wasmGhcExe);
+  if (enforceVersion && !skipVersionCheck) {
+    ensureVersionCompatible(ghcSrc, wasmGhcExe);
+  }
 
   const libdir = getLibdir(wasmGhcExe);
   if (!libdir || !fs.existsSync(libdir)) {
@@ -365,7 +402,20 @@ function main() {
   console.log("Done.");
   console.log(`  ghc.wasm:   ${outWasm}`);
   console.log(`  libdir.tar: ${outLibdir}`);
-  console.log("Next: pnpm run build:runtimes");
+
+  if (process.env.GHC_WASM_SKIP_PACK !== "1") {
+    console.log("Packing runtime assets into public/haskell...");
+    exec("node", ["scripts/build-runtimes.mjs"], {
+      cwd: root,
+      env: {
+        ...process.env,
+        RUNTIME_TARGETS: "haskell",
+      },
+    });
+    console.log("Release assets are ready under public/haskell/.");
+  } else {
+    console.log("Skipped runtime packaging (GHC_WASM_SKIP_PACK=1).");
+  }
 }
 
 try {

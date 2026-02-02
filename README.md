@@ -57,20 +57,26 @@ GHC_LIBDIR_TAR=/abs/path/to/libdir.tar
 - 可选：`WASM_GHC_EXE=/abs/path/to/wasm32-wasi-ghc`
 - 可选：`GHC_WASM_META_HOME=~/.ghc-wasm`
 
-若未设置 `GHC_WASM_SRC`，脚本会尝试自动 clone 源码到：
+若未设置 `GHC_WASM_SRC`，脚本会自动 clone **最新 GHC 源码（默认分支）**到：
 
 - `GHC_WASM_CLONE_DIR`（若设置）
 - 否则 `./.cache/ghc`
 
-可通过 `GHC_WASM_GIT_URL` 指定镜像地址。
+可通过 `GHC_WASM_GIT_URL` 指定镜像地址，或用 `GHC_WASM_GIT_REF` 固定分支/Tag/Commit。
 
 运行：
 
 - `pnpm run build:ghc-wasm`
-- `pnpm run build:runtimes`
 
-**注意版本匹配**：`GHC_WASM_SRC` 的源码版本需与 `wasm32-wasi-ghc --numeric-version` 一致，否则会编译失败。
-如确需跳过检查，可设置 `GHC_WASM_SKIP_VERSION_CHECK=1`。
+该脚本会直接生成 `runtimes/haskell-ghc/dist/` 并 **打包到 `public/haskell/` 发布文件**。
+若只想生成 dist，不打包发布文件，可设置 `GHC_WASM_SKIP_PACK=1`。
+
+**版本匹配（可选）**：默认不强制版本一致。
+如需强制 `GHC_WASM_SRC` 与 `wasm32-wasi-ghc --numeric-version` 匹配：
+
+- 设置 `GHC_WASM_USE_VERSION=1`（会优先尝试 `ghc-<version>` 标签）
+- 或设置 `GHC_WASM_ENFORCE_VERSION=1`
+- 仍可用 `GHC_WASM_SKIP_VERSION_CHECK=1` 跳过检查
 
 **压缩建议**：
 

@@ -38,35 +38,24 @@ GHC_WASM_SRC=/absolute/path/to/ghc
 pnpm run build:ghc-wasm
 ```
 
-If `GHC_WASM_SRC` is not set, the script will auto-clone GHC into:
+If `GHC_WASM_SRC` is not set, the script will auto-clone the **latest GHC** (default branch) into:
 
 - `GHC_WASM_CLONE_DIR` (if provided)
 - otherwise `./.cache/ghc`
 
-You can set `GHC_WASM_GIT_URL` to use a mirror.
+You can set `GHC_WASM_GIT_URL` to use a mirror or `GHC_WASM_GIT_REF` to pin a ref.
 
-**Version note**: the GHC source version must match `wasm32-wasi-ghc --numeric-version`.
-To bypass the check, set `GHC_WASM_SKIP_VERSION_CHECK=1`.
+**Version note (optional)**: by default version matching is not enforced.
+To enforce version matching, set `GHC_WASM_USE_VERSION=1` (use `ghc-<version>` tags)
+or `GHC_WASM_ENFORCE_VERSION=1`. To bypass, set `GHC_WASM_SKIP_VERSION_CHECK=1`.
 
 This will generate:
 
 - `runtimes/haskell-ghc/dist/ghc.wasm`
 - `runtimes/haskell-ghc/dist/libdir.tar`
 
-Then run:
-
-```
-pnpm run build:runtimes
-```
-
-Then run:
-
-```
-pnpm run build:runtimes
-```
-
-This copies the wasm binaries and libdir tar into `public/haskell/` and writes
-`public/haskell/runner.meta.json`.
+The script also packs release assets into `public/haskell/` by default.
+Set `GHC_WASM_SKIP_PACK=1` to skip packaging and run `pnpm run build:runtimes` manually.
 
 ## Protocols
 
