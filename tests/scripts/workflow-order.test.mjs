@@ -62,5 +62,9 @@ for (const [workflow, expectedActions] of workflows) {
     assert.match(source, /^\s{10}cache:\s+true\s*$/m);
     assert.match(source, /^\s{10}install:\s+false\s*$/m);
     assert.match(source, /^\s{10}lfs:\s+true\s*$/m);
+    if (workflow.endsWith("deploy-gh-pages.yml")) {
+      assert.match(source, /^\s{4}environment:\r?\n\s{6}name:\s+github-pages\r?\n\s{6}url:\s+\$\{\{ steps\.deployment\.outputs\.page_url \}\}$/m);
+      assert.match(source, /^\s{8}id:\s+deployment\s*$/m);
+    }
   });
 }
