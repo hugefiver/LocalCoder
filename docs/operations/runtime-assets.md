@@ -35,9 +35,9 @@ Generated identities identify a particular built Worker and its applicable runti
 
 When an optional `one-of` group has multiple present loadable variants (for example gzip and raw), every present variant is declared in catalog order by the manifest, hashed by the Worker identity, and required in the verification receipt. A group remains packaged when at least one variant is present.
 
-The generated Worker bundle and `runtime-manifest.json` are deliberately outside the identity input set. Including either would self-hash a generated output. The direct build dependencies in `package-lock.json` must match the installed builder inputs. A tool, library, platform-binary, Worker-source, or applicable asset change therefore changes the corresponding identity, while an unrelated runtime asset does not. Two builds that use different actual builders can produce different identities even when their source checkout matches.
+The generated Worker bundle and `runtime-manifest.json` are deliberately outside the identity input set. Including either would self-hash a generated output. The direct build dependencies in `pnpm-lock.yaml` must match the installed builder inputs. A tool, library, platform-binary, Worker-source, or applicable asset change therefore changes the corresponding identity, while an unrelated runtime asset does not. Two builds that use different actual builders can produce different identities even when their source checkout matches.
 
-The current required identities are `32c927a7995bc8b8` for JavaScript and TypeScript and `c0af25cee696df69` for Pyodide Python. Operations must record the observed identity. It is a build correlation value, not authentication or a cryptographic assurance claim.
+Current identities are generated from the installed pnpm-locked toolchain and packaged runtime bytes. Read them from `public/runtime-manifest.json` and record the observed browser handshake. An identity is a build correlation value, not authentication or a cryptographic assurance claim.
 
 ## Receipt and verification order
 
@@ -54,14 +54,14 @@ RustPython parity requires matching actual values or compatible error classifica
 
 ## Commands and exit codes
 
-Use npm and the committed lockfile. Do not substitute pnpm commands.
+Use pnpm 12 and the committed lockfile.
 
 ```powershell
-npm ci
-npm run runtime:manifest
-npm run runtime:check
-npm run build
-npm run smoke
+pnpm install --frozen-lockfile
+pnpm run runtime:manifest
+pnpm run runtime:check
+pnpm run build
+pnpm run smoke
 node scripts/report-runtime-capabilities.mjs
 node scripts/verify-optional-runtime.mjs <runtimeId>
 node scripts/verify-optional-runtime.mjs <runtimeId> --browser --port 4180
@@ -69,8 +69,8 @@ node scripts/verify-optional-runtime.mjs <runtimeId> --browser --port 4180
 
 `verify-optional-runtime.mjs` exits `0` only for `VERIFIED`, after a current browser receipt. It exits `2` for `UNAVAILABLE` and `LOADABLE_UNVERIFIED`. Exit `2` is a disabled-state report, not a passed runtime test. It exits `1` for `BROKEN`, including an absent manifest entry, bad assets, failed receipt, or verifier error.
 
-`npm run build` is the cross-platform delivery sequence: it stages the TypeScript compiler assets, stages Pyodide, builds Worker assets, generates the manifest, reports capabilities, typechecks, runs zero-warning lint, runs tests, builds the static site, checks runtime assets in `dist`, and runs smoke checks. The manifest must follow Worker and asset construction so it describes the files actually delivered. `node scripts/report-runtime-capabilities.mjs` reports required and optional classifications for the current artifacts.
+`pnpm run build` is the cross-platform delivery sequence: it stages the TypeScript compiler assets, stages Pyodide, builds Worker assets, generates the manifest, reports capabilities, typechecks, runs zero-warning lint, runs tests, builds the static site, checks runtime assets in `dist`, and runs smoke checks. The manifest must follow Worker and asset construction so it describes the files actually delivered. `node scripts/report-runtime-capabilities.mjs` reports required and optional classifications for the current artifacts.
 
-GitHub Pages deployment uses `npm ci`, the strict quality commands, the Pages build, and the capability report. Required failure blocks delivery. CI does not install Rust, Racket, Haskell, or any other external runtime toolchain. A packaged optional remains disabled in the UI and controller, is rejected by the OJ Engine, and cannot be started through the Supervisor until its verification session succeeds. The same gate remains in force during verification, so ordinary execution cannot create a Worker around it. A verified optional keeps that verification state through a Worker failure and may recover using a fresh Worker. `UNAVAILABLE` and `LOADABLE_UNVERIFIED` are valid disabled product states, but neither is a passing optional-runtime test. `BROKEN` fails the workflow.
+GitHub Pages deployment uses `pnpm install --frozen-lockfile`, the strict quality commands, the Pages build, and the capability report. Required failure blocks delivery. CI does not install Rust, Racket, Haskell, or any other external runtime toolchain. A packaged optional remains disabled in the UI and controller, is rejected by the OJ Engine, and cannot be started through the Supervisor until its verification session succeeds. The same gate remains in force during verification, so ordinary execution cannot create a Worker around it. A verified optional keeps that verification state through a Worker failure and may recover using a fresh Worker. `UNAVAILABLE` and `LOADABLE_UNVERIFIED` are valid disabled product states, but neither is a passing optional-runtime test. `BROKEN` fails the workflow.
 
 *Author's note: Written for release and CI operators, so packaged files, browser receipts, and actual runtime support cannot be confused.*

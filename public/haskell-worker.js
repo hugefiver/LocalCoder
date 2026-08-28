@@ -977,7 +977,7 @@ function isFile(value) {
   return value !== void 0 && "data" in value;
 }
 function injectedBuildId() {
-  return true ? "fe70682db97c0171" : "development";
+  return true ? "b639f78001e259a9" : "development";
 }
 
 // src/workers/shared/endpoint.ts
@@ -1079,7 +1079,7 @@ function installHaskellWorker(scope) {
   });
 }
 function injectedBuildId2() {
-  return true ? "fe70682db97c0171" : "development";
+  return true ? "b639f78001e259a9" : "development";
 }
 var workerScope = globalThis;
 if (isHaskellWorkerScope(workerScope)) installHaskellWorker(workerScope);

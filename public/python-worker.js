@@ -745,7 +745,7 @@ __localcoder_bridge_run()
     return error instanceof Error ? error.message : typeof error === "string" ? error : void 0;
   }
   function injectedBuildId() {
-    return true ? "cac199df1bbe0cc5" : "development";
+    return true ? "9f4fade77f53b374" : "development";
   }
 
   // src/workers/pyodide.worker.ts
@@ -795,7 +795,7 @@ __localcoder_bridge_run()
     return new RuntimeFailureError({ kind: "infrastructure", code, message, fatal: true });
   }
   function injectedBuildId2() {
-    return true ? "cac199df1bbe0cc5" : "development";
+    return true ? "9f4fade77f53b374" : "development";
   }
   var workerScope = globalThis;
   if (typeof workerScope.addEventListener === "function" && typeof workerScope.postMessage === "function" && typeof workerScope.importScripts === "function" && workerScope.location !== void 0) {

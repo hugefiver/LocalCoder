@@ -6,7 +6,7 @@ This directory contains the RustPython WASI runtime used by `public/rustpython-w
 
 - `runner.wasm`
 
-`npm run build:runtimes` produces this file.
+`pnpm run build:runtimes` produces this file.
 
 ## Protocol
 

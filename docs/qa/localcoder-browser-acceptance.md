@@ -7,13 +7,13 @@ This is the Task 23 acceptance plan. It records what must be checked and how to 
 Run every command separately in PowerShell. Record the command, exit code, test count where applicable, and concise output in the Task 23 results artifact.
 
 ```powershell
-npm run typecheck
-npm run lint
-npm test
-npm run runtime:manifest
-npm run runtime:check
-npm run build
-npm run smoke
+pnpm run typecheck
+pnpm run lint
+pnpm test
+pnpm run runtime:manifest
+pnpm run runtime:check
+pnpm run build
+pnpm run smoke
 node scripts/report-runtime-capabilities.mjs
 ```
 
@@ -24,15 +24,15 @@ Build the Pages variant in a separate PowerShell process:
 ```powershell
 $env:GITHUB_PAGES = "true"
 $env:VITE_GITHUB_PAGES = "true"
-npm run build
-npm run smoke
+pnpm run build
+pnpm run smoke
 ```
 
 Verify `./` asset paths, `404.html`, HashRouter direct-route loading, and required manifest URLs. Do not use Bash `export` syntax.
 
 ## Required runtime browser matrix
 
-Start the local server with `npm run dev -- --host 127.0.0.1 --port 4173`. For each required runtime, `javascript-worker`, `typescript-official`, and `python-pyodide`, run the same problem contract and record route, runtime/build identity, visible verdict, console and network evidence, and recovery outcome.
+Start the local server with `pnpm run dev -- --host 127.0.0.1 --port 4173`. For each required runtime, `javascript-worker`, `typescript-official`, and `python-pyodide`, run the same problem contract and record route, runtime/build identity, visible verdict, console and network evidence, and recovery outcome.
 
 | Scenario | JavaScript | TypeScript | Pyodide Python |
 |---|---|---|---|

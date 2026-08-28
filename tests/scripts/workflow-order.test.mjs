@@ -7,14 +7,14 @@ const workflows = new Map([
     ".github/workflows/build-executors.yml",
     [
       "actions/checkout@v7.0.1",
-      "actions/setup-node@v7.0.0",
+      "pnpm/setup@v2.0.2",
     ],
   ],
   [
     ".github/workflows/deploy-gh-pages.yml",
     [
       "actions/checkout@v7.0.1",
-      "actions/setup-node@v7.0.0",
+      "pnpm/setup@v2.0.2",
       "actions/configure-pages@v6.0.0",
       "actions/upload-pages-artifact@v5.0.0",
       "actions/deploy-pages@v5.0.0",
@@ -23,7 +23,7 @@ const workflows = new Map([
 ]);
 
 const orderedSteps = [
-  "run: npm ci",
+  "run: pnpm install --frozen-lockfile",
   "run: node scripts/copy-typescript-asset.mjs",
   "run: node scripts/setup-pyodide.js --skip-typescript",
   "run: node scripts/build-worker-assets.mjs",
@@ -57,6 +57,10 @@ for (const [workflow, expectedActions] of workflows) {
   test(`${workflow} pins every GitHub Action to the current stable release`, () => {
     const source = readFileSync(workflow, "utf8");
     assert.deepEqual(actionUses(source), expectedActions);
-    assert.match(source, /^\s{10}node-version:\s+24\s*$/m);
+    assert.match(source, /^\s{10}version:\s+12\.0\.0\s*$/m);
+    assert.match(source, /^\s{10}runtime:\s+node@24\s*$/m);
+    assert.match(source, /^\s{10}cache:\s+true\s*$/m);
+    assert.match(source, /^\s{10}install:\s+false\s*$/m);
+    assert.match(source, /^\s{10}lfs:\s+true\s*$/m);
   });
 }

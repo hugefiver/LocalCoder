@@ -665,7 +665,7 @@
     return error instanceof Error ? error.message : typeof error === "string" ? error : void 0;
   }
   function injectedBuildId() {
-    return true ? "158c0d96f39672f5" : "development";
+    return true ? "6ae70ad61480f510" : "development";
   }
 
   // src/workers/shared/endpoint.ts
@@ -786,7 +786,7 @@
     return new RuntimeFailureError({ kind: "infrastructure", code, message, fatal: true });
   }
   function injectedBuildId2() {
-    return true ? "158c0d96f39672f5" : "development";
+    return true ? "6ae70ad61480f510" : "development";
   }
   var workerScope = globalThis;
   if (typeof workerScope.addEventListener === "function" && typeof workerScope.postMessage === "function" && typeof workerScope.importScripts === "function" && workerScope.location !== void 0) {

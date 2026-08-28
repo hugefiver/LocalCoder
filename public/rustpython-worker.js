@@ -565,7 +565,7 @@
     return error instanceof Error ? error.message : typeof error === "string" ? error : void 0;
   }
   function injectedBuildId() {
-    return true ? "1cbeafb430cfa9e7" : "development";
+    return true ? "45d9ed70763d6775" : "development";
   }
 
   // src/workers/shared/endpoint.ts
@@ -637,7 +637,7 @@
     };
   }
 
-  // node_modules/@bjorn3/browser_wasi_shim/dist/wasi_defs.js
+  // node_modules/.pnpm/@bjorn3+browser_wasi_shim@0.4.2/node_modules/@bjorn3/browser_wasi_shim/dist/wasi_defs.js
   var CLOCKID_REALTIME = 0;
   var CLOCKID_MONOTONIC = 1;
   var ERRNO_SUCCESS = 0;
@@ -846,7 +846,7 @@
     }
   };
 
-  // node_modules/@bjorn3/browser_wasi_shim/dist/debug.js
+  // node_modules/.pnpm/@bjorn3+browser_wasi_shim@0.4.2/node_modules/@bjorn3/browser_wasi_shim/dist/debug.js
   var Debug = class Debug2 {
     enable(enabled) {
       this.log = createLogger(enabled === void 0 ? true : enabled, this.prefix);
@@ -871,7 +871,7 @@
   }
   var debug = new Debug(false);
 
-  // node_modules/@bjorn3/browser_wasi_shim/dist/wasi.js
+  // node_modules/.pnpm/@bjorn3+browser_wasi_shim@0.4.2/node_modules/@bjorn3/browser_wasi_shim/dist/wasi.js
   var WASIProcExit = class extends Error {
     constructor(code) {
       super("exit with exit code " + code);
@@ -1435,7 +1435,7 @@
     }
   };
 
-  // node_modules/@bjorn3/browser_wasi_shim/dist/fd.js
+  // node_modules/.pnpm/@bjorn3+browser_wasi_shim@0.4.2/node_modules/@bjorn3/browser_wasi_shim/dist/fd.js
   var Fd = class {
     fd_allocate(offset, len) {
       return ERRNO_NOTSUP;
@@ -1535,7 +1535,7 @@
   };
   Inode.next_ino = 1n;
 
-  // node_modules/@bjorn3/browser_wasi_shim/dist/fs_mem.js
+  // node_modules/.pnpm/@bjorn3+browser_wasi_shim@0.4.2/node_modules/@bjorn3/browser_wasi_shim/dist/fs_mem.js
   var OpenFile = class extends Fd {
     fd_allocate(offset, len) {
       if (this.file.size > offset + len) {
@@ -2089,7 +2089,7 @@
     });
   }
   function injectedBuildId2() {
-    return true ? "1cbeafb430cfa9e7" : "development";
+    return true ? "45d9ed70763d6775" : "development";
   }
   var workerScope = globalThis;
   if (isRustPythonWorkerScope(workerScope)) {

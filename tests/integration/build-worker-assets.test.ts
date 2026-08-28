@@ -3,7 +3,6 @@ import {
   appendFileSync,
   copyFileSync,
   cpSync,
-  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -155,18 +154,47 @@ function nestedEsbuildPlatformPackage(rootPath: string): string {
   );
 }
 
+function packageRootFromResolved(resolvedPath: string, packageName: string): string {
+  let current = path.dirname(resolvedPath);
+  while (current !== path.dirname(current)) {
+    const packageJsonPath = path.join(current, "package.json");
+    try {
+      const metadata = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { name?: unknown };
+      if (metadata.name === packageName) return current;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+    current = path.dirname(current);
+  }
+  throw new Error(`Cannot locate resolved package root for ${packageName}`);
+}
+
+function resolvedPackageRoot(rootPath: string, packageName: string): string {
+  const requireFromRoot = createRequire(path.join(rootPath, "package.json"));
+  return packageRootFromResolved(requireFromRoot.resolve(packageName), packageName);
+}
+
+function resolvedEsbuildPlatformPackage(rootPath: string): string {
+  const esbuildRoot = resolvedPackageRoot(rootPath, "esbuild");
+  const packageName = `@esbuild/${process.platform}-${process.arch}`;
+  const requireFromEsbuild = createRequire(path.join(esbuildRoot, "package.json"));
+  return packageRootFromResolved(
+    requireFromEsbuild.resolve(`${packageName}/${currentEsbuildPlatformBinary()}`),
+    packageName,
+  );
+}
+
 function copyFixtureToolchain(fixture: string): void {
-  for (const packagePath of [
-    "node_modules/esbuild",
-    currentEsbuildPlatformPackage(),
-    "node_modules/@bjorn3/browser_wasi_shim",
-  ]) {
-    cpSync(path.join(root, packagePath), path.join(fixture, packagePath), { recursive: true });
-  }
+  cpSync(resolvedPackageRoot(root, "esbuild"), path.join(fixture, "node_modules", "esbuild"), { recursive: true });
+  const platformSource = resolvedEsbuildPlatformPackage(root);
   const nestedPlatformPackage = nestedEsbuildPlatformPackage(fixture);
-  if (!existsSync(nestedPlatformPackage)) {
-    cpSync(path.join(fixture, currentEsbuildPlatformPackage()), nestedPlatformPackage, { recursive: true });
-  }
+  cpSync(platformSource, nestedPlatformPackage, { recursive: true });
+  cpSync(platformSource, path.join(fixture, currentEsbuildPlatformPackage()), { recursive: true });
+  cpSync(
+    resolvedPackageRoot(root, "@bjorn3/browser_wasi_shim"),
+    path.join(fixture, "node_modules", "@bjorn3", "browser_wasi_shim"),
+    { recursive: true },
+  );
 }
 
 function writeAsset(rootPath: string, relativePath: string, contents: string): void {

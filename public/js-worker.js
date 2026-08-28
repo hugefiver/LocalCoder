@@ -483,7 +483,7 @@
   }
 
   // src/workers/javascript/evaluator.ts
-  var missingSolution = Symbol("missing-solution");
+  var missingSolution = /* @__PURE__ */ Symbol("missing-solution");
   function createJavaScriptRuntime(options = {}) {
     const buildId = options.buildId ?? injectedBuildId();
     const outputBytes = options.outputBytes ?? MAX_OUTPUT_BYTES;
@@ -633,7 +633,7 @@ return typeof solution === "function" ? solution(input) : missing;`
     return error instanceof Error ? error.message : typeof error === "string" ? error : void 0;
   }
   function injectedBuildId() {
-    return true ? "ff7412fd1ed53294" : "development";
+    return true ? "42e9aeb39931eeee" : "development";
   }
 
   // src/workers/javascript/typescript-compiler.ts

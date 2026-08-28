@@ -43,7 +43,7 @@ export async function setupPyodide({ root = projectRoot, copyTypeScript = true }
   const targetDir = resolve(root, "public", "pyodide");
 
   if (!existsSync(pyodideDir)) {
-    throw new Error("Pyodide not found in node_modules. Please run: npm install pyodide");
+    throw new Error("Pyodide not found in node_modules. Please run: pnpm install");
   }
   assertRequiredPyodideAssets(pyodideDir);
   assertSafePyodideTarget(root, targetDir);

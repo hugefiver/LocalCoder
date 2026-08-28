@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "runtimes": [
+    {
+      "runtimeId": "javascript-worker",
+      "languageId": "javascript",
+      "protocolVersion": 1,
+      "runtimeVersion": "artifact-derived",
+      "worker": {
+        "url": "js-worker.js",
+        "type": "classic"
+      },
+      "assets": [
+        {
+          "url": "js-worker.js",
+          "bytes": 31874
+        }
+      ],
+      "required": true,
+      "packaged": true,
+      "reuse": "per-submission",
+      "capabilities": {
+        "execute": true,
+        "judge": true
+      },
+      "timeouts": {
+        "initializeMs": 10000,
+        "executeMs": 30000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    },
+    {
+      "runtimeId": "typescript-official",
+      "languageId": "typescript",
+      "protocolVersion": 1,
+      "runtimeVersion": "5.9.3",
+      "worker": {
+        "url": "js-worker.js",
+        "type": "classic"
+      },
+      "assets": [
+        {
+          "url": "js-worker.js",
+          "bytes": 31874
+        },
+        {
+          "url": "typescript/typescript.js",
+          "bytes": 9112572
+        }
+      ],
+      "required": true,
+      "packaged": true,
+      "reuse": "per-submission",
+      "capabilities": {
+        "execute": true,
+        "judge": true
+      },
+      "timeouts": {
+        "initializeMs": 10000,
+        "executeMs": 30000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    },
+    {
+      "runtimeId": "python-pyodide",
+      "languageId": "python",
+      "protocolVersion": 1,
+      "runtimeVersion": "artifact-derived",
+      "worker": {
+        "url": "python-worker.js",
+        "type": "classic"
+      },
+      "assets": [
+        {
+          "url": "python-worker.js",
+          "bytes": 32473
+        },
+        {
+          "url": "pyodide/pyodide.js",
+          "bytes": 18597
+        },
+        {
+          "url": "pyodide/pyodide.asm.js",
+          "bytes": 1074322
+        },
+        {
+          "url": "pyodide/pyodide.asm.wasm",
+          "bytes": 8647684
+        },
+        {
+          "url": "pyodide/python_stdlib.zip",
+          "bytes": 2423989
+        },
+        {
+          "url": "pyodide/pyodide-lock.json",
+          "bytes": 120010
+        }
+      ],
+      "required": true,
+      "packaged": true,
+      "reuse": "session",
+      "capabilities": {
+        "execute": true,
+        "judge": true
+      },
+      "timeouts": {
+        "initializeMs": 90000,
+        "executeMs": 30000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    },
+    {
+      "runtimeId": "python-rustpython",
+      "languageId": "python",
+      "protocolVersion": 1,
+      "runtimeVersion": "artifact-derived",
+      "worker": {
+        "url": "rustpython-worker.js",
+        "type": "classic"
+      },
+      "assets": [
+        {
+          "url": "rustpython-worker.js",
+          "bytes": 79713
+        }
+      ],
+      "required": false,
+      "packaged": false,
+      "unavailableReason": "Missing asset groups: one of rustpython/runner.wasm.gz or rustpython/runner.wasm",
+      "reuse": "session",
+      "capabilities": {
+        "execute": false,
+        "judge": false
+      },
+      "timeouts": {
+        "initializeMs": 90000,
+        "executeMs": 30000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    },
+    {
+      "runtimeId": "racket-wasm",
+      "languageId": "racket",
+      "protocolVersion": 1,
+      "runtimeVersion": "artifact-derived",
+      "worker": {
+        "url": "racket-worker.js",
+        "type": "classic"
+      },
+      "assets": [
+        {
+          "url": "racket-worker.js",
+          "bytes": 32869
+        }
+      ],
+      "required": false,
+      "packaged": false,
+      "unavailableReason": "Missing asset groups: racket/racket.js; one of racket/racket.wasm.gz or racket/racket.wasm",
+      "reuse": "session",
+      "capabilities": {
+        "execute": false,
+        "judge": false
+      },
+      "timeouts": {
+        "initializeMs": 90000,
+        "executeMs": 30000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    },
+    {
+      "runtimeId": "haskell-ghc-wasi",
+      "languageId": "haskell",
+      "protocolVersion": 1,
+      "runtimeVersion": "artifact-derived",
+      "worker": {
+        "url": "haskell-worker.js",
+        "type": "module"
+      },
+      "assets": [
+        {
+          "url": "haskell-worker.js",
+          "bytes": 43588
+        },
+        {
+          "url": "haskell/ghc.wasm.gz",
+          "bytes": 21088671
+        },
+        {
+          "url": "haskell/ghc.wasm",
+          "bytes": 146482240
+        },
+        {
+          "url": "haskell/libdir.tar.gz",
+          "bytes": 643211474
+        },
+        {
+          "url": "haskell/wasi-shim.js",
+          "bytes": 62623
+        },
+        {
+          "url": "haskell/runner.meta.json",
+          "bytes": 248
+        }
+      ],
+      "required": false,
+      "packaged": true,
+      "reuse": "session",
+      "capabilities": {
+        "execute": true,
+        "judge": true
+      },
+      "timeouts": {
+        "initializeMs": 120000,
+        "executeMs": 120000
+      },
+      "limits": {
+        "sourceBytes": 262144,
+        "caseCount": 100,
+        "outputBytes": 65536
+      }
+    }
+  ]
+}

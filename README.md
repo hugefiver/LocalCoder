@@ -17,25 +17,25 @@ The runtime manifest is generated from packaged assets. It is the source of trut
 
 Runtime identities are generated from the current executable build inputs. Read the current values from `public/runtime-manifest.json` and `docs/qa/2026-08-24-localcoder-rebuild-results.md`; they are evidence for one build, not permanent runtime versions.
 
-An optional runtime remains disabled until it has its assets, a matching current browser receipt, a protocol handshake, smoke execution, and judge-contract verification. RustPython must also match Pyodide on the six-problem corpus. Its files are not present until `rustpython/runner.wasm.gz` or `rustpython/runner.wasm` is packaged. Racket lacks `racket/racket.js` and `racket/racket.wasm.gz` or `racket/racket.wasm`. Haskell lacks `haskell/ghc.wasm.gz` or `haskell/ghc.wasm`, `haskell/libdir.tar.gz` or `haskell/libdir.tar`, and `haskell/wasi-shim.js`.
+An optional runtime remains disabled until it has its assets, a matching current browser receipt, a protocol handshake, smoke execution, and judge-contract verification. RustPython must also match Pyodide on the six-problem corpus. Its files are not present until `rustpython/runner.wasm.gz` or `rustpython/runner.wasm` is packaged. Racket lacks `racket/racket.js` and `racket/racket.wasm.gz` or `racket/racket.wasm`. Haskell assets are packaged, but the runtime remains `LOADABLE_UNVERIFIED` and disabled until a matching browser receipt completes its verification contract.
 
 ## Install and local commands
 
-Use npm and the committed `package-lock.json`:
+Use pnpm 12 and the committed `pnpm-lock.yaml`:
 
 ```powershell
-npm ci
-npm run typecheck
-npm run lint
-npm test
-npm run runtime:manifest
-npm run runtime:check
-npm run build
-npm run smoke
+pnpm install --frozen-lockfile
+pnpm run typecheck
+pnpm run lint
+pnpm test
+pnpm run runtime:manifest
+pnpm run runtime:check
+pnpm run build
+pnpm run smoke
 node scripts/report-runtime-capabilities.mjs
 ```
 
-For local development, run `npm run dev`. `npm run build` prepares required assets, builds Workers, generates the manifest, runs strict checks, builds the application, then performs readiness and smoke checks. Do not read an unavailable optional runtime as a passing runtime test.
+For local development, run `pnpm run dev`. `pnpm run build` prepares required assets, builds Workers, generates the manifest, runs strict checks, builds the application, then performs readiness and smoke checks. Do not read an unavailable optional runtime as a passing runtime test.
 
 To inspect one optional runtime, run:
 
@@ -63,7 +63,7 @@ After the application and selected runtime assets have loaded, an active browser
 
 ## GitHub Pages
 
-Pages builds use relative asset paths (`./`), HashRouter routes, and a `404.html` fallback. The deployed application remains static. A missing required runtime blocks the build or deployment readiness path. CI uses `npm ci` and does not install Rust, Racket, Haskell, or other external runtime toolchains.
+Pages builds use relative asset paths (`./`), HashRouter routes, and a `404.html` fallback. The deployed application remains static. A missing required runtime blocks the build or deployment readiness path. CI uses `pnpm install --frozen-lockfile` and does not install Rust, Racket, Haskell, or other external runtime toolchains.
 
 For the full runtime model, asset operation rules, and Task 23 browser acceptance matrix, read:
 
@@ -75,4 +75,4 @@ For the full runtime model, asset operation rules, and Task 23 browser acceptanc
 
 MIT License. See [LICENSE](LICENSE).
 
-*Author's note: Written for a developer setting up or validating LocalCoder, with the expectation that they run the listed npm checks and treat runtime states literally.*
+*Author's note: Written for a developer setting up or validating LocalCoder, with the expectation that they run the listed pnpm checks and treat runtime states literally.*

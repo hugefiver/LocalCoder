@@ -24,22 +24,22 @@ Run covers public and custom cases and never changes progress. Submit includes j
 
 ## Development and delivery
 
-Use npm with the committed `package-lock.json`:
+Use pnpm 12 with the committed `pnpm-lock.yaml`:
 
 ```powershell
-npm ci
-npm run typecheck
-npm run lint
-npm test
-npm run runtime:manifest
-npm run runtime:check
-npm run build
-npm run smoke
+pnpm install --frozen-lockfile
+pnpm run typecheck
+pnpm run lint
+pnpm test
+pnpm run runtime:manifest
+pnpm run runtime:check
+pnpm run build
+pnpm run smoke
 node scripts/report-runtime-capabilities.mjs
 ```
 
 Do not treat a skipped or unavailable optional runtime as a passing test. `verify-optional-runtime.mjs` exits `0` only for `VERIFIED`, `2` for `UNAVAILABLE` or `LOADABLE_UNVERIFIED`, and `1` for `BROKEN`.
 
-GitHub Pages uses `./` asset paths, HashRouter, and a `404.html` fallback. CI runs `npm ci` against the lockfile and must not install external Rust, Racket, or Haskell toolchains.
+GitHub Pages uses `./` asset paths, HashRouter, and a `404.html` fallback. CI runs `pnpm install --frozen-lockfile` and must not install external Rust, Racket, or Haskell toolchains.
 
 *Author's note: Written for contributors changing LocalCoder so they preserve the runtime, storage, and trust boundaries rather than restoring legacy assumptions.*
