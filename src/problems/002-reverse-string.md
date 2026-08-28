@@ -1,8 +1,13 @@
 ---
+schemaVersion: 2
 id: 2
+slug: reverse-string
 title: Reverse String
 difficulty: Easy
-description: Write a function that reverses a string in-place.
+summary: Reverse a character array in place and return the reversed array.
+tags:
+  - string
+  - two-pointers
 examples:
   - input: "s = [\"h\",\"e\",\"l\",\"l\",\"o\"]"
     output: "[\"o\",\"l\",\"l\",\"e\",\"h\"]"
@@ -10,31 +15,26 @@ examples:
     output: "[\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]"
 constraints:
   - "1 <= s.length <= 10^5"
-  - "s[i] is a printable ascii character"
-testCases:
-  - input: {"s": ["h","e","l","l","o"]}
-    expected: ["o","l","l","e","h"]
-  - input: {"s": ["H","a","n","n","a","h"]}
-    expected: ["h","a","n","n","a","H"]
-  - input: {"s": ["A"]}
-    expected: ["A"]
+  - "s[i] is a printable ASCII character"
+entrypoint: solution
+contract: json-function-v1
 templates:
   javascript: |
     function solution(input) {
       const { s } = input;
-      // Modify the array in-place and return it
+      // Modify the array in-place and return it.
       return s;
     }
   typescript: |
     function solution(input: { s: string[] }): string[] {
       const { s } = input;
-      // Modify the array in-place and return it
+      // Modify the array in-place and return it.
       return s;
     }
   python: |
     def solution(input):
         s = input['s']
-        # Modify the list in-place and return it
+        # Modify the list in-place and return it.
         return s
   racket: |
     #lang racket
@@ -43,6 +43,15 @@ templates:
       (let ([s (hash-ref input 's)])
         ;; Your code here
         s))
+tests:
+  public:
+    - input: { s: ["h", "e", "l", "l", "o"] }
+      expected: ["o", "l", "l", "e", "h"]
+    - input: { s: ["H", "a", "n", "n", "a", "h"] }
+      expected: ["h", "a", "n", "n", "a", "H"]
+  judge:
+    - input: { s: ["A"] }
+      expected: ["A"]
 ---
 
 ## 题目

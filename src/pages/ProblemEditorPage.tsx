@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { EditorView } from "@/components/EditorView";
+import { useParams } from "react-router-dom";
+
+import { ProblemWorkspace } from "../features/problems/ProblemWorkspace.js";
 
 export function ProblemEditorPage() {
-  const navigate = useNavigate();
   const params = useParams();
 
   const problemId = useMemo(() => {
@@ -11,5 +11,5 @@ export function ProblemEditorPage() {
     return Number.isFinite(n) ? n : 0;
   }, [params.id]);
 
-  return <EditorView problemId={problemId} onBack={() => navigate("/problems")} />;
+  return <ProblemWorkspace problemId={problemId} />;
 }

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import type { Problem } from "@/lib/problems";
-import { loadProblems } from "@/lib/problems";
+import type { Problem } from "@/domain/problem";
+import { loadProblems } from "@/problems/problem-modules";
 
 export function useProblems() {
-  const [problems, setProblems] = useState<Problem[]>([]);
+  const [problems, setProblems] = useState<readonly Problem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,9 +17,9 @@ export function useProblems() {
         const data = await loadProblems();
         if (cancelled) return;
         setProblems(data);
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (cancelled) return;
-        setError(e?.message ?? String(e));
+        setError(e instanceof Error ? e.message : String(e));
       } finally {
         if (!cancelled) setIsLoading(false);
       }

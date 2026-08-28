@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import { createGzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
 import { buildSync } from "esbuild";
+import { buildWorkerAssets } from "./build-worker-assets.mjs";
+import { writeRuntimeManifest } from "./generate-runtime-manifest.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const runtimeTargets = (process.env.RUNTIME_TARGETS ?? "")
@@ -21,7 +23,7 @@ function exec(cmd, args, opts = {}) {
     stdio: "inherit",
     cwd: opts.cwd ?? root,
     env: { ...process.env, ...(opts.env ?? {}) },
-    shell: process.platform === "win32",
+    shell: false,
   });
   if (res.status !== 0) {
     throw new Error(`${cmd} ${args.join(" ")} failed (exit ${res.status})`);
@@ -145,57 +147,38 @@ async function main() {
   const haskellGhciDir = path.join(root, "runtimes", "haskell-ghc");
   const racketDir = path.join(root, "runtimes", "racket-runtime");
 
-  let rustpythonBuilt = false;
-  let haskellBuilt = false;
-  let racketBuilt = false;
-
   if (shouldBuildRuntime("haskell")) {
-    console.log("Building Haskell runtime (GHC/GHCi WASM)...");
+    console.log("Building Haskell runtime (GHC WASM)...");
     try {
       const hsArtifacts = buildHaskellGhciRunner(haskellGhciDir);
       const publicHaskellDir = path.join(root, "public", "haskell");
-      if (hsArtifacts.ghcWasm) {
-        copyFile(hsArtifacts.ghcWasm, path.join(publicHaskellDir, "ghc.wasm"));
+      if (!hsArtifacts.ghcWasm || !hsArtifacts.libdirTar || !hsArtifacts.metaPath) {
+        throw new Error("Haskell runtime requires ghc.wasm, libdir.tar, and runner.meta.json before any assets are staged");
       }
-      if (hsArtifacts.ghciWasm) {
-        copyFile(hsArtifacts.ghciWasm, path.join(publicHaskellDir, "ghci.wasm"));
+      const meta = JSON.parse(fs.readFileSync(hsArtifacts.metaPath, "utf8"));
+      const ghciSelected = meta?.executorMode === "ghci" || meta?.testMode === "ghci";
+      if (ghciSelected && !hsArtifacts.ghciWasm) {
+        throw new Error("Haskell metadata selects GHCi but dist/ghci.wasm is missing");
       }
-      if (hsArtifacts.libdirTar) {
-        copyFile(hsArtifacts.libdirTar, path.join(publicHaskellDir, "libdir.tar"));
-      } else if (hsArtifacts.ghcWasm || hsArtifacts.ghciWasm) {
-        throw new Error("Missing libdir.tar in runtimes/haskell-ghc/dist (required for GHC/GHCi)");
+      copyFile(hsArtifacts.ghcWasm, path.join(publicHaskellDir, "ghc.wasm"));
+      copyFile(hsArtifacts.libdirTar, path.join(publicHaskellDir, "libdir.tar"));
+      if (ghciSelected && hsArtifacts.ghciWasm) copyFile(hsArtifacts.ghciWasm, path.join(publicHaskellDir, "ghci.wasm"));
+      const metaOut = { ...meta };
+      if (await gzipIfExists(path.join(publicHaskellDir, "ghc.wasm"), path.join(publicHaskellDir, "ghc.wasm.gz"))) {
+        metaOut.ghcWasm = "haskell/ghc.wasm.gz";
       }
-      if (hsArtifacts.metaPath) {
-        const meta = JSON.parse(fs.readFileSync(hsArtifacts.metaPath, "utf8"));
-        const metaOut = { ...meta };
-        const ghcGz = path.join(publicHaskellDir, "ghc.wasm.gz");
-        const ghciGz = path.join(publicHaskellDir, "ghci.wasm.gz");
-        const libdirGz = path.join(publicHaskellDir, "libdir.tar.gz");
-
-        if (await gzipIfExists(path.join(publicHaskellDir, "ghc.wasm"), ghcGz)) {
-          metaOut.ghcWasm = "haskell/ghc.wasm.gz";
-        }
-        if (await gzipIfExists(path.join(publicHaskellDir, "ghci.wasm"), ghciGz)) {
-          metaOut.ghciWasm = "haskell/ghci.wasm.gz";
-        }
-        if (await gzipIfExists(path.join(publicHaskellDir, "libdir.tar"), libdirGz)) {
-          metaOut.libdirTar = "haskell/libdir.tar.gz";
-        }
-
-        fs.writeFileSync(
-          path.join(publicHaskellDir, "runner.meta.json"),
-          JSON.stringify(metaOut, null, 2),
-        );
+      if (await gzipIfExists(path.join(publicHaskellDir, "libdir.tar"), path.join(publicHaskellDir, "libdir.tar.gz"))) {
+        metaOut.libdirTar = "haskell/libdir.tar.gz";
       }
-      haskellBuilt = Boolean(hsArtifacts.ghcWasm || hsArtifacts.ghciWasm);
-      if (haskellBuilt) {
-        const wasiShimPath = path.join(root, "public", "haskell", "wasi-shim.js");
-        buildWasiShim(wasiShimPath);
-        if (hsArtifacts.ghcWasm) console.log("  ✓ public/haskell/ghc.wasm(.gz)");
-        if (hsArtifacts.ghciWasm) console.log("  ✓ public/haskell/ghci.wasm(.gz)");
-        if (hsArtifacts.libdirTar) console.log("  ✓ public/haskell/libdir.tar(.gz)");
-        console.log("  ✓ public/haskell/wasi-shim.js");
+      if (ghciSelected && await gzipIfExists(path.join(publicHaskellDir, "ghci.wasm"), path.join(publicHaskellDir, "ghci.wasm.gz"))) {
+        metaOut.ghciWasm = "haskell/ghci.wasm.gz";
       }
+      fs.writeFileSync(path.join(publicHaskellDir, "runner.meta.json"), `${JSON.stringify(metaOut, null, 2)}\n`);
+      buildWasiShim(path.join(publicHaskellDir, "wasi-shim.js"));
+      console.log("  ✓ public/haskell/ghc.wasm(.gz)");
+      console.log("  ✓ public/haskell/libdir.tar(.gz)");
+      if (ghciSelected) console.log("  ✓ public/haskell/ghci.wasm(.gz)");
+      console.log("  ✓ public/haskell/wasi-shim.js");
     } catch (err) {
       const strict = process.env.HASKELL_WASM_STRICT === "1";
       console.error("  ✗ Failed to build GHC/GHCi runtime:", err.message);
@@ -217,7 +200,6 @@ async function main() {
         path.join(root, "public", "racket", "racket.wasm"),
         path.join(root, "public", "racket", "racket.wasm.gz"),
       );
-      racketBuilt = true;
       console.log("  ✓ public/racket/racket.js");
       console.log("  ✓ public/racket/racket.wasm(.gz)");
     } catch (err) {
@@ -243,7 +225,6 @@ async function main() {
           path.join(root, "public", "rustpython", "runner.wasm"),
           path.join(root, "public", "rustpython", "runner.wasm.gz"),
         );
-        rustpythonBuilt = true;
         console.log("  ✓ public/rustpython/runner.wasm(.gz)");
       } else {
         throw new Error("cargo build failed for all targets");
@@ -257,60 +238,12 @@ async function main() {
     console.log("Skipping RustPython runtime (RUNTIME_TARGETS)");
   }
 
-  const manifest = {
-    haskell: {
-      source: "official",
-      format: "wasi",
-      shim: "bjorn3",
-      available: haskellBuilt,
-      assets: {
-        ghc: "haskell/ghc.wasm(.gz)",
-        ghci: "haskell/ghci.wasm(.gz)",
-        libdir: "haskell/libdir.tar(.gz)",
-        wasiShim: "haskell/wasi-shim.js",
-        meta: "haskell/runner.meta.json",
-      },
-    },
-    rustpython: {
-      source: "custom",
-      format: "wasi",
-      shim: "minimal",
-      available: rustpythonBuilt,
-      assets: {
-        wasm: "rustpython/runner.wasm(.gz)",
-      },
-    },
-    racket: {
-      source: "custom",
-      format: "emscripten",
-      available: racketBuilt,
-      assets: {
-        js: "racket/racket.js",
-        wasm: "racket/racket.wasm",
-      },
-    },
-    python: {
-      source: "official",
-      format: "pyodide",
-      available: fs.existsSync(path.join(root, "public", "pyodide")),
-      assets: {
-        base: "pyodide/",
-      },
-    },
-  };
-
-  ensureDir(path.join(root, "public"));
-  fs.writeFileSync(path.join(root, "public", "runtime-manifest.json"), JSON.stringify(manifest, null, 2));
+  await buildWorkerAssets({ root });
+  const { manifest } = await writeRuntimeManifest({ root });
 
   console.log("\nRuntime build summary:");
-  console.log(`  Python (Pyodide): ${manifest.python.available ? "✓ available" : "✗ not available"}`);
-  console.log(`  Haskell runtime: ${haskellBuilt ? "✓ built" : "✗ not built"}`);
-  console.log(`  Racket runtime:  ${racketBuilt ? "✓ built" : "✗ not built"}`);
-  console.log(`  RustPython:   ${rustpythonBuilt ? "✓ built" : "✗ not built"}`);
-
-  if (!manifest.python.available && !haskellBuilt && !rustpythonBuilt && !racketBuilt) {
-    console.error("\nNo runtimes were built. Check the errors above.");
-    process.exit(1);
+  for (const runtime of manifest.runtimes) {
+    console.log(`  ${runtime.runtimeId}: ${runtime.packaged ? "packaged" : runtime.unavailableReason}`);
   }
 }
 

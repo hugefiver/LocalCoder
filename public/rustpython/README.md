@@ -6,13 +6,19 @@ This directory contains the RustPython WASI runtime used by `public/rustpython-w
 
 - `runner.wasm`
 
-This file is produced by `pnpm run build:runtimes` (or `pnpm run build:rustpython-runtime`).
+`npm run build:runtimes` produces this file.
 
 ## Protocol
 
-stdin JSON:
-- executor: `{ "mode": "executor", "code": "..." }`
-- test: `{ "mode": "test", "code": "...", "input": <any> }`
+The runner reads one JSON request from stdin:
 
-stdout JSON:
-`{ "logs": "...", "result": <any>, "error"?: string }`
+- Execute: `{ "mode": "execute", "source": "..." }`
+- Judge: `{ "mode": "judge", "source": "...", "input": <JSON> }`
+
+stdout contains exactly one JSON bridge envelope. Its fields and error kinds are defined by
+`runtimes/rustpython-runner/src/main.rs`: successful requests contain `ok`, `value`,
+`stdout`, and `stderr`; failed requests contain `ok: false`, `kind`, `details`, `stdout`,
+and `stderr`.
+
+If `runner.wasm` has not been packaged, RustPython remains `UNAVAILABLE`. That state does
+not indicate that execution has passed.

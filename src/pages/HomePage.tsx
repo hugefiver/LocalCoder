@@ -1,82 +1,93 @@
+import { ArrowRight, ListChecks, TerminalSquare } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Terminal, ListChecks } from "@phosphor-icons/react";
-import { Card } from "@/components/ui/card";
+
+import { Button } from "../components/ui/button.js";
+import { buildHomeSummary, type HomeSummaryModel } from "../features/home/home-view-model.js";
+import { ProgressSummary } from "../features/home/ProgressSummary.js";
+import { useAppServices } from "../hooks/use-app-services.js";
 
 export function HomePage() {
+  const services = useAppServices();
+  const [reloadKey, setReloadKey] = useState(0);
+  const [state, setState] = useState<HomeState>({ kind: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    setState({ kind: "loading" });
+    void Promise.all([
+      services.problems.list(),
+      services.storage.listProgress(),
+      services.storage.listSubmissions(),
+    ]).then(([problems, progress, submissions]) => {
+      if (!cancelled) setState({ kind: "ready", summary: buildHomeSummary(problems, progress, submissions) });
+    }).catch((error: unknown) => {
+      if (!cancelled) setState({ kind: "error", message: errorMessage(error) });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey, services]);
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto max-w-5xl px-6 py-10">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">LocalCoder</h1>
-          <p className="text-sm text-muted-foreground">
-            本地运行的浏览器代码执行与刷题小站（无需后端）。
-          </p>
+    <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-8 sm:px-6 sm:py-12">
+      <header className="grid max-w-3xl gap-4">
+        <p className="font-mono text-xs font-semibold text-muted-foreground">BROWSER-LOCAL OJ</p>
+        <h1 className="text-4xl font-bold tracking-tight">LocalCoder</h1>
+        <p className="max-w-2xl text-base text-muted-foreground">
+          在浏览器中运行、判题并保存本地练习记录。运行时状态和数据耐久性始终明确可见。
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild><Link to="/problems"><ListChecks aria-hidden="true" />浏览题库</Link></Button>
+          <Button asChild variant="outline"><Link to="/executor"><TerminalSquare aria-hidden="true" />自由执行</Link></Button>
         </div>
+      </header>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          <Link to="/executor" className="block">
-            <Card className="p-6 h-full transition-all hover:shadow-lg hover:border-primary/50">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Terminal size={22} weight="bold" className="text-primary" />
-                </div>
-                <div>
-                  <div className="font-semibold">自由代码执行</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    JavaScript / TypeScript / Python / Racket
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Link>
-
-          <Link to="/problems" className="block">
-            <Card className="p-6 h-full transition-all hover:shadow-lg hover:border-primary/50">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <ListChecks size={22} weight="bold" className="text-primary" />
-                </div>
-                <div>
-                  <div className="font-semibold">试题</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    从本地 Markdown 题库加载
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Link>
-        </div>
-
-        <div className="mt-10">
-          <Card className="p-6">
-            <div className="text-sm font-semibold">项目链接</div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              <div>
-                GitHub：{" "}
-                <a
-                  className="underline underline-offset-4 hover:text-foreground"
-                  href="https://github.com/hugefiver/LocalCoder"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  hugefiver/LocalCoder
-                </a>
-              </div>
-              <div className="mt-1">
-                Issues：{" "}
-                <a
-                  className="underline underline-offset-4 hover:text-foreground"
-                  href="https://github.com/hugefiver/LocalCoder/issues"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  报告问题 / 提需求
-                </a>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
+      <HomeContent onRetry={() => setReloadKey((value) => value + 1)} state={state} />
     </div>
   );
+}
+
+type HomeState =
+  | { kind: "loading" }
+  | { kind: "error"; message: string }
+  | { kind: "ready"; summary: HomeSummaryModel };
+
+function HomeContent({ state, onRetry }: { state: HomeState; onRetry: () => void }) {
+  if (state.kind === "loading") {
+    return <div aria-busy="true" className="min-h-72 rounded-lg border bg-card p-6" role="status">正在读取本地进度…</div>;
+  }
+  if (state.kind === "error") {
+    return (
+      <section className="rounded-lg border border-destructive bg-card p-6" role="alert">
+        <h2 className="font-semibold">无法读取本地进度</h2>
+        <p className="mt-2 overflow-wrap-anywhere text-sm text-muted-foreground">{state.message}</p>
+        <Button className="mt-4" onClick={onRetry} type="button" variant="outline">重试</Button>
+      </section>
+    );
+  }
+  return (
+    <div className="grid gap-8">
+      <ProgressSummary summary={state.summary} />
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-lg border bg-card p-5">
+        <div>
+          <h2 className="font-semibold">继续本地练习</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {state.summary.recentProblemId === undefined ? "从题库选择第一道题开始。" : `返回最近练习的题目 #${state.summary.recentProblemId}。`}
+          </p>
+        </div>
+        <Button asChild variant="secondary">
+          <Link to={state.summary.recentProblemId === undefined ? "/problems" : `/problems/${state.summary.recentProblemId}`}>
+            {state.summary.recentProblemId === undefined ? "打开题库" : "继续练习"}
+            <ArrowRight aria-hidden="true" />
+          </Link>
+        </Button>
+      </section>
+    </div>
+  );
+}
+
+function errorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.length <= 500 ? message : `${message.slice(0, 497)}…`;
 }

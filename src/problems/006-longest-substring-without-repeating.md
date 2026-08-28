@@ -1,24 +1,24 @@
 ---
+schemaVersion: 2
 id: 6
+slug: longest-substring-without-repeating
 title: Longest Substring Without Repeating Characters
 difficulty: Medium
-description: Find the length of the longest substring without repeating characters.
+summary: Return the length of the longest substring that contains no repeated character.
+tags:
+  - string
+  - sliding-window
 examples:
   - input: "s = \"abcabcbb\""
     output: "3"
-    explanation: "The answer is \"abc\", with the length of 3."
+    explanation: "The substring \"abc\" has length 3 and no repeated character."
   - input: "s = \"bbbbb\""
     output: "1"
 constraints:
   - "0 <= s.length <= 5 * 10^4"
   - "s consists of English letters, digits, symbols and spaces"
-testCases:
-  - input: {"s": "abcabcbb"}
-    expected: 3
-  - input: {"s": "bbbbb"}
-    expected: 1
-  - input: {"s": "pwwkew"}
-    expected: 3
+entrypoint: solution
+contract: json-function-v1
 templates:
   javascript: |
     function solution(input) {
@@ -44,6 +44,15 @@ templates:
       (let ([s (hash-ref input 's)])
         ;; Your code here
         0))
+tests:
+  public:
+    - input: { s: "abcabcbb" }
+      expected: 3
+    - input: { s: "bbbbb" }
+      expected: 1
+  judge:
+    - input: { s: "pwwkew" }
+      expected: 3
 ---
 
 ## 题目

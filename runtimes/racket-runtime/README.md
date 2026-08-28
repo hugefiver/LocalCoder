@@ -18,7 +18,7 @@ runtimes/racket-runtime/racket-src
 Then run:
 
 ```
-pnpm run build:runtimes
+npm run build:runtimes
 ```
 
 The build script will:

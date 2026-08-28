@@ -10,7 +10,10 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -28,6 +31,14 @@
     },
   },
   "include": [
-    "src"
+    "src/main.tsx",
+    "src/harness/runtime-contract-harness.ts",
+    "src/harness/storage-contract-harness.ts",
+    "src/workers/javascript.worker.ts",
+    "src/workers/pyodide.worker.ts",
+    "src/workers/rustpython.worker.ts",
+    "src/workers/haskell.worker.ts",
+    "src/vite-env.d.ts",
+    "vite.config.ts"
   ]
 }

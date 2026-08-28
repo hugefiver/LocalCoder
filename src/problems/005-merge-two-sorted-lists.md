@@ -1,8 +1,13 @@
 ---
+schemaVersion: 2
 id: 5
+slug: merge-two-sorted-lists
 title: Merge Two Sorted Lists
 difficulty: Easy
-description: Merge two sorted lists.
+summary: Merge two sorted arrays that model linked-list values into one sorted array.
+tags:
+  - linked-list
+  - two-pointers
 examples:
   - input: "list1 = [1,2,4], list2 = [1,3,4]"
     output: "[1,1,2,3,4,4]"
@@ -11,13 +16,8 @@ examples:
 constraints:
   - "The number of nodes in both lists is in the range [0, 50]"
   - "-100 <= Node.val <= 100"
-testCases:
-  - input: {"list1": [1,2,4], "list2": [1,3,4]}
-    expected: [1,1,2,3,4,4]
-  - input: {"list1": [], "list2": []}
-    expected: []
-  - input: {"list1": [], "list2": [0]}
-    expected: [0]
+entrypoint: solution
+contract: json-function-v1
 templates:
   javascript: |
     function solution(input) {
@@ -26,7 +26,7 @@ templates:
       return [];
     }
   typescript: |
-    function solution(input: { list1: number[], list2: number[] }): number[] {
+    function solution(input: { list1: number[]; list2: number[] }): number[] {
       const { list1, list2 } = input;
       // Your code here
       return [];
@@ -45,6 +45,15 @@ templates:
             [list2 (hash-ref input 'list2)])
         ;; Your code here
         '()))
+tests:
+  public:
+    - input: { list1: [1, 2, 4], list2: [1, 3, 4] }
+      expected: [1, 1, 2, 3, 4, 4]
+    - input: { list1: [], list2: [] }
+      expected: []
+  judge:
+    - input: { list1: [], list2: [0] }
+      expected: [0]
 ---
 
 ## 题目

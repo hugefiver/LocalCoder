@@ -1,6 +1,7 @@
-name: Build executors
+name: Runtime capability checks
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       ref:
@@ -15,178 +16,34 @@ on:
         type: string
 
 jobs:
-  build-runtime:
+  runtime-capabilities:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        runtime:
-          - haskell
-          - racket
-          - rustpython
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.ref || github.ref }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.0.0
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.0.0
         with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Restore Haskell cache
-        if: ${{ matrix.runtime == 'haskell' }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            public/haskell
-            runtimes/haskell-ghc/dist
-            ~/.ghc-wasm
-            ~/.ghcup
-            ~/.cabal
-          key: ${{ runner.os }}-haskell-${{ hashFiles('runtimes/haskell-ghc/**', 'scripts/build-runtimes.mjs') }}
-
-      - name: Restore Racket cache
-        if: ${{ matrix.runtime == 'racket' }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            public/racket
-            runtimes/racket-runtime/dist
-            ~/.emscripten_cache
-          key: ${{ runner.os }}-racket-${{ hashFiles('runtimes/racket-runtime/**', 'scripts/build-runtimes.mjs') }}
-
-      - name: Restore RustPython cache
-        if: ${{ matrix.runtime == 'rustpython' }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            public/rustpython
-            runtimes/rustpython-runner/target
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-rustpython-${{ hashFiles('runtimes/rustpython-runner/**', 'scripts/build-runtimes.mjs') }}
-
-      - name: Setup GHCup
-        if: ${{ matrix.runtime == 'haskell' }}
-        uses: haskell-actions/setup@v2
-        with:
-          ghc-version: "9.14.1"
-          cabal-version: "3.16.1.0"
-          enable-stack: false
-
-      - name: Install GHC WASM toolchain
-        if: ${{ matrix.runtime == 'haskell' }}
-        run: |
-          WASM_GHC_VERSION=wasm32-wasi-9.14.1.20251219
-          GHC_WASM_BRANCH=ghc-9.14
-          GHC_WASM_SRC=runtimes/haskell-ghc/ghc-src
-          sudo apt-get update
-          sudo apt-get install -y zstd jq unzip git python3 perl autoconf automake libtool pkg-config libgmp-dev libtinfo-dev libncurses-dev
-          cabal update
-          cabal install happy-1.20.1.1 alex-3.2.7.3 --installdir=$HOME/.local/bin --overwrite-policy=always
-          curl https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/bootstrap.sh | SKIP_GHC=1 sh
-          source ~/.ghc-wasm/env
-          ~/.ghc-wasm/add_to_github_path.sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          ghcup config add-release-channel https://gitlab.haskell.org/haskell-wasm/ghc-wasm-meta/-/raw/master/ghcup-wasm-0.0.9.yaml
-          ghcup install ghc "$WASM_GHC_VERSION" -- $CONFIGURE_ARGS
-          git clone --depth 1 --recurse-submodules --shallow-submodules --branch "$GHC_WASM_BRANCH" https://gitlab.haskell.org/haskell-wasm/ghc.git "$GHC_WASM_SRC"
-          pushd "$GHC_WASM_SRC"
-          ./boot
-          ./configure $CONFIGURE_ARGS
-          ./hadrian/build -j --flavour=quick --docs=none --build-root=_build_wasm
-          popd
-          echo "GHC_WASM_SRC=${GHC_WASM_SRC}" >> $GITHUB_ENV
-
-      - name: Stage GHC WASM artifacts
-        if: ${{ matrix.runtime == 'haskell' }}
-        run: |
-          mkdir -p runtimes/haskell-ghc/dist
-          WASM_GHC_EXE=$(command -v wasm32-wasi-ghc)
-          if [ -z "$WASM_GHC_EXE" ]; then
-            echo "wasm32-wasi-ghc not found in PATH"
-            exit 1
-          fi
-          WASM_GHC_LIB=$($WASM_GHC_EXE --print-libdir)
-          echo "GHC_WASM_SRC=$GHC_WASM_SRC"
-          echo "WASM_GHC_EXE=$WASM_GHC_EXE"
-          echo "WASM_GHC_LIB=$WASM_GHC_LIB"
-          find "$GHC_WASM_SRC" -maxdepth 8 \( -name 'ghc.wasm' -o -name 'ghci.wasm' \)
-          GHC_WASM=$(find "$GHC_WASM_SRC" -name 'ghc.wasm' -print -quit)
-          GHCI_WASM=$(find "$GHC_WASM_SRC" -name 'ghci.wasm' -print -quit)
-          if [ -z "$GHC_WASM" ] || [ -z "$GHCI_WASM" ]; then
-            echo "Failed to locate ghc.wasm/ghci.wasm under $GHC_WASM_SRC"
-            exit 1
-          fi
-          cp "$GHC_WASM" runtimes/haskell-ghc/dist/ghc.wasm
-          cp "$GHCI_WASM" runtimes/haskell-ghc/dist/ghci.wasm
-          tar -cf runtimes/haskell-ghc/dist/libdir.tar -C "$WASM_GHC_LIB" .
-
-      - name: Fetch Racket source (official)
-        if: ${{ matrix.runtime == 'racket' }}
-        run: |
-          if [ ! -d runtimes/racket-runtime/racket-src/.git ]; then
-            git clone --depth 1 https://github.com/racket/racket.git runtimes/racket-runtime/racket-src
-          else
-            git -C runtimes/racket-runtime/racket-src fetch --depth 1 origin master
-            git -C runtimes/racket-runtime/racket-src reset --hard origin/master
-          fi
-
-      - name: Setup Emscripten
-        if: ${{ matrix.runtime == 'racket' }}
-        uses: mymindstorm/setup-emsdk@v14
-
-      - name: Setup Rust
-        if: ${{ matrix.runtime == 'rustpython' }}
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-wasip1
+          node-version: 24
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
-      - name: Build runtime
-        run: pnpm build:runtimes
-        env:
-          RUNTIME_TARGETS: ${{ matrix.runtime }}
+      - name: Copy TypeScript runtime asset
+        run: node scripts/copy-typescript-asset.mjs
 
-      - name: Upload runtime artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: executor-${{ matrix.runtime }}
-          path: public/${{ matrix.runtime }}
-          if-no-files-found: warn
+      - name: Setup Pyodide runtime assets
+        run: node scripts/setup-pyodide.js --skip-typescript
 
-  bundle:
-    needs: build-runtime
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+      - name: Generate worker assets
+        run: node scripts/build-worker-assets.mjs
 
-      - name: Download runtime artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: executor-*
-          path: .
-          merge-multiple: true
+      - name: Generate runtime manifest
+        run: node scripts/generate-runtime-manifest.mjs
 
-      - name: Upload executor runtimes
-        uses: actions/upload-artifact@v4
-        with:
-          name: executor-runtimes
-          path: |
-            public/haskell
-            public/racket
-            public/rustpython
-          if-no-files-found: warn
+      - name: Report runtime capabilities
+        run: node scripts/report-runtime-capabilities.mjs --github-summary

@@ -1,0 +1,812 @@
+{
+  "task": "Task23 storage browser acceptance",
+  "status": "passed",
+  "sharedDevServer": "http://127.0.0.1:4173",
+  "startedAt": "2026-08-26T08:07:57.455Z",
+  "cdp": {
+    "persistentRecheck": {
+      "port": 9237,
+      "profile": "localcoder-task23-storage-recheck3-20260826"
+    },
+    "memoryRecheck": {
+      "port": 9239,
+      "profile": "localcoder-task23-storage-memory-recheck2-20260826"
+    }
+  },
+  "screenshots": [
+    "storage-migration.png",
+    "storage-run.png",
+    "storage-history.png",
+    "storage-reload.png",
+    "storage-memory.png",
+    "storage-concurrent.png"
+  ],
+  "supersededEvidence": {
+    "priorDriverDefect": {
+      "status": "superseded",
+      "cause": "Old character-by-character keyboard.type triggered CodeMirror auto-closing braces. All affected rechecks now use focused CDP Input.insertText and exact editor-text equality before execution."
+    },
+    "preservedPriorEvidence": {
+      "legacyMigration": {
+        "sixLegacyFamilies": [
+          "problem-<id>-language",
+          "problem-<id>-code-<language>",
+          "problem-<id>-custom-tests",
+          "executor-language",
+          "executor-code-<language>",
+          "solved-problems"
+        ],
+        "firstMigration": {
+          "state": "migrated",
+          "imported": 5
+        },
+        "secondMigration": {
+          "state": "already-migrated",
+          "imported": 0
+        },
+        "legacyKeysRetained": true,
+        "storesObserved": [
+          "drafts",
+          "customCases",
+          "submissions",
+          "progress",
+          "settings",
+          "meta"
+        ]
+      },
+      "historyPruning": {
+        "harnessInserted": 205,
+        "exactStoredCount": 200,
+        "oldestHarnessRecordTrimmed": true,
+        "newestHarnessRecordRetained": true
+      }
+    }
+  },
+  "recheck": {
+    "memoryFallback": {
+      "profile": "localcoder-task23-storage-memory-recheck2-20260826",
+      "source": {
+        "method": "CDP Input.insertText",
+        "sourceLength": 299,
+        "exactMatch": true
+      },
+      "indexedDbDisabledAtNewDocument": true,
+      "unsavedStatusOnWorkspaceAndHistory": true,
+      "submitVerdict": "AC",
+      "sessionHistoryRows": 1
+    },
+    "persistent": {
+      "profile": "localcoder-task23-storage-recheck3-20260826",
+      "source": {
+        "insertion": "CDP Input.insertText",
+        "sourceLength": 299,
+        "actualCodeMirrorEqualsIntendedBeforeExecution": true
+      },
+      "run": {
+        "verdict": "AC",
+        "submissionsBefore": 0,
+        "submissionsAfter": 0,
+        "progressBefore": 0,
+        "progressAfter": 0,
+        "unchanged": true
+      },
+      "acSubmit": {
+        "verdict": "AC",
+        "submissionDelta": 1,
+        "progressAttempts": 1,
+        "acceptedLanguageId": "javascript",
+        "acceptedRuntimeId": "javascript-worker",
+        "atomic": true
+      },
+      "history": {
+        "acFilterApplied": true,
+        "exactSourceSnapshot": true,
+        "judgeCountOnly": true
+      },
+      "reload": {
+        "exactSource": true,
+        "submissionCount": 1,
+        "progressAttempts": 1
+      }
+    }
+  },
+  "failures": [],
+  "finishedAt": "2026-08-28T06:51:20.707Z",
+  "current": {
+    "concurrentSubmissions": {
+      "status": "PASS",
+      "lifecycle": "current",
+      "evidenceId": "task23-concurrent-isolated-32c927a7995bc8b8-2026-08-28T06:50:34.478Z",
+      "evidenceAt": "2026-08-28T06:50:34.478Z",
+      "profile": "C:/Users/hugefiver/AppData/Local/Temp/opencode/localcoder-task23-review2/storage/concurrent-js-32c927a7995bc8b8-isolated-20260828-01",
+      "launchIsolation": {
+        "freshUserDataDir": true,
+        "defaultProfileUsed": false,
+        "extensionsDisabled": true,
+        "syncDisabled": true,
+        "backgroundNetworkingDisabled": true,
+        "componentUpdateDisabled": true,
+        "flags": [
+          "--disable-extensions",
+          "--disable-sync",
+          "--no-first-run",
+          "--no-default-browser-check",
+          "--disable-background-networking",
+          "--disable-component-update",
+          "--disable-default-apps",
+          "--disable-features=msEdgeFirstRunExperience"
+        ]
+      },
+      "cdp": {
+        "primaryPort": 9237,
+        "secondaryPortReservedAndUnused": 9239
+      },
+      "origin": "http://127.0.0.1:4173",
+      "expectedIdentity": {
+        "languageId": "javascript",
+        "runtimeId": "javascript-worker",
+        "runtimeVersion": "javascript-es2020",
+        "buildId": "32c927a7995bc8b8"
+      },
+      "topology": {
+        "contextCount": 1,
+        "pageTargets": [
+          {
+            "targetId": "4A748EADD98E66B4384D00A27AB09071",
+            "url": "http://127.0.0.1:4173/problems/1"
+          },
+          {
+            "targetId": "2922C8E2F0264D542615A85DC4CB1A03",
+            "url": "http://127.0.0.1:4173/problems/1"
+          }
+        ],
+        "sameOrigin": true,
+        "sameNativeIndexedDb": true,
+        "independentAppServices": true
+      },
+      "runExcluded": true,
+      "rounds": [
+        {
+          "name": "isolated-round1-fast-WA-delayed-AC",
+          "startedAtEpochMs": 1787899848908,
+          "clickInitiationMode": "Both trusted visible Submit clicks were invoked in one Promise.all; neither result was awaited first.",
+          "clickInvocationSkewMs": 2,
+          "clicks": [
+            {
+              "marker": "isolated-r1-wa-fast",
+              "invokedAtEpochMs": 1787899848908,
+              "actionSettledAtEpochMs": 1787899849687
+            },
+            {
+              "marker": "isolated-r1-ac-delayed",
+              "invokedAtEpochMs": 1787899848910,
+              "actionSettledAtEpochMs": 1787899849210
+            }
+          ],
+          "sourceChecks": [
+            {
+              "marker": "isolated-r1-wa-fast",
+              "insertion": "CDP Input.insertText",
+              "intendedLength": 95,
+              "actualLength": 95,
+              "exact": true
+            },
+            {
+              "marker": "isolated-r1-ac-delayed",
+              "insertion": "CDP Input.insertText",
+              "intendedLength": 394,
+              "actualLength": 394,
+              "exact": true
+            }
+          ],
+          "completions": [
+            {
+              "marker": "isolated-r1-wa-fast",
+              "verdict": "wrong-answer",
+              "completedAtEpochMs": 1787899850457,
+              "elapsedFromStartMs": 1549
+            },
+            {
+              "marker": "isolated-r1-ac-delayed",
+              "verdict": "accepted",
+              "completedAtEpochMs": 1787899858573,
+              "elapsedFromStartMs": 9665
+            }
+          ],
+          "completionOrder": [
+            "isolated-r1-wa-fast",
+            "isolated-r1-ac-delayed"
+          ],
+          "persistenceFailureVisible": false
+        },
+        {
+          "name": "isolated-round2-fast-AC-delayed-WA",
+          "startedAtEpochMs": 1787899861703,
+          "clickInitiationMode": "Both trusted visible Submit clicks were invoked in one Promise.all; neither result was awaited first.",
+          "clickInvocationSkewMs": 0,
+          "clicks": [
+            {
+              "marker": "isolated-r2-ac-fast",
+              "invokedAtEpochMs": 1787899861703,
+              "actionSettledAtEpochMs": 1787899865630
+            },
+            {
+              "marker": "isolated-r2-wa-delayed",
+              "invokedAtEpochMs": 1787899861703,
+              "actionSettledAtEpochMs": 1787899861874
+            }
+          ],
+          "sourceChecks": [
+            {
+              "marker": "isolated-r2-ac-fast",
+              "insertion": "CDP Input.insertText",
+              "intendedLength": 324,
+              "actualLength": 324,
+              "exact": true
+            },
+            {
+              "marker": "isolated-r2-wa-delayed",
+              "insertion": "CDP Input.insertText",
+              "intendedLength": 165,
+              "actualLength": 165,
+              "exact": true
+            }
+          ],
+          "completions": [
+            {
+              "marker": "isolated-r2-ac-fast",
+              "verdict": "accepted",
+              "completedAtEpochMs": 1787899866642,
+              "elapsedFromStartMs": 4939
+            },
+            {
+              "marker": "isolated-r2-wa-delayed",
+              "verdict": "wrong-answer",
+              "completedAtEpochMs": 1787899871055,
+              "elapsedFromStartMs": 9352
+            }
+          ],
+          "completionOrder": [
+            "isolated-r2-ac-fast",
+            "isolated-r2-wa-delayed"
+          ],
+          "persistenceFailureVisible": false
+        }
+      ],
+      "nativeIndexedDb": {
+        "submissionsCount": 4,
+        "progressAttempts": 4,
+        "acceptedLanguageId": "javascript",
+        "acceptedRuntimeId": "javascript-worker",
+        "acceptedAtPresent": true,
+        "lastAttemptAt": 1787899870973,
+        "lastAttemptMatchesFinalTransaction": true,
+        "acceptedAtMatchesLatestAcceptedTransaction": true,
+        "commitOrder": [
+          "isolated-r1-wa-fast",
+          "isolated-r1-ac-delayed",
+          "isolated-r2-ac-fast",
+          "isolated-r2-wa-delayed"
+        ],
+        "submissions": [
+          {
+            "id": 1,
+            "marker": "isolated-r1-wa-fast",
+            "verdict": "wrong-answer",
+            "sourceExact": true,
+            "createdAt": 1787899850145,
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          {
+            "id": 2,
+            "marker": "isolated-r1-ac-delayed",
+            "verdict": "accepted",
+            "sourceExact": true,
+            "createdAt": 1787899858436,
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          {
+            "id": 3,
+            "marker": "isolated-r2-ac-fast",
+            "verdict": "accepted",
+            "sourceExact": true,
+            "createdAt": 1787899865872,
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          {
+            "id": 4,
+            "marker": "isolated-r2-wa-delayed",
+            "verdict": "wrong-answer",
+            "sourceExact": true,
+            "createdAt": 1787899870973,
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          }
+        ],
+        "currentRuntimeBuildIdentityFromStoredResults": {
+          "languageId": "javascript",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8"
+        }
+      },
+      "history": {
+        "visibleRows": 4,
+        "persistenceFailureVisible": false,
+        "detailIdentityVisible": true
+      },
+      "screenshot": "storage-concurrent.png"
+    }
+  },
+  "historical": {
+    "concurrentSubmissions": [
+      {
+        "lifecycle": "historical-superseded",
+        "originalStatus": "PASS",
+        "supersededAt": "2026-08-28T06:23:42.137Z",
+        "supersededByEvidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:23:42.137Z",
+        "supersededByBuildId": "32c927a7995bc8b8",
+        "evidence": {
+          "status": "PASS",
+          "evidenceAt": "2026-08-28T04:47:47.490Z",
+          "profile": "localcoder-task23-storage-concurrent-20260828-02",
+          "origin": "http://127.0.0.1:4173",
+          "topology": {
+            "contextCount": 1,
+            "pageTargets": [
+              {
+                "targetId": "3A53802DCA680C3A1B339A12413512F2",
+                "url": "http://127.0.0.1:4173/problems/1"
+              },
+              {
+                "targetId": "7F05093148F487AAB46E496E8DD25ED6",
+                "url": "http://127.0.0.1:4173/problems/1"
+              }
+            ],
+            "sameOrigin": true,
+            "sameNativeIndexedDb": true,
+            "independentAppServices": true,
+            "sharedDraftKeyNote": "Both distinct page targets used problem 1 and the same draft key; each in-memory CodeMirror document was re-read and exactly matched its intended source immediately before the overlapping clicks."
+          },
+          "runExcluded": true,
+          "rounds": [
+            {
+              "name": "round1-fast-WA-delayed-AC",
+              "startedAtEpochMs": 1787892454320,
+              "clickInitiationMode": "Both visible Submit clicks were initiated in one Promise.all; neither submission result was awaited before initiating the other click.",
+              "bothClickActionsSettledAtEpochMs": 1787892454575,
+              "bothClickActionsSettledAfterStartMs": 255,
+              "sourceChecks": [
+                {
+                  "marker": "round1-wa-fast",
+                  "intendedLength": 90,
+                  "actualLength": 90,
+                  "exact": true
+                },
+                {
+                  "marker": "round1-ac-delayed",
+                  "intendedLength": 389,
+                  "actualLength": 389,
+                  "exact": true
+                }
+              ],
+              "completions": [
+                {
+                  "marker": "round1-wa-fast",
+                  "verdict": "wrong-answer",
+                  "completedAtEpochMs": 1787892455523,
+                  "elapsedFromStartMs": 1203
+                },
+                {
+                  "marker": "round1-ac-delayed",
+                  "verdict": "accepted",
+                  "completedAtEpochMs": 1787892458178,
+                  "elapsedFromStartMs": 3858
+                }
+              ],
+              "completionOrder": [
+                "round1-wa-fast",
+                "round1-ac-delayed"
+              ],
+              "persistenceFailureVisible": false
+            },
+            {
+              "name": "round2-fast-AC-delayed-WA",
+              "startedAtEpochMs": 1787892460708,
+              "clickInitiationMode": "Both visible Submit clicks were initiated in one Promise.all; neither submission result was awaited before initiating the other click.",
+              "bothClickActionsSettledAtEpochMs": 1787892462229,
+              "bothClickActionsSettledAfterStartMs": 1521,
+              "sourceChecks": [
+                {
+                  "marker": "round2-ac-fast",
+                  "intendedLength": 319,
+                  "actualLength": 319,
+                  "exact": true
+                },
+                {
+                  "marker": "round2-wa-delayed",
+                  "intendedLength": 160,
+                  "actualLength": 160,
+                  "exact": true
+                }
+              ],
+              "completions": [
+                {
+                  "marker": "round2-ac-fast",
+                  "verdict": "accepted",
+                  "completedAtEpochMs": 1787892463198,
+                  "elapsedFromStartMs": 2490
+                },
+                {
+                  "marker": "round2-wa-delayed",
+                  "verdict": "wrong-answer",
+                  "completedAtEpochMs": 1787892464458,
+                  "elapsedFromStartMs": 3750
+                }
+              ],
+              "completionOrder": [
+                "round2-ac-fast",
+                "round2-wa-delayed"
+              ],
+              "persistenceFailureVisible": false
+            }
+          ],
+          "nativeIndexedDb": {
+            "submissionsCount": 4,
+            "progressAttempts": 4,
+            "acceptedAtPresent": true,
+            "acceptedLanguageId": "javascript",
+            "acceptedRuntimeId": "javascript-worker",
+            "lastAttemptAt": 1787892464431,
+            "lastAttemptMatchesFinalTransaction": true,
+            "acceptedAtMatchesLatestAcceptedTransaction": true,
+            "commitOrder": [
+              "round1-wa-fast",
+              "round1-ac-delayed",
+              "round2-ac-fast",
+              "round2-wa-delayed"
+            ],
+            "submissions": [
+              {
+                "id": 1,
+                "marker": "round1-wa-fast",
+                "verdict": "wrong-answer",
+                "sourceExact": true,
+                "createdAt": 1787892454721,
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "7dec0daea6e8ab12"
+              },
+              {
+                "id": 2,
+                "marker": "round1-ac-delayed",
+                "verdict": "accepted",
+                "sourceExact": true,
+                "createdAt": 1787892458116,
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "7dec0daea6e8ab12"
+              },
+              {
+                "id": 3,
+                "marker": "round2-ac-fast",
+                "verdict": "accepted",
+                "sourceExact": true,
+                "createdAt": 1787892462342,
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "7dec0daea6e8ab12"
+              },
+              {
+                "id": 4,
+                "marker": "round2-wa-delayed",
+                "verdict": "wrong-answer",
+                "sourceExact": true,
+                "createdAt": 1787892464431,
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "7dec0daea6e8ab12"
+              }
+            ],
+            "runtimeBuildIdentityFromStoredResults": [
+              {
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "7dec0daea6e8ab12"
+              }
+            ]
+          },
+          "history": {
+            "visibleRows": 4,
+            "persistenceFailureVisible": false
+          },
+          "screenshot": "storage-concurrent.png"
+        }
+      },
+      {
+        "lifecycle": "historical-superseded",
+        "originalStatus": "BLOCKED",
+        "supersededAt": "2026-08-28T06:27:57.565Z",
+        "supersededByEvidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:27:57.565Z",
+        "supersededByBuildId": "32c927a7995bc8b8",
+        "evidence": {
+          "status": "BLOCKED",
+          "lifecycle": "current",
+          "evidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:23:42.137Z",
+          "evidenceAt": "2026-08-28T06:23:42.137Z",
+          "profile": "C:/Users/hugefiver/AppData/Local/Temp/opencode/localcoder-task23-review2/storage/concurrent-js-32c927a7995bc8b8-20260828-01",
+          "expectedIdentity": {
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          "blocker": {
+            "name": "Error",
+            "message": "Round 2 did not complete AC before delayed WA"
+          }
+        }
+      },
+      {
+        "lifecycle": "historical-superseded",
+        "originalStatus": "BLOCKED",
+        "supersededAt": "2026-08-28T06:32:28.915Z",
+        "supersededByEvidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:32:28.915Z",
+        "supersededByBuildId": "32c927a7995bc8b8",
+        "evidence": {
+          "status": "BLOCKED",
+          "lifecycle": "current",
+          "evidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:27:57.565Z",
+          "evidenceAt": "2026-08-28T06:27:57.565Z",
+          "profile": "C:/Users/hugefiver/AppData/Local/Temp/opencode/localcoder-task23-review2/storage/concurrent-js-32c927a7995bc8b8-20260828-02",
+          "expectedIdentity": {
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          "blocker": {
+            "name": "Error",
+            "message": "History did not show exactly 4 rows"
+          }
+        }
+      },
+      {
+        "lifecycle": "historical-superseded",
+        "originalStatus": "PASS",
+        "supersededAt": "2026-08-28T06:50:34.478Z",
+        "supersededByEvidenceId": "task23-concurrent-isolated-32c927a7995bc8b8-2026-08-28T06:50:34.478Z",
+        "supersededByBuildId": "32c927a7995bc8b8",
+        "evidence": {
+          "status": "PASS",
+          "lifecycle": "current",
+          "evidenceId": "task23-concurrent-32c927a7995bc8b8-2026-08-28T06:32:28.915Z",
+          "evidenceAt": "2026-08-28T06:32:28.915Z",
+          "profile": "C:/Users/hugefiver/AppData/Local/Temp/opencode/localcoder-task23-review2/storage/concurrent-js-32c927a7995bc8b8-20260828-03",
+          "cdp": {
+            "primaryPort": 9237,
+            "secondaryPortReservedAndUnused": 9239
+          },
+          "origin": "http://127.0.0.1:4173",
+          "expectedIdentity": {
+            "languageId": "javascript",
+            "runtimeId": "javascript-worker",
+            "runtimeVersion": "javascript-es2020",
+            "buildId": "32c927a7995bc8b8"
+          },
+          "topology": {
+            "contextCount": 1,
+            "pageTargets": [
+              {
+                "targetId": "1149E95989E67E8C75AE94628EAFF223",
+                "url": "http://127.0.0.1:4173/problems/1"
+              },
+              {
+                "targetId": "5C07AB7ABBF93A9101326D4E33862221",
+                "url": "http://127.0.0.1:4173/problems/1"
+              }
+            ],
+            "sameOrigin": true,
+            "sameNativeIndexedDb": true,
+            "independentAppServices": true,
+            "sharedDraftKeyNote": "Both distinct targets shared the problem-1 draft key; each in-memory CodeMirror document exactly matched its intended whole-string source immediately before concurrent Submit."
+          },
+          "runExcluded": true,
+          "rounds": [
+            {
+              "name": "review2-round1-fast-WA-delayed-AC",
+              "startedAtEpochMs": 1787898763483,
+              "clickInitiationMode": "Both trusted visible Submit clicks were initiated through one Promise.all; neither result was awaited before the other invocation.",
+              "clickInvocationSkewMs": 2,
+              "clickActions": [
+                {
+                  "marker": "review2-round1-wa-fast",
+                  "invokedAtEpochMs": 1787898763483,
+                  "actionSettledAtEpochMs": 1787898764065
+                },
+                {
+                  "marker": "review2-round1-ac-delayed",
+                  "invokedAtEpochMs": 1787898763485,
+                  "actionSettledAtEpochMs": 1787898763752
+                }
+              ],
+              "sourceChecks": [
+                {
+                  "marker": "review2-round1-wa-fast",
+                  "intendedLength": 98,
+                  "actualLength": 98,
+                  "exact": true,
+                  "insertion": "CDP Input.insertText"
+                },
+                {
+                  "marker": "review2-round1-ac-delayed",
+                  "intendedLength": 397,
+                  "actualLength": 397,
+                  "exact": true,
+                  "insertion": "CDP Input.insertText"
+                }
+              ],
+              "completions": [
+                {
+                  "marker": "review2-round1-wa-fast",
+                  "verdict": "wrong-answer",
+                  "completedAtEpochMs": 1787898764863,
+                  "elapsedFromStartMs": 1380
+                },
+                {
+                  "marker": "review2-round1-ac-delayed",
+                  "verdict": "accepted",
+                  "completedAtEpochMs": 1787898773053,
+                  "elapsedFromStartMs": 9570
+                }
+              ],
+              "completionOrder": [
+                "review2-round1-wa-fast",
+                "review2-round1-ac-delayed"
+              ],
+              "persistenceFailureVisible": false
+            },
+            {
+              "name": "review2-round2-fast-AC-delayed-WA",
+              "startedAtEpochMs": 1787898775970,
+              "clickInitiationMode": "Both trusted visible Submit clicks were initiated through one Promise.all; neither result was awaited before the other invocation.",
+              "clickInvocationSkewMs": 0,
+              "clickActions": [
+                {
+                  "marker": "review2-round2-ac-fast",
+                  "invokedAtEpochMs": 1787898775970,
+                  "actionSettledAtEpochMs": 1787898777132
+                },
+                {
+                  "marker": "review2-round2-wa-delayed",
+                  "invokedAtEpochMs": 1787898775970,
+                  "actionSettledAtEpochMs": 1787898776132
+                }
+              ],
+              "sourceChecks": [
+                {
+                  "marker": "review2-round2-ac-fast",
+                  "intendedLength": 327,
+                  "actualLength": 327,
+                  "exact": true,
+                  "insertion": "CDP Input.insertText"
+                },
+                {
+                  "marker": "review2-round2-wa-delayed",
+                  "intendedLength": 168,
+                  "actualLength": 168,
+                  "exact": true,
+                  "insertion": "CDP Input.insertText"
+                }
+              ],
+              "completions": [
+                {
+                  "marker": "review2-round2-ac-fast",
+                  "verdict": "accepted",
+                  "completedAtEpochMs": 1787898778075,
+                  "elapsedFromStartMs": 2105
+                },
+                {
+                  "marker": "review2-round2-wa-delayed",
+                  "verdict": "wrong-answer",
+                  "completedAtEpochMs": 1787898785288,
+                  "elapsedFromStartMs": 9318
+                }
+              ],
+              "completionOrder": [
+                "review2-round2-ac-fast",
+                "review2-round2-wa-delayed"
+              ],
+              "persistenceFailureVisible": false
+            }
+          ],
+          "nativeIndexedDb": {
+            "submissionsCount": 4,
+            "progressAttempts": 4,
+            "acceptedLanguageId": "javascript",
+            "acceptedRuntimeId": "javascript-worker",
+            "acceptedAtPresent": true,
+            "lastAttemptAt": 1787898785217,
+            "lastAttemptMatchesFinalTransaction": true,
+            "acceptedAtMatchesLatestAcceptedTransaction": true,
+            "commitOrder": [
+              "review2-round1-wa-fast",
+              "review2-round1-ac-delayed",
+              "review2-round2-ac-fast",
+              "review2-round2-wa-delayed"
+            ],
+            "submissions": [
+              {
+                "id": 1,
+                "marker": "review2-round1-wa-fast",
+                "verdict": "wrong-answer",
+                "sourceExact": true,
+                "createdAt": 1787898764440,
+                "languageId": "javascript",
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "32c927a7995bc8b8"
+              },
+              {
+                "id": 2,
+                "marker": "review2-round1-ac-delayed",
+                "verdict": "accepted",
+                "sourceExact": true,
+                "createdAt": 1787898772929,
+                "languageId": "javascript",
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "32c927a7995bc8b8"
+              },
+              {
+                "id": 3,
+                "marker": "review2-round2-ac-fast",
+                "verdict": "accepted",
+                "sourceExact": true,
+                "createdAt": 1787898777294,
+                "languageId": "javascript",
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "32c927a7995bc8b8"
+              },
+              {
+                "id": 4,
+                "marker": "review2-round2-wa-delayed",
+                "verdict": "wrong-answer",
+                "sourceExact": true,
+                "createdAt": 1787898785217,
+                "languageId": "javascript",
+                "runtimeId": "javascript-worker",
+                "runtimeVersion": "javascript-es2020",
+                "buildId": "32c927a7995bc8b8"
+              }
+            ],
+            "currentRuntimeBuildIdentityFromStoredResults": {
+              "languageId": "javascript",
+              "runtimeId": "javascript-worker",
+              "runtimeVersion": "javascript-es2020",
+              "buildId": "32c927a7995bc8b8"
+            }
+          },
+          "history": {
+            "visibleRows": 4,
+            "persistenceFailureVisible": false,
+            "detailIdentityVisible": true
+          },
+          "screenshot": "storage-concurrent.png"
+        }
+      }
+    ]
+  }
+}

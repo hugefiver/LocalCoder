@@ -1,0 +1,1554 @@
+{
+  "task": "Task23 required-runtime browser matrix and warm-session offline/no-application-API evidence",
+  "status": "PASS",
+  "authority": {
+    "runId": "task23-import-closure-config-1787899753327",
+    "authoritative": true,
+    "historicalEvidence": {
+      "status": "historical/superseded",
+      "previousRunId": "task23-runtime-v2-1787892402733",
+      "previousGeneratedAt": "2026-08-28T04:46:42.733Z",
+      "previousCompletedAt": "2026-08-28T04:48:47.714Z",
+      "previousStatus": "PASS",
+      "previousIdentities": {
+        "javascript-worker": {
+          "runtimeVersions": [
+            "javascript-es2020"
+          ],
+          "buildIds": [
+            "7dec0daea6e8ab12"
+          ]
+        },
+        "typescript-official": {
+          "runtimeVersions": [
+            "5.9.3"
+          ],
+          "buildIds": [
+            "7dec0daea6e8ab12"
+          ]
+        },
+        "python-pyodide": {
+          "runtimeVersions": [
+            "0.29.1"
+          ],
+          "buildIds": [
+            "90730f502fd60811"
+          ]
+        }
+      },
+      "authorityNote": "Historical metadata only. The current matrix below is the sole authoritative runtime evidence.",
+      "interruptedRefresh": {
+        "runId": "task23-import-closure-config-1787899337647",
+        "generatedAt": "2026-08-28T06:42:17.647Z",
+        "completedAt": "2026-08-28T06:42:17.804Z",
+        "status": "RELEASE_ACCEPTANCE_BLOCKED",
+        "note": "Non-authoritative interrupted evidence-driver run; superseded by the current fresh-profile run."
+      }
+    }
+  },
+  "generatedAt": "2026-08-28T06:49:13.327Z",
+  "route": "/problems/1",
+  "baseUrl": "http://127.0.0.1:4173",
+  "browser": {
+    "engine": "Microsoft Edge Chromium via CDP",
+    "cdpPort": 9236,
+    "freshProfile": "C:/Users/hugefiver/AppData/Local/Temp/opencode/localcoder-task23-review2/runtime"
+  },
+  "expectedCurrentIdentitiesFromAcceptanceTask": {
+    "javascript-worker": {
+      "runtimeVersion": "javascript-es2020",
+      "buildId": "32c927a7995bc8b8"
+    },
+    "typescript-official": {
+      "runtimeVersion": "5.9.3",
+      "buildId": "32c927a7995bc8b8"
+    },
+    "python-pyodide": {
+      "runtimeVersion": "0.29.1",
+      "buildId": "c0af25cee696df69"
+    }
+  },
+  "sourceEntry": "Every submission uses one CDP Input.insertText call after verified full-document selection; exact CodeMirror innerText is asserted after insertion and immediately before Submit.",
+  "matrix": [
+    {
+      "runtimeId": "javascript-worker",
+      "language": "javascript",
+      "authoritative": true,
+      "sequence": [
+        "AC-initial",
+        "WA",
+        "WA-to-AC",
+        "CE",
+        "CE-to-AC",
+        "RE",
+        "RE-to-AC",
+        "TLE",
+        "TLE-to-AC"
+      ],
+      "steps": [
+        {
+          "name": "AC-initial",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:18.399Z",
+          "completedAt": "2026-08-28T06:49:19.013Z"
+        },
+        {
+          "name": "WA",
+          "expected": "WA · 答案错误",
+          "visibleVerdict": "WA · 答案错误",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:19.141Z",
+          "completedAt": "2026-08-28T06:49:19.434Z"
+        },
+        {
+          "name": "WA-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:19.673Z",
+          "completedAt": "2026-08-28T06:49:20.087Z"
+        },
+        {
+          "name": "CE",
+          "expected": "CE · 编译错误",
+          "visibleVerdict": "CE · 编译错误",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "javascript-compile-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:20.204Z",
+          "completedAt": "2026-08-28T06:49:20.675Z"
+        },
+        {
+          "name": "CE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:20.829Z",
+          "completedAt": "2026-08-28T06:49:21.256Z"
+        },
+        {
+          "name": "RE",
+          "expected": "RE · 运行错误",
+          "visibleVerdict": "RE · 运行错误",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "javascript-runtime-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:21.392Z",
+          "completedAt": "2026-08-28T06:49:21.819Z"
+        },
+        {
+          "name": "RE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:21.998Z",
+          "completedAt": "2026-08-28T06:49:22.329Z"
+        },
+        {
+          "name": "TLE",
+          "expected": "TLE · 超时",
+          "visibleVerdict": "TLE · 超时",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "execution-timeout",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:22.429Z",
+          "completedAt": "2026-08-28T06:49:52.707Z"
+        },
+        {
+          "name": "TLE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:53.122Z",
+          "completedAt": "2026-08-28T06:49:53.692Z"
+        }
+      ],
+      "screenshot": "runtime-javascript-worker.png",
+      "screenshotPhase": "TLE-to-AC",
+      "workerTerminationRecovery": {
+        "preTleWorkerIds": [],
+        "postRecoveryWorkerIds": [
+          "AB22DF062C2857BF4D1D7EDBDF535C04"
+        ],
+        "tleEvents": [
+          {
+            "event": "created",
+            "targetId": "AB22DF062C2857BF4D1D7EDBDF535C04",
+            "type": "worker",
+            "url": "",
+            "timestamp": "2026-08-28T06:49:22.436Z"
+          }
+        ],
+        "recoveryEvents": [
+          {
+            "event": "created",
+            "targetId": "93165C1F0D19D6900D64A21139310EB6",
+            "type": "worker",
+            "url": "",
+            "timestamp": "2026-08-28T06:49:53.129Z"
+          },
+          {
+            "event": "destroyed",
+            "targetId": "93165C1F0D19D6900D64A21139310EB6",
+            "timestamp": "2026-08-28T06:49:53.439Z"
+          }
+        ],
+        "tleIdentity": {
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "recoveryIdentity": {
+          "runtimeId": "javascript-worker",
+          "runtimeVersion": "javascript-es2020",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "candidateTleWorkerIds": [
+          "AB22DF062C2857BF4D1D7EDBDF535C04"
+        ],
+        "terminatedTleWorker": null,
+        "createdRecoveryWorker": {
+          "event": "created",
+          "targetId": "93165C1F0D19D6900D64A21139310EB6",
+          "type": "worker",
+          "url": "",
+          "timestamp": "2026-08-28T06:49:53.129Z"
+        },
+        "workerTerminatedForTle": false,
+        "workerCreatedForRecovery": true,
+        "cdpDestroyedEventObservedForTleTarget": false,
+        "staleTleTargetStillEnumeratedAfterRecovery": true,
+        "freshWorkerAfterTle": true
+      }
+    },
+    {
+      "runtimeId": "typescript-official",
+      "language": "typescript",
+      "authoritative": true,
+      "sequence": [
+        "AC-initial",
+        "WA",
+        "WA-to-AC",
+        "CE",
+        "CE-to-AC",
+        "RE",
+        "RE-to-AC",
+        "TLE",
+        "TLE-to-AC"
+      ],
+      "steps": [
+        {
+          "name": "AC-initial",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:55.381Z",
+          "completedAt": "2026-08-28T06:49:56.422Z"
+        },
+        {
+          "name": "WA",
+          "expected": "WA · 答案错误",
+          "visibleVerdict": "WA · 答案错误",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:56.569Z",
+          "completedAt": "2026-08-28T06:49:57.446Z"
+        },
+        {
+          "name": "WA-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:57.622Z",
+          "completedAt": "2026-08-28T06:49:58.444Z"
+        },
+        {
+          "name": "CE",
+          "expected": "CE · 编译错误",
+          "visibleVerdict": "CE · 编译错误",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "typescript-compile-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:58.592Z",
+          "completedAt": "2026-08-28T06:49:59.575Z"
+        },
+        {
+          "name": "CE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:49:59.742Z",
+          "completedAt": "2026-08-28T06:50:00.853Z"
+        },
+        {
+          "name": "RE",
+          "expected": "RE · 运行错误",
+          "visibleVerdict": "RE · 运行错误",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "javascript-runtime-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:01.001Z",
+          "completedAt": "2026-08-28T06:50:01.967Z"
+        },
+        {
+          "name": "RE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:02.127Z",
+          "completedAt": "2026-08-28T06:50:03.109Z"
+        },
+        {
+          "name": "TLE",
+          "expected": "TLE · 超时",
+          "visibleVerdict": "TLE · 超时",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "execution-timeout",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:03.273Z",
+          "completedAt": "2026-08-28T06:50:34.560Z"
+        },
+        {
+          "name": "TLE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:35.550Z",
+          "completedAt": "2026-08-28T06:50:38.502Z"
+        }
+      ],
+      "screenshot": "runtime-typescript-official.png",
+      "screenshotPhase": "TLE-to-AC",
+      "typescriptCeIdentityRetention": {
+        "observed": {
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "initialAc": {
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "retained": true
+      },
+      "workerTerminationRecovery": {
+        "preTleWorkerIds": [],
+        "postRecoveryWorkerIds": [],
+        "tleEvents": [
+          {
+            "event": "created",
+            "targetId": "D6991627FA46BF2AD6268005437497A8",
+            "type": "worker",
+            "url": "",
+            "timestamp": "2026-08-28T06:50:03.287Z"
+          }
+        ],
+        "recoveryEvents": [
+          {
+            "event": "created",
+            "targetId": "63CF341CE2A03A1E370614C945D3ADE6",
+            "type": "worker",
+            "url": "",
+            "timestamp": "2026-08-28T06:50:35.569Z"
+          },
+          {
+            "event": "destroyed",
+            "targetId": "D6991627FA46BF2AD6268005437497A8",
+            "timestamp": "2026-08-28T06:50:36.551Z"
+          },
+          {
+            "event": "destroyed",
+            "targetId": "63CF341CE2A03A1E370614C945D3ADE6",
+            "timestamp": "2026-08-28T06:50:37.892Z"
+          }
+        ],
+        "tleIdentity": {
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "recoveryIdentity": {
+          "runtimeId": "typescript-official",
+          "runtimeVersion": "5.9.3",
+          "buildId": "32c927a7995bc8b8"
+        },
+        "candidateTleWorkerIds": [
+          "D6991627FA46BF2AD6268005437497A8"
+        ],
+        "terminatedTleWorker": {
+          "event": "destroyed",
+          "targetId": "D6991627FA46BF2AD6268005437497A8",
+          "timestamp": "2026-08-28T06:50:36.551Z"
+        },
+        "createdRecoveryWorker": {
+          "event": "created",
+          "targetId": "63CF341CE2A03A1E370614C945D3ADE6",
+          "type": "worker",
+          "url": "",
+          "timestamp": "2026-08-28T06:50:35.569Z"
+        },
+        "workerTerminatedForTle": true,
+        "workerCreatedForRecovery": true,
+        "cdpDestroyedEventObservedForTleTarget": true,
+        "staleTleTargetStillEnumeratedAfterRecovery": false,
+        "freshWorkerAfterTle": true
+      }
+    },
+    {
+      "runtimeId": "python-pyodide",
+      "language": "python",
+      "authoritative": true,
+      "sequence": [
+        "AC-initial",
+        "WA",
+        "WA-to-AC",
+        "CE",
+        "CE-to-AC",
+        "RE",
+        "RE-to-AC",
+        "TLE",
+        "TLE-to-AC"
+      ],
+      "steps": [
+        {
+          "name": "AC-initial",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:40.738Z",
+          "completedAt": "2026-08-28T06:50:48.318Z"
+        },
+        {
+          "name": "WA",
+          "expected": "WA · 答案错误",
+          "visibleVerdict": "WA · 答案错误",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:48.546Z",
+          "completedAt": "2026-08-28T06:50:49.386Z"
+        },
+        {
+          "name": "WA-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:49.902Z",
+          "completedAt": "2026-08-28T06:50:50.406Z"
+        },
+        {
+          "name": "CE",
+          "expected": "CE · 编译错误",
+          "visibleVerdict": "CE · 编译错误",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "python-compile-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:50.751Z",
+          "completedAt": "2026-08-28T06:50:51.219Z"
+        },
+        {
+          "name": "CE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:51.553Z",
+          "completedAt": "2026-08-28T06:50:52.189Z"
+        },
+        {
+          "name": "RE",
+          "expected": "RE · 运行错误",
+          "visibleVerdict": "RE · 运行错误",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "python-runtime-error",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:52.330Z",
+          "completedAt": "2026-08-28T06:50:52.721Z"
+        },
+        {
+          "name": "RE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:52.920Z",
+          "completedAt": "2026-08-28T06:50:53.332Z"
+        },
+        {
+          "name": "TLE",
+          "expected": "TLE · 超时",
+          "visibleVerdict": "TLE · 超时",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": "execution-timeout",
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:50:53.751Z",
+          "completedAt": "2026-08-28T06:51:24.225Z"
+        },
+        {
+          "name": "TLE-to-AC",
+          "expected": "AC · 通过",
+          "visibleVerdict": "AC · 通过",
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69",
+          "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+          "failureCode": null,
+          "sourceVerifiedBeforeSubmit": true,
+          "resultSignatureChanged": true,
+          "submitButtonRecovered": true,
+          "startedAt": "2026-08-28T06:51:24.644Z",
+          "completedAt": "2026-08-28T06:51:29.621Z"
+        }
+      ],
+      "screenshot": "runtime-python-pyodide.png",
+      "screenshotPhase": "TLE-to-AC",
+      "workerTerminationRecovery": {
+        "preTleWorkerIds": [
+          "B9185F3CFE36ED1658BE57CA108BCCA7"
+        ],
+        "postRecoveryWorkerIds": [
+          "4F409B91FB4DBEC82567521D1E220736"
+        ],
+        "tleEvents": [],
+        "recoveryEvents": [
+          {
+            "event": "created",
+            "targetId": "4F409B91FB4DBEC82567521D1E220736",
+            "type": "worker",
+            "url": "",
+            "timestamp": "2026-08-28T06:51:24.650Z"
+          },
+          {
+            "event": "destroyed",
+            "targetId": "B9185F3CFE36ED1658BE57CA108BCCA7",
+            "timestamp": "2026-08-28T06:51:25.934Z"
+          }
+        ],
+        "tleIdentity": {
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69"
+        },
+        "recoveryIdentity": {
+          "runtimeId": "python-pyodide",
+          "runtimeVersion": "0.29.1",
+          "buildId": "c0af25cee696df69"
+        },
+        "candidateTleWorkerIds": [
+          "B9185F3CFE36ED1658BE57CA108BCCA7"
+        ],
+        "terminatedTleWorker": {
+          "event": "destroyed",
+          "targetId": "B9185F3CFE36ED1658BE57CA108BCCA7",
+          "timestamp": "2026-08-28T06:51:25.934Z"
+        },
+        "createdRecoveryWorker": {
+          "event": "created",
+          "targetId": "4F409B91FB4DBEC82567521D1E220736",
+          "type": "worker",
+          "url": "",
+          "timestamp": "2026-08-28T06:51:24.650Z"
+        },
+        "workerTerminatedForTle": true,
+        "workerCreatedForRecovery": true,
+        "cdpDestroyedEventObservedForTleTarget": true,
+        "staleTleTargetStillEnumeratedAfterRecovery": false,
+        "freshWorkerAfterTle": true
+      }
+    }
+  ],
+  "offline": {
+    "scenario": "Warm Pyodide; CDP offline network emulation; no reload; another AC submit",
+    "result": {
+      "name": "warm-offline-no-reload",
+      "expected": "AC · 通过",
+      "visibleVerdict": "AC · 通过",
+      "runtimeId": "python-pyodide",
+      "runtimeVersion": "0.29.1",
+      "buildId": "c0af25cee696df69",
+      "identitySource": "visible RuntimeFacts from the protocol-validated Worker handshake/invocation",
+      "failureCode": null,
+      "sourceVerifiedBeforeSubmit": true,
+      "resultSignatureChanged": true,
+      "submitButtonRecovered": true,
+      "startedAt": "2026-08-28T06:51:30.654Z",
+      "completedAt": "2026-08-28T06:51:30.981Z"
+    },
+    "navigationEntriesBefore": 1,
+    "navigationEntriesAfter": 1,
+    "noReload": true,
+    "applicationRequestCount": 0,
+    "applicationRequestZero": true,
+    "relevantNetworkEvents": [],
+    "passed": true,
+    "screenshot": "runtime-python-pyodide-offline.png"
+  },
+  "console": [
+    {
+      "source": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "timestamp": 1787899753769.927
+    },
+    {
+      "source": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "timestamp": 1787899753790.184
+    },
+    {
+      "source": "console",
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": 1787899754421.697
+    },
+    {
+      "source": "console",
+      "type": "debug",
+      "text": "[vite] hot updated: /src/styles/foundations.css",
+      "timestamp": 1787899881358.271
+    }
+  ],
+  "consoleSummary": {
+    "totalEvents": 4,
+    "warningCount": 0,
+    "errorCount": 0,
+    "pageExceptionCount": 0,
+    "illegalTransitionCount": 0,
+    "uncontrolledSelectCount": 0,
+    "warnings": [],
+    "errors": [],
+    "pageExceptions": [],
+    "illegalTransitions": [],
+    "uncontrolledSelect": [],
+    "clean": true
+  },
+  "network": {
+    "summary": {
+      "application": {
+        "requests": 165,
+        "responses": 145,
+        "failures": 0,
+        "urls": [
+          "http://127.0.0.1:4173/problems/1",
+          "http://127.0.0.1:4173/src/main.tsx?t=1787899337814",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react-error-boundary.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/App.tsx",
+          "http://127.0.0.1:4173/src/components/app/AppErrorFallback.tsx",
+          "http://127.0.0.1:4173/src/styles/foundations.css?t=1787899337814",
+          "http://127.0.0.1:4173/src/styles/layout.css",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-APAI5QCZ.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-PR4QN5HX.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/app/AppProviders.tsx",
+          "http://127.0.0.1:4173/src/app/routes.tsx",
+          "http://127.0.0.1:4173/src/components/ui/sonner.tsx",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/lucide-react.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/components/ui/button.tsx",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-3B3TWITN.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/hooks/use-app-services.ts",
+          "http://127.0.0.1:4173/src/services/app-services.ts",
+          "http://127.0.0.1:4173/src/app/ThemeProvider.tsx",
+          "http://127.0.0.1:4173/src/components/app/AppShell.tsx",
+          "http://127.0.0.1:4173/src/app/app-mode.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/sonner.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/hooks/use-theme.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@radix-ui_react-slot.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/class-variance-authority.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/lib/utils.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-RSR2SAXM.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-PUWIC5IW.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-NUNMXZXD.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-U7P2NEEE.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/oj/engine.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/registry.ts",
+          "http://127.0.0.1:4173/src/runtime/browser-worker-factory.ts",
+          "http://127.0.0.1:4173/src/runtime/manifest.ts",
+          "http://127.0.0.1:4173/src/runtime/optional-verification.ts",
+          "http://127.0.0.1:4173/src/runtime/python-parity.ts",
+          "http://127.0.0.1:4173/src/runtime/registry.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor.ts",
+          "http://127.0.0.1:4173/src/storage/legacy-migration.ts",
+          "http://127.0.0.1:4173/src/storage/repository.ts",
+          "http://127.0.0.1:4173/src/services/submission-service.ts",
+          "http://127.0.0.1:4173/src/features/runtimes/runtime-view-model.ts",
+          "http://127.0.0.1:4173/src/features/runtimes/RuntimeRail.tsx",
+          "http://127.0.0.1:4173/src/hooks/use-runtime-registry.ts",
+          "http://127.0.0.1:4173/src/hooks/use-storage-state.ts",
+          "http://127.0.0.1:4173/src/components/app/AppNav.tsx",
+          "http://127.0.0.1:4173/src/components/app/StorageStatus.tsx",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/clsx.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/tailwind-merge.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/runtime/adapters/javascript.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/haskell.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/python.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/racket.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/rustpython.ts",
+          "http://127.0.0.1:4173/src/runtime/adapters/typescript.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor-faults.ts",
+          "http://127.0.0.1:4173/src/oj/case-selection.ts",
+          "http://127.0.0.1:4173/src/oj/judge-response.ts",
+          "http://127.0.0.1:4173/src/oj/judge-validation.ts",
+          "http://127.0.0.1:4173/src/oj/submission-aggregation.ts",
+          "http://127.0.0.1:4173/src/oj/comparer.ts",
+          "http://127.0.0.1:4173/src/runtime/contracts/runtime-contract-cases.ts",
+          "http://127.0.0.1:4173/src/domain/language.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor-lifecycle.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor-worker-state.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor-validation.ts",
+          "http://127.0.0.1:4173/src/runtime/worker-port.ts",
+          "http://127.0.0.1:4173/src/domain/json-value.ts",
+          "http://127.0.0.1:4173/src/runtime/protocol.ts",
+          "http://127.0.0.1:4173/src/storage/indexeddb-driver.ts",
+          "http://127.0.0.1:4173/src/storage/memory-driver.ts",
+          "http://127.0.0.1:4173/src/storage/record-validation.ts",
+          "http://127.0.0.1:4173/src/storage/validation.ts",
+          "http://127.0.0.1:4173/src/components/ThemeToggle.tsx",
+          "http://127.0.0.1:4173/src/features/runtimes/RuntimeDetailsDialog.tsx",
+          "http://127.0.0.1:4173/src/runtime/supervisor-completion.ts",
+          "http://127.0.0.1:4173/src/runtime/supervisor-transport.ts",
+          "http://127.0.0.1:4173/src/storage/schema.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@phosphor-icons_react.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/components/ui/dialog.tsx",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-D7GI7AB5.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-MYWE6UTB.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-VKY5I7DW.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-MIDPHP62.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/problems/problem-modules.ts",
+          "http://127.0.0.1:4173/src/problems/problem-repository.ts",
+          "http://127.0.0.1:4173/src/problems/problem-schema.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/gray-matter.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/marked.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/zod.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/runtime-manifest.json",
+          "http://127.0.0.1:4173/src/pages/ProblemEditorPage.tsx",
+          "http://127.0.0.1:4173/src/features/problems/ProblemWorkspace.tsx",
+          "http://127.0.0.1:4173/src/components/ui/resizable.tsx",
+          "http://127.0.0.1:4173/src/components/ui/tabs.tsx",
+          "http://127.0.0.1:4173/src/features/problems/ProblemStatementPanel.tsx",
+          "http://127.0.0.1:4173/src/features/problems/WorkspaceEditorPanel.tsx",
+          "http://127.0.0.1:4173/src/features/problems/WorkspaceToolbar.tsx",
+          "http://127.0.0.1:4173/src/features/problems/use-problem-workspace.ts",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/react-resizable-panels.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/src/components/CodeEditor.tsx",
+          "http://127.0.0.1:4173/src/features/problems/CaseEditorPanel.tsx",
+          "http://127.0.0.1:4173/src/features/problems/RecentProblemSubmissions.tsx",
+          "http://127.0.0.1:4173/src/features/problems/ResultPanel.tsx",
+          "http://127.0.0.1:4173/src/features/problems/workspace-controller.ts",
+          "http://127.0.0.1:4173/src/components/ui/select.tsx",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-AFHSYT5C.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-7HZ2MDYD.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_view.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_state.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_lang-javascript.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_lang-python.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_commands.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_language.js?v=7d1d36e8",
+          "http://127.0.0.1:4173/node_modules/.vite/deps/@codemirror_legacy-modes_mode_haskell.js?v=7d1d36e8"
+        ]
+      },
+      "viteHmr": {
+        "requests": 3,
+        "responses": 3,
+        "failures": 0,
+        "urls": [
+          "http://127.0.0.1:4173/@vite/client",
+          "http://127.0.0.1:4173/@react-refresh",
+          "http://127.0.0.1:4173/node_modules/vite/dist/client/env.mjs"
+        ]
+      },
+      "googleFonts": {
+        "requests": 3,
+        "responses": 3,
+        "failures": 0,
+        "urls": [
+          "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+          "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2",
+          "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2"
+        ]
+      },
+      "edgeBackgroundNoise": {
+        "requests": 0,
+        "responses": 0,
+        "failures": 0,
+        "urls": []
+      },
+      "networkFailure": {
+        "requests": 0,
+        "responses": 0,
+        "failures": 0,
+        "urls": []
+      }
+    },
+    "relevantEvents": [
+      {
+        "phase": "request",
+        "category": "viteHmr",
+        "url": "http://127.0.0.1:4173/@vite/client",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452543.388262
+      },
+      {
+        "phase": "request",
+        "category": "googleFonts",
+        "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+        "type": "Stylesheet",
+        "method": "GET",
+        "timestamp": 1452543.388821
+      },
+      {
+        "phase": "response",
+        "category": "googleFonts",
+        "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+        "type": "Stylesheet",
+        "status": 200,
+        "timestamp": 1452543.39661
+      },
+      {
+        "phase": "request",
+        "category": "viteHmr",
+        "url": "http://127.0.0.1:4173/@react-refresh",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452543.398103
+      },
+      {
+        "phase": "response",
+        "category": "viteHmr",
+        "url": "http://127.0.0.1:4173/@vite/client",
+        "type": "Script",
+        "status": 200,
+        "timestamp": 1452543.403222
+      },
+      {
+        "phase": "response",
+        "category": "viteHmr",
+        "url": "http://127.0.0.1:4173/@react-refresh",
+        "type": "Script",
+        "status": 200,
+        "timestamp": 1452543.419648
+      },
+      {
+        "phase": "request",
+        "category": "googleFonts",
+        "url": "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2",
+        "type": "Font",
+        "method": "GET",
+        "timestamp": 1452546.455547
+      },
+      {
+        "phase": "request",
+        "category": "googleFonts",
+        "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+        "type": "Font",
+        "method": "GET",
+        "timestamp": 1452546.456274
+      },
+      {
+        "phase": "response",
+        "category": "googleFonts",
+        "url": "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2",
+        "type": "Font",
+        "status": 200,
+        "timestamp": 1452546.472588
+      },
+      {
+        "phase": "response",
+        "category": "googleFonts",
+        "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+        "type": "Font",
+        "status": 200,
+        "timestamp": 1452546.476131
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/runtime-manifest.json",
+        "type": "Fetch",
+        "method": "GET",
+        "timestamp": 1452546.608344
+      },
+      {
+        "phase": "response",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/runtime-manifest.json",
+        "type": "Fetch",
+        "status": 200,
+        "timestamp": 1452546.624152
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452548.10463
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452548.826798
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452549.357924
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452549.892821
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452550.52852
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452551.078468
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452551.683392
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452552.114253
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452582.80656
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452585.067399
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452586.254366
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452587.307031
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452588.285826
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452589.427105
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452590.68299
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452591.810402
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452592.960951
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/js-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452625.242156
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/python-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452630.425476
+      },
+      {
+        "phase": "request",
+        "category": "application",
+        "url": "http://127.0.0.1:4173/python-worker.js",
+        "type": "Script",
+        "method": "GET",
+        "timestamp": 1452674.329162
+      }
+    ]
+  },
+  "workerTargets": [
+    {
+      "event": "created",
+      "targetId": "827477630218CEFA7F0C0A31CB276845",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:18.428Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "827477630218CEFA7F0C0A31CB276845",
+      "timestamp": "2026-08-28T06:49:18.713Z"
+    },
+    {
+      "event": "created",
+      "targetId": "D56B33FDA4C9FCB4CFD80EEB7BE8AA4E",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:19.148Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "D56B33FDA4C9FCB4CFD80EEB7BE8AA4E",
+      "timestamp": "2026-08-28T06:49:19.289Z"
+    },
+    {
+      "event": "created",
+      "targetId": "3D598FB0F8FB35DD49A9B7DB5650C1C4",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:19.680Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "3D598FB0F8FB35DD49A9B7DB5650C1C4",
+      "timestamp": "2026-08-28T06:49:19.846Z"
+    },
+    {
+      "event": "created",
+      "targetId": "95FC8E853C97D0E134C8404C956C69C9",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:20.215Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "95FC8E853C97D0E134C8404C956C69C9",
+      "timestamp": "2026-08-28T06:49:20.365Z"
+    },
+    {
+      "event": "created",
+      "targetId": "EFB0E2D71B6B56EFDD5A9FBA53F7893B",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:20.851Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "EFB0E2D71B6B56EFDD5A9FBA53F7893B",
+      "timestamp": "2026-08-28T06:49:20.999Z"
+    },
+    {
+      "event": "created",
+      "targetId": "5599076BE43F84D4EBF23D3C35C654E4",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:21.401Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "5599076BE43F84D4EBF23D3C35C654E4",
+      "timestamp": "2026-08-28T06:49:21.572Z"
+    },
+    {
+      "event": "created",
+      "targetId": "755712F6D7F4209A6AD09156D63B61EA",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:22.005Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "755712F6D7F4209A6AD09156D63B61EA",
+      "timestamp": "2026-08-28T06:49:22.138Z"
+    },
+    {
+      "event": "created",
+      "targetId": "AB22DF062C2857BF4D1D7EDBDF535C04",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:22.436Z"
+    },
+    {
+      "event": "created",
+      "targetId": "93165C1F0D19D6900D64A21139310EB6",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:53.129Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "93165C1F0D19D6900D64A21139310EB6",
+      "timestamp": "2026-08-28T06:49:53.439Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "AB22DF062C2857BF4D1D7EDBDF535C04",
+      "timestamp": "2026-08-28T06:49:54.549Z"
+    },
+    {
+      "event": "created",
+      "targetId": "766539AF4A75D925E9E282EB283AEAD2",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:55.389Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "766539AF4A75D925E9E282EB283AEAD2",
+      "timestamp": "2026-08-28T06:49:56.158Z"
+    },
+    {
+      "event": "created",
+      "targetId": "8159314C5F75BA27AA817132E22D9CFC",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:56.576Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "8159314C5F75BA27AA817132E22D9CFC",
+      "timestamp": "2026-08-28T06:49:57.281Z"
+    },
+    {
+      "event": "created",
+      "targetId": "7CEC1DBC2C2E15EBDAC51CE06601B4CC",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:57.628Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "7CEC1DBC2C2E15EBDAC51CE06601B4CC",
+      "timestamp": "2026-08-28T06:49:58.279Z"
+    },
+    {
+      "event": "created",
+      "targetId": "3F776647DE3ED1E3297EDAF6C4B404C6",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:58.609Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "3F776647DE3ED1E3297EDAF6C4B404C6",
+      "timestamp": "2026-08-28T06:49:59.330Z"
+    },
+    {
+      "event": "created",
+      "targetId": "4F853F1EAB8EDBABC0BA53A8EAB702A8",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:49:59.751Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "4F853F1EAB8EDBABC0BA53A8EAB702A8",
+      "timestamp": "2026-08-28T06:50:00.586Z"
+    },
+    {
+      "event": "created",
+      "targetId": "DFB832562825E7DE9CAE70EC4A3C3D70",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:50:01.005Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "DFB832562825E7DE9CAE70EC4A3C3D70",
+      "timestamp": "2026-08-28T06:50:01.819Z"
+    },
+    {
+      "event": "created",
+      "targetId": "CF323ED98560150B5C91DF43DA8FF48E",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:50:02.132Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "CF323ED98560150B5C91DF43DA8FF48E",
+      "timestamp": "2026-08-28T06:50:02.946Z"
+    },
+    {
+      "event": "created",
+      "targetId": "D6991627FA46BF2AD6268005437497A8",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:50:03.287Z"
+    },
+    {
+      "event": "created",
+      "targetId": "63CF341CE2A03A1E370614C945D3ADE6",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:50:35.569Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "D6991627FA46BF2AD6268005437497A8",
+      "timestamp": "2026-08-28T06:50:36.551Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "63CF341CE2A03A1E370614C945D3ADE6",
+      "timestamp": "2026-08-28T06:50:37.892Z"
+    },
+    {
+      "event": "created",
+      "targetId": "B9185F3CFE36ED1658BE57CA108BCCA7",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:50:40.747Z"
+    },
+    {
+      "event": "created",
+      "targetId": "4F409B91FB4DBEC82567521D1E220736",
+      "type": "worker",
+      "url": "",
+      "timestamp": "2026-08-28T06:51:24.650Z"
+    },
+    {
+      "event": "destroyed",
+      "targetId": "B9185F3CFE36ED1658BE57CA108BCCA7",
+      "timestamp": "2026-08-28T06:51:25.934Z"
+    }
+  ],
+  "observedCurrentIdentities": {
+    "javascript-worker": {
+      "runtimeVersions": [
+        "javascript-es2020"
+      ],
+      "buildIds": [
+        "32c927a7995bc8b8"
+      ],
+      "source": "all nine protocol-validated visible results"
+    },
+    "typescript-official": {
+      "runtimeVersions": [
+        "5.9.3"
+      ],
+      "buildIds": [
+        "32c927a7995bc8b8"
+      ],
+      "source": "all nine protocol-validated visible results"
+    },
+    "python-pyodide": {
+      "runtimeVersions": [
+        "0.29.1"
+      ],
+      "buildIds": [
+        "c0af25cee696df69"
+      ],
+      "source": "all nine protocol-validated visible results"
+    }
+  },
+  "identityVerification": {
+    "javascript-worker": {
+      "expected": {
+        "runtimeId": "javascript-worker",
+        "runtimeVersion": "javascript-es2020",
+        "buildId": "32c927a7995bc8b8"
+      },
+      "observed": {
+        "runtimeId": "javascript-worker",
+        "runtimeVersions": [
+          "javascript-es2020"
+        ],
+        "buildIds": [
+          "32c927a7995bc8b8"
+        ]
+      },
+      "allNineConsistent": true,
+      "exactCurrentIdentity": true
+    },
+    "typescript-official": {
+      "expected": {
+        "runtimeId": "typescript-official",
+        "runtimeVersion": "5.9.3",
+        "buildId": "32c927a7995bc8b8"
+      },
+      "observed": {
+        "runtimeId": "typescript-official",
+        "runtimeVersions": [
+          "5.9.3"
+        ],
+        "buildIds": [
+          "32c927a7995bc8b8"
+        ]
+      },
+      "allNineConsistent": true,
+      "exactCurrentIdentity": true
+    },
+    "python-pyodide": {
+      "expected": {
+        "runtimeId": "python-pyodide",
+        "runtimeVersion": "0.29.1",
+        "buildId": "c0af25cee696df69"
+      },
+      "observed": {
+        "runtimeId": "python-pyodide",
+        "runtimeVersions": [
+          "0.29.1"
+        ],
+        "buildIds": [
+          "c0af25cee696df69"
+        ]
+      },
+      "allNineConsistent": true,
+      "exactCurrentIdentity": true
+    }
+  },
+  "errors": [],
+  "initialUi": {
+    "title": "Two Sum",
+    "visibleCodeMirrorCount": 1,
+    "visibleSubmitCount": 1,
+    "navigationEntries": 1
+  },
+  "acceptance": {
+    "allThreeExactNineStepMatricesPassed": true,
+    "exactCurrentIdentitiesPassed": true,
+    "typescriptCeIdentityRetentionPassed": true,
+    "freshWorkerAfterEveryTlePassed": true,
+    "warmOfflineNoReloadZeroApplicationRequestsPassed": true,
+    "consolePassed": true
+  },
+  "artifacts": [
+    "runtime-results.json",
+    "runtime-javascript-worker.png",
+    "runtime-typescript-official.png",
+    "runtime-python-pyodide.png",
+    "runtime-python-pyodide-offline.png"
+  ],
+  "completedAt": "2026-08-28T06:51:31.657Z"
+}

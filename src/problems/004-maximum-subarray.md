@@ -1,24 +1,24 @@
 ---
+schemaVersion: 2
 id: 4
+slug: maximum-subarray
 title: Maximum Subarray
 difficulty: Medium
-description: Find the contiguous subarray with the largest sum.
+summary: Find the largest sum of any non-empty contiguous subarray.
+tags:
+  - array
+  - dynamic-programming
 examples:
   - input: "nums = [-2,1,-3,4,-1,2,1,-5,4]"
     output: "6"
-    explanation: "[4,-1,2,1] has the largest sum = 6."
+    explanation: "[4,-1,2,1] has the largest sum, 6."
   - input: "nums = [1]"
     output: "1"
 constraints:
   - "1 <= nums.length <= 10^5"
   - "-10^4 <= nums[i] <= 10^4"
-testCases:
-  - input: {"nums": [-2,1,-3,4,-1,2,1,-5,4]}
-    expected: 6
-  - input: {"nums": [1]}
-    expected: 1
-  - input: {"nums": [5,4,-1,7,8]}
-    expected: 23
+entrypoint: solution
+contract: json-function-v1
 templates:
   javascript: |
     function solution(input) {
@@ -44,6 +44,15 @@ templates:
       (let ([nums (hash-ref input 'nums)])
         ;; Your code here
         0))
+tests:
+  public:
+    - input: { nums: [-2, 1, -3, 4, -1, 2, 1, -5, 4] }
+      expected: 6
+    - input: { nums: [1] }
+      expected: 1
+  judge:
+    - input: { nums: [5, 4, -1, 7, 8] }
+      expected: 23
 ---
 
 ## 题目

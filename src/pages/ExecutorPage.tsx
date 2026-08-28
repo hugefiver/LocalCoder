@@ -1,7 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { ExecutorView } from "@/components/ExecutorView";
+import { ExecutorWorkspace } from "../features/executor/ExecutorWorkspace.js";
 
 export function ExecutorPage() {
-  const navigate = useNavigate();
-  return <ExecutorView onBack={() => navigate(-1)} />;
+  return <ExecutorWorkspace />;
 }

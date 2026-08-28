@@ -1,24 +1,24 @@
 ---
+schemaVersion: 2
 id: 3
+slug: valid-palindrome
 title: Valid Palindrome
 difficulty: Easy
-description: Return true if s is a palindrome after lowercasing and removing non-alphanumeric characters.
+summary: Check whether a string is a palindrome after ignoring case and non-alphanumeric characters.
+tags:
+  - string
+  - two-pointers
 examples:
   - input: "s = \"A man, a plan, a canal: Panama\""
     output: "true"
-    explanation: "\"amanaplanacanalpanama\" is a palindrome."
+    explanation: "\"amanaplanacanalpanama\" reads the same in either direction."
   - input: "s = \"race a car\""
     output: "false"
 constraints:
   - "1 <= s.length <= 2 * 10^5"
   - "s consists only of printable ASCII characters"
-testCases:
-  - input: {"s": "A man, a plan, a canal: Panama"}
-    expected: true
-  - input: {"s": "race a car"}
-    expected: false
-  - input: {"s": " "}
-    expected: true
+entrypoint: solution
+contract: json-function-v1
 templates:
   javascript: |
     function solution(input) {
@@ -44,6 +44,15 @@ templates:
       (let ([s (hash-ref input 's)])
         ;; Your code here
         #f))
+tests:
+  public:
+    - input: { s: "A man, a plan, a canal: Panama" }
+      expected: true
+    - input: { s: "race a car" }
+      expected: false
+  judge:
+    - input: { s: " " }
+      expected: true
 ---
 
 ## 题目

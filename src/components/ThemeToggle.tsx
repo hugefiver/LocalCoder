@@ -1,29 +1,31 @@
 import { Moon, Sun } from "@phosphor-icons/react";
-import { useTheme } from "next-themes";
 import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/use-theme";
 
-/**
- * Simple light/dark toggle.
- * Uses next-themes and Tailwind's `.dark` class variant.
- */
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { persistenceError, resolvedTheme, setTheme } = useTheme();
 
   const isDark = useMemo(() => resolvedTheme === "dark", [resolvedTheme]);
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="icon"
-      className="fixed right-4 top-4 z-50"
-      aria-label={isDark ? "切换到亮色模式" : "切换到暗色模式"}
-      title={isDark ? "切换到亮色模式" : "切换到暗色模式"}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-    >
-      {isDark ? <Sun size={18} weight="bold" /> : <Moon size={18} weight="bold" />}
-    </Button>
+    <div className="theme-control">
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label={isDark ? "切换到亮色模式" : "切换到暗色模式"}
+        title={isDark ? "切换到亮色模式" : "切换到暗色模式"}
+        onClick={() => {
+          void setTheme(isDark ? "light" : "dark").catch(() => undefined);
+        }}
+      >
+        {isDark ? <Sun aria-hidden="true" weight="bold" /> : <Moon aria-hidden="true" weight="bold" />}
+      </Button>
+      {persistenceError === null ? null : (
+        <span className="theme-control__error" role="alert">{persistenceError}</span>
+      )}
+    </div>
   );
 }

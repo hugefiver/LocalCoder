@@ -12,7 +12,7 @@ on:
         default: "master"
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
   pages: write
 
@@ -21,54 +21,68 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-executors:
-    uses: ./.github/workflows/build-executors.yml
-    with:
-      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
-
   deploy:
-    needs: build-executors
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.0.0
-
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.0.0
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: 24
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
-      - name: Download executor runtimes
-        uses: actions/download-artifact@v4
-        with:
-          name: executor-runtimes
-          path: .
+      - name: Copy TypeScript runtime asset
+        run: node scripts/copy-typescript-asset.mjs
+
+      - name: Setup Pyodide runtime assets
+        run: node scripts/setup-pyodide.js --skip-typescript
+
+      - name: Generate worker assets
+        run: node scripts/build-worker-assets.mjs
+
+      - name: Generate runtime manifest
+        run: node scripts/generate-runtime-manifest.mjs
+
+      - name: Report runtime capabilities
+        run: node scripts/report-runtime-capabilities.mjs --github-summary
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
 
       - name: Run tests
-        run: pnpm test
+        run: npm test
 
-      - name: Build
+      - name: Build GitHub Pages distribution
         env:
           GITHUB_PAGES: "true"
           VITE_GITHUB_PAGES: "true"
-        run: pnpm build
+        run: npm run build
 
-      - name: SPA fallback (404.html)
-        run: cp dist/index.html dist/404.html
+      - name: Check packaged runtime assets
+        run: node scripts/check-runtime-assets.mjs dist
+
+      - name: Smoke check Pages distribution
+        env:
+          GITHUB_PAGES: "true"
+        run: npm run smoke
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6.0.0
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: ./dist
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+        uses: actions/deploy-pages@v5.0.0

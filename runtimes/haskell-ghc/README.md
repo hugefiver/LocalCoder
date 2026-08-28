@@ -28,7 +28,7 @@ GHC_LIBDIR_TAR=/absolute/path/to/libdir.tar
 Then run:
 
 ```
-pnpm run build:runtimes
+npm run build:runtimes
 ```
 
 This copies the wasm binaries and libdir tar into `public/haskell/` and writes

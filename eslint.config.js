@@ -11,7 +11,7 @@ export default tseslint.config(
       "node_modules/**",
       "public/**",
       "**/*.min.*",
-      "src/vite-end.d.ts",
+      ".test-dist/**",
     ],
   },
   js.configs.recommended,
@@ -33,6 +33,14 @@ export default tseslint.config(
     },
   },
   {
+    files: ["tests/**/*.{ts,tsx,mts,cts,mjs}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
@@ -51,14 +59,22 @@ export default tseslint.config(
 
       // Vite + React Fast Refresh
       "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
+        "error",
+        {
+          allowConstantExport: true,
+          allowExportNames: [
+            "badgeVariants",
+            "buttonVariants",
+            "navigationMenuTriggerStyle",
+            "toggleVariants",
+          ],
+        },
       ],
 
       // Prefer TS-aware unused-vars; allow `_`-prefixed intentionally-unused.
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
-        "warn",
+        "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
 
@@ -68,7 +84,7 @@ export default tseslint.config(
       // The new react-hooks plugin versions include extra rules that are too strict for this project.
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/purity": "off",
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/exhaustive-deps": "error",
     },
   }
 )

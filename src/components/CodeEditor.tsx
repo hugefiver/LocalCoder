@@ -1,8 +1,8 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { EditorView, keymap, lineNumbers, highlightActiveLineGutter } from '@codemirror/view';
-import { EditorState, Compartment } from '@codemirror/state';
+import { Compartment, EditorState, StateEffect, StateField } from '@codemirror/state';
 import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
-import { python, pythonLanguage } from '@codemirror/lang-python';
+import { python } from '@codemirror/lang-python';
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 import { syntaxHighlighting, HighlightStyle, bracketMatching, indentOnInput, LanguageSupport, StreamLanguage } from '@codemirror/language';
 import { haskell as haskellLegacy } from '@codemirror/legacy-modes/mode/haskell';
@@ -11,40 +11,66 @@ import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
 import { lintKeymap } from '@codemirror/lint';
 import { tags } from '@lezer/highlight';
 import { cn } from '@/lib/utils';
+import type { LanguageId } from '@/domain/language';
 
 interface CodeEditorProps {
   value: string;
   onChange: (value: string) => void;
-  language: string;
+  language: LanguageId;
   className?: string;
 }
 
 const racketSupport = (): LanguageSupport => {
-  const racketKeywords = 'define lambda let if cond else and or not quote list cons car cdr null? hash-ref hash-set map filter fold begin display newline';
-  
-  return new LanguageSupport(
-    javascriptLanguage,
-    []
-  );
+  return new LanguageSupport(javascriptLanguage, []);
 };
 
 const customHighlightStyle = HighlightStyle.define([
-  { tag: tags.keyword, color: '#c792ea' },
-  { tag: tags.function(tags.variableName), color: '#82aaff' },
-  { tag: tags.variableName, color: '#eeffff' },
-  { tag: tags.string, color: '#c3e88d' },
-  { tag: tags.number, color: '#f78c6c' },
-  { tag: tags.bool, color: '#ff5370' },
-  { tag: tags.null, color: '#ff5370' },
-  { tag: tags.operator, color: '#89ddff' },
-  { tag: tags.comment, color: '#546e7a', fontStyle: 'italic' },
-  { tag: tags.className, color: '#ffcb6b' },
-  { tag: tags.typeName, color: '#ffcb6b' },
-  { tag: tags.propertyName, color: '#89ddff' },
-  { tag: tags.bracket, color: '#89ddff' },
+  { tag: tags.keyword, color: 'var(--accent-primary)' },
+  { tag: tags.function(tags.variableName), color: 'var(--status-info)' },
+  { tag: tags.variableName, color: 'var(--text-primary)' },
+  { tag: tags.string, color: 'var(--status-success)' },
+  { tag: tags.number, color: 'var(--status-warning)' },
+  { tag: tags.bool, color: 'var(--status-error)' },
+  { tag: tags.null, color: 'var(--status-error)' },
+  { tag: tags.operator, color: 'var(--accent-hover)' },
+  { tag: tags.comment, color: 'var(--text-secondary)', fontStyle: 'italic' },
+  { tag: tags.className, color: 'var(--status-warning)' },
+  { tag: tags.typeName, color: 'var(--status-warning)' },
+  { tag: tags.propertyName, color: 'var(--status-info)' },
+  { tag: tags.bracket, color: 'var(--text-secondary)' },
 ]);
 
-const getLanguageExtension = (language: string) => {
+const setEscapeTabArmed = StateEffect.define<boolean>();
+const escapeTabState = StateField.define<boolean>({
+  create: () => false,
+  update: (armed, transaction) => {
+    for (const effect of transaction.effects) {
+      if (effect.is(setEscapeTabArmed)) return effect.value;
+    }
+    return armed;
+  },
+});
+
+const escapeThenTabKeymap = keymap.of([
+  {
+    key: 'Escape',
+    run: (view) => {
+      view.dispatch({ effects: setEscapeTabArmed.of(true) });
+      return false;
+    },
+  },
+  {
+    key: 'Tab',
+    run: (view) => {
+      if (!view.state.field(escapeTabState)) return false;
+      view.dispatch({ effects: setEscapeTabArmed.of(false) });
+      focusNextAfterEditor(view);
+      return true;
+    },
+  },
+]);
+
+const getLanguageExtension = (language: LanguageId) => {
   switch (language) {
     case 'javascript':
       return javascript();
@@ -52,27 +78,31 @@ const getLanguageExtension = (language: string) => {
       return javascript({ typescript: true });
     case 'python':
       return python();
-    case 'rustpython':
-      return python();
     case 'racket':
       return racketSupport();
     case 'haskell':
       return StreamLanguage.define(haskellLegacy);
-    default:
-      return javascript();
   }
 };
 
 export function CodeEditor({ value, onChange, language, className }: CodeEditorProps) {
+  const instructionsId = useId();
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const languageCompartment = useRef(new Compartment());
+  const initialValueRef = useRef(value);
+  const initialLanguageRef = useRef(language);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     if (!editorRef.current) return;
 
     const startState = EditorState.create({
-      doc: value,
+      doc: initialValueRef.current,
       extensions: [
         lineNumbers(),
         highlightActiveLineGutter(),
@@ -82,7 +112,13 @@ export function CodeEditor({ value, onChange, language, className }: CodeEditorP
         highlightSelectionMatches(),
         autocompletion(),
         syntaxHighlighting(customHighlightStyle),
-        languageCompartment.current.of(getLanguageExtension(language)),
+        languageCompartment.current.of(getLanguageExtension(initialLanguageRef.current)),
+        escapeTabState,
+        escapeThenTabKeymap,
+        EditorView.contentAttributes.of({
+          'aria-label': '代码编辑器',
+          'aria-describedby': instructionsId,
+        }),
         keymap.of([
           ...defaultKeymap,
           ...closeBracketsKeymap,
@@ -94,13 +130,16 @@ export function CodeEditor({ value, onChange, language, className }: CodeEditorP
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             const newValue = update.state.doc.toString();
-            onChange(newValue);
+            onChangeRef.current(newValue);
           }
         }),
         EditorView.theme({
           '&': {
             height: '100%',
-            fontSize: '14px',
+            width: '100%',
+            backgroundColor: 'var(--surface-inset)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--text-code)',
             fontFamily: 'var(--font-mono)',
           },
           '.cm-scroller': {
@@ -108,29 +147,33 @@ export function CodeEditor({ value, onChange, language, className }: CodeEditorP
             fontFamily: 'var(--font-mono)',
           },
           '.cm-content': {
-            caretColor: 'oklch(0.75 0.15 195)',
+            caretColor: 'var(--accent-primary)',
             fontFamily: 'var(--font-mono)',
           },
           '.cm-cursor': {
-            borderLeftColor: 'oklch(0.75 0.15 195)',
+            borderLeftColor: 'var(--accent-primary)',
           },
           '&.cm-focused .cm-cursor': {
-            borderLeftColor: 'oklch(0.75 0.15 195)',
+            borderLeftColor: 'var(--accent-primary)',
           },
           '&.cm-focused .cm-selectionBackground, ::selection': {
-            backgroundColor: 'oklch(0.35 0.01 250)',
+            backgroundColor: 'var(--border-strong)',
           },
           '.cm-activeLine': {
-            backgroundColor: 'oklch(0.18 0.01 250)',
+            backgroundColor: 'var(--surface-panel)',
           },
           '.cm-activeLineGutter': {
-            backgroundColor: 'oklch(0.18 0.01 250)',
+            backgroundColor: 'var(--surface-panel)',
           },
           '.cm-gutters': {
-            backgroundColor: 'oklch(0.12 0.01 250)',
-            color: 'oklch(0.65 0.01 250)',
-            border: 'none',
+            backgroundColor: 'var(--surface-inset)',
+            color: 'var(--text-secondary)',
+            borderRight: '1px solid var(--border-default)',
             fontFamily: 'var(--font-mono)',
+          },
+          '&.cm-focused': {
+            outline: '2px solid var(--focus-ring)',
+            outlineOffset: '-2px',
           },
         }),
         EditorView.lineWrapping,
@@ -147,7 +190,7 @@ export function CodeEditor({ value, onChange, language, className }: CodeEditorP
     return () => {
       view.destroy();
     };
-  }, []);
+  }, [instructionsId]);
 
   useEffect(() => {
     if (viewRef.current && value !== undefined) {
@@ -173,8 +216,24 @@ export function CodeEditor({ value, onChange, language, className }: CodeEditorP
   }, [language]);
 
   return (
-    <div className={cn('h-full overflow-hidden rounded-lg border border-border', className)}>
-      <div ref={editorRef} className="h-full" id="code-editor" />
+    <div className={cn('size-full min-h-0 overflow-hidden rounded-lg border border-border bg-[var(--surface-inset)]', className)}>
+      <div ref={editorRef} className="size-full" />
+      <p className="sr-only" id={instructionsId}>
+        Tab 键用于代码缩进。先按 Escape，再按 Tab，可将焦点移出编辑器。
+      </p>
     </div>
   );
+}
+
+function focusNextAfterEditor(view: EditorView): void {
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+  )).filter((element) => element.getClientRects().length > 0 && element.getAttribute('aria-hidden') !== 'true');
+  const currentIndex = candidates.indexOf(view.contentDOM);
+  const next = candidates[currentIndex + 1];
+  if (next === undefined) {
+    view.contentDOM.blur();
+    return;
+  }
+  next.focus();
 }

@@ -1,129 +1,45 @@
-# LocalCoder - Copilot Instructions
+# LocalCoder Copilot Instructions
 
-## Architecture Overview
+## Product boundary
 
-Browser-based LeetCode-style coding platform with **pure frontend execution** - all code runs in Web Workers with no backend. Multi-language support via isolated worker runtimes.
+LocalCoder is a static, single-user local-practice OJ. It has no accounts, backend, cloud sync, rankings, remote execution API, or trusted-contest guarantee. Browser Workers provide local execution isolation and a termination boundary. They are not a secure sandbox, and browser-shipped judge cases are inspectable rather than secret.
 
-### Key Components
+The main thread owns expected values, comparison, and verdict mapping. Workers return actual values or structured failures. TLE is based on local main-thread timeout and termination. Timing is not authoritative, and the product does not claim a memory limit or emit MLE.
 
-- **Workers (`public/*-worker.js`)**: Language execution sandboxes (JavaScript/TypeScript share `js-worker.js`, Python uses `python-worker.js` with Pyodide)
-- **Worker Manager (`src/lib/runtime/worker-manager.ts`)**: Singleton worker lifecycle, request routing, timeout handling, state synchronization via `useSyncExternalStore`
-- **Problem System (`src/lib/problems.ts`)**: Auto-loads from `src/problems/*.md` using Vite's `import.meta.glob` with gray-matter frontmatter parsing
-- **Storage Pattern**: Per-problem, per-language code persistence via `useLocalStorageState` with keys like `problem-${id}-language` and `problem-${id}-code-${lang}`, includes cross-tab sync via storage events
-- **UI Layout**: React Router SPA with resizable panels (problem description | code editor | test results) using `react-resizable-panels`
-- **Routing**: Uses `react-router-dom` with routes: `/` (home), `/problems` (list), `/problems/:id` (editor), `/executor` (free-form code execution)
+## Runtime model
 
-## Critical Setup Requirements
+Use `LanguageId` and `RuntimeId` separately. Required runtime IDs are `javascript-worker`, `typescript-official`, and `python-pyodide`. Optional IDs are `python-rustpython`, `racket-wasm`, and `haskell-ghc-wasi`.
 
-**Pyodide must be copied to `public/pyodide/` before Python execution works:**
+`public/runtime-manifest.json` is generated from packaged assets and is the only availability source. An optional runtime stays disabled until a current matching receipt proves handshake, smoke, and judge contract. RustPython also needs six-problem parity with Pyodide. Packaged assets alone do not prove support.
 
-```bash
-pnpm install  # triggers postinstall hook
-pnpm run setup  # or run manually
+Every Worker protocol message includes `protocolVersion`, `requestId`, and `runtimeId`. Fail closed on malformed messages, unknown protocol versions, or identity mismatches. Preserve the runtime version and build ID returned by the exact Worker generation that completed an operation.
+
+The Supervisor serializes session runtimes FIFO, terminates on timeout, cancellation, malformed response, Worker error, and fatal runtime failure, then rebuilds before the next operation. Late messages from an old generation are ignored.
+
+## Storage and user flows
+
+Persist user data through the IndexedDB repository with stores `drafts`, `customCases`, `submissions`, `progress`, `settings`, and `meta`. `localStorage` exists only as an idempotent legacy-migration input. If IndexedDB fails, retain session data in memory and visibly show `未保存`.
+
+Run covers public and custom cases and never changes progress. Submit includes judge cases. An accepted submission and progress update must be one transaction, with language, runtime, and runtime/build identity recorded. Cap local submission history at 200 records inside the insertion transaction.
+
+## Development and delivery
+
+Use npm with the committed `package-lock.json`:
+
+```powershell
+npm ci
+npm run typecheck
+npm run lint
+npm test
+npm run runtime:manifest
+npm run runtime:check
+npm run build
+npm run smoke
+node scripts/report-runtime-capabilities.mjs
 ```
 
-The `scripts/setup-pyodide.js` copies entire `node_modules/pyodide/` to `public/` (not from CDN). Workers load from relative path via `importScripts('./pyodide/pyodide.js')`.
+Do not treat a skipped or unavailable optional runtime as a passing test. `verify-optional-runtime.mjs` exits `0` only for `VERIFIED`, `2` for `UNAVAILABLE` or `LOADABLE_UNVERIFIED`, and `1` for `BROKEN`.
 
-## Development Workflow
+GitHub Pages uses `./` asset paths, HashRouter, and a `404.html` fallback. CI runs `npm ci` against the lockfile and must not install external Rust, Racket, or Haskell toolchains.
 
-```bash
-pnpm dev        # Vite dev server (port 5173)
-pnpm build      # TypeScript + Vite build (note: tsc -b --noCheck skips type checking)
-pnpm lint       # ESLint
-pnpm preview    # Preview production build
-```
-
-**GitHub Pages deployment**: Auto-deploys on push to `master` via `.github/workflows/deploy-gh-pages.yml`. Build sets `GITHUB_PAGES=true` env var and uses relative base path `./` for assets. SPA routing handled by copying `dist/index.html` → `dist/404.html` via custom Vite plugin `ghPagesSpaFallback()`.
-
-## Code Patterns
-
-### Adding Problems
-
-Create `src/problems/NNN-slug.md` with frontmatter:
-
-```yaml
----
-id: 7
-title: Problem Name
-difficulty: Easy|Medium|Hard
-description: Short summary for list view
-examples:
-  - input: "nums = [2,7,11,15], target = 9"
-    output: "[0,1]"
-    explanation: "Optional explanation"
-constraints:
-  - "2 <= nums.length <= 10^4"
-testCases:
-  - input: {"param": value}
-    expected: result
-templates:
-  javascript: |
-    function solution(input) { /* ... */ }
-  python: |
-    def solution(input):
-        # Your code here
----
-Markdown body rendered as problem description
-```
-
-### Worker Communication Pattern
-
-Workers use request/response with unique IDs. Example from `worker-manager.ts`:
-
-```typescript
-await executeWorkerRequest<ExecutionResult>(
-  language,
-  { code, testCases, executorMode },
-  { timeoutMs: 30000 }
-);
-```
-
-Workers post back `{ success, results, requestId }`. Python worker initialization takes 10-15s first run (Pyodide loading). Workers send `{ type: 'ready', requestId }` after initialization.
-
-### State Management
-
-- **No Redux/Zustand**: Hooks + React Router + localStorage only
-- **Cross-tab sync**: `useLocalStorageState` listens to `storage` events, automatically syncs state across browser tabs/windows
-- **Worker states**: Global singleton in `worker-manager.ts`, exposed via `getAllRuntimeStates()` for React consumption with `useSyncExternalStore`
-- **Runtime states**: `idle` → `loading` → `ready` | `error`, tracked per-language
-
-## Project Conventions
-
-- **Path alias**: `@/` maps to `src/` (see `tsconfig.json` and `vite.config.ts`)
-- **UI components**: Shadcn/ui with Radix primitives (config in `components.json`), "new-york" style
-- **Styling**: Tailwind CSS v4 with `@tailwindcss/vite` plugin, custom theme in `theme.json`
-- **Icons**: Lucide React (configured in `components.json`)
-- **Package manager**: pnpm 10.0.0 (specified in `packageManager` field)
-- **No type checking in build**: `tsc -b --noCheck` means TypeScript errors don't fail builds
-
-## Integration Points
-
-- **CodeMirror 6**: Custom theme in `CodeEditor.tsx` with language-specific extensions (JavaScript uses `@codemirror/lang-javascript`, Python uses `@codemirror/lang-python`)
-- **Pyodide**: WebAssembly CPython, loaded from local `public/pyodide/` NOT CDN. Base URL calculated dynamically in worker: `self.location.origin + self.location.pathname.replace(/\/[^\/]*$/, '/') + 'pyodide/'`
-- **Vite build config**: Special rollup options to preserve worker filenames and output Pyodide assets to correct paths (see `vite.config.ts` `assetFileNames` logic)
-- **Theme system**: Uses `next-themes` for dark/light mode toggle with system preference detection
-
-## Testing & Execution
-
-Test cases run in workers with timeout protection (default 5s per test, 30s overall). Two modes:
-
-1. **Problem mode** (`executorMode: false`): Runs user function against test cases, compares actual vs expected with deep equality
-2. **Executor mode** (`executorMode: true`): Free-form code execution, returns logs + final result (used in `/executor` page)
-
-All languages wrap user code in try-catch and capture `console.log` output via function interception.
-
-## Important Constraints
-
-- **Pure frontend**: No server-side execution, no API calls to external code runners
-- **Worker persistence**: Workers stay alive across executions for performance (especially Pyodide's 10-15s init)
-- **TypeScript quirks**: Build uses `tsc -b --noCheck` - type errors don't fail build, ensure types are correct manually
-- **GitHub Pages**: SPA routing requires 404.html fallback, base path set to `./` (relative) via `GITHUB_PAGES` env var
-- **Asset handling**: Vite configured to copy `public/` directory contents (including Pyodide), workers and Pyodide assets get special path handling in build output
-
-## File Structure Conventions
-
-- **Workers** live in `public/` (not `src/`) to avoid being processed by build tools
-- **Problems** must follow naming pattern `NNN-slug.md` where NNN is a number (used for ID extraction if not in frontmatter)
-- **Components**: React functional components with hooks, no class components
-- **Hooks**: Custom hooks prefixed with `use-` in `src/hooks/`
-- **Pages**: Top-level route components in `src/pages/` suffixed with `Page.tsx`
+*Author's note: Written for contributors changing LocalCoder so they preserve the runtime, storage, and trust boundaries rather than restoring legacy assumptions.*

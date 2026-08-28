@@ -1,0 +1,88 @@
+:root {
+  --surface-base: oklch(0.98 0.006 250);
+  --surface-panel: oklch(1 0 0);
+  --surface-inset: oklch(0.95 0.008 250);
+  --surface-raised: oklch(1 0 0);
+  --text-primary: oklch(0.2 0.015 250);
+  --text-secondary: oklch(0.47 0.018 250);
+  --text-disabled: oklch(0.65 0.01 250);
+  --border-default: oklch(0.87 0.012 250);
+  --border-strong: oklch(0.72 0.02 250);
+  --accent-primary: oklch(0.5 0.13 205);
+  --accent-hover: oklch(0.48 0.14 205);
+  --status-success: oklch(0.5 0.15 145);
+  --status-warning: oklch(0.53 0.15 75);
+  --status-error: oklch(0.55 0.2 25);
+  --status-info: oklch(0.53 0.14 250);
+  --focus-ring: oklch(0.55 0.13 205);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+  --text-display: 2.25rem;
+  --text-h1: 1.75rem;
+  --text-h2: 1.375rem;
+  --text-h3: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-code: 0.875rem;
+  --weight-display: 700;
+  --weight-h1: 700;
+  --weight-h2: 650;
+  --weight-h3: 600;
+  --weight-body: 400;
+  --weight-caption: 500;
+  --weight-code: 400;
+  --leading-display: 1.15;
+  --leading-h1: 1.2;
+  --leading-h2: 1.3;
+  --leading-h3: 1.4;
+  --leading-body: 1.6;
+  --leading-body-sm: 1.5;
+  --leading-caption: 1.4;
+  --leading-code: 1.6;
+
+  --radius-control: 4px;
+  --radius-panel: 8px;
+  --radius-full: 9999px;
+  --shadow-popover: 0 8px 28px oklch(0 0 0 / 0.16);
+
+  --motion-immediate: 100ms;
+  --motion-standard: 180ms;
+  --motion-emphasis: 280ms;
+  --ease-immediate: ease-out;
+  --ease-standard: ease-in-out;
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --content-max: 70rem;
+}
+
+.dark {
+  --surface-base: oklch(0.13 0.012 250);
+  --surface-panel: oklch(0.17 0.012 250);
+  --surface-inset: oklch(0.105 0.01 250);
+  --surface-raised: oklch(0.205 0.014 250);
+  --text-primary: oklch(0.94 0.008 250);
+  --text-secondary: oklch(0.7 0.014 250);
+  --text-disabled: oklch(0.48 0.01 250);
+  --border-default: oklch(0.29 0.012 250);
+  --border-strong: oklch(0.4 0.018 250);
+  --accent-primary: oklch(0.76 0.13 195);
+  --accent-hover: oklch(0.82 0.12 195);
+  --status-success: oklch(0.72 0.16 145);
+  --status-warning: oklch(0.78 0.14 75);
+  --status-error: oklch(0.7 0.19 25);
+  --status-info: oklch(0.72 0.13 250);
+  --focus-ring: oklch(0.8 0.12 195);
+}

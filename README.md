@@ -1,184 +1,78 @@
 # LocalCoder
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Build](https://img.shields.io/github/actions/workflow/status/hugefiver/LocalCoder/deploy-gh-pages.yml?branch=master)](https://github.com/hugefiver/LocalCoder/actions/workflows/deploy-gh-pages.yml)
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-deployed-blue)](https://hugefiver.github.io/LocalCoder/)
+LocalCoder is a static, single-user browser application for local algorithm practice. It is an OJ-style learning tool, not a contest service. There are no accounts, backend, rankings, cloud sync, application APIs, remote code runners, or secret test infrastructure.
 
-A browser-based code execution platform that mimics LeetCode's interface, allowing users to browse coding problems, write solutions in multiple languages, and test their code entirely in the browser.
+## Runtime support
 
-## Features
+The runtime manifest is generated from packaged assets. It is the source of truth for whether a runtime can be selected.
 
-- **Multiple Language Support**: JavaScript, TypeScript, Python (via Pyodide), Racket (official interpreter WASM), and Haskell (GHC/GHCi WASM)
-- **Syntax Highlighting & Autocomplete**: Professional code editing experience with CodeMirror
-- **Resizable Panels**: LeetCode-style layout with problem description, code editor, and test results
-- **Test Cases**: Default and custom test cases with instant feedback
-- **Code Persistence**: Automatically saves your code per problem and language
-- **Pure Frontend**: All code execution happens in browser workers - no backend required
-- **Theme**: Light/Dark mode toggle (top-right)
+| Language | Runtime ID | Product state |
+|---|---|---|
+| JavaScript | `javascript-worker` | Required |
+| TypeScript | `typescript-official` | Required, using the packaged official TypeScript compiler |
+| Python | `python-pyodide` | Required, using packaged Pyodide |
+| Python | `python-rustpython` | Optional and currently unavailable |
+| Racket | `racket-wasm` | Optional and currently unavailable |
+| Haskell | `haskell-ghc-wasi` | Optional and currently unavailable |
 
-## 安装
+Runtime identities are generated from the current executable build inputs. Read the current values from `public/runtime-manifest.json` and `docs/qa/2026-08-24-localcoder-rebuild-results.md`; they are evidence for one build, not permanent runtime versions.
 
-After installing dependencies, run the setup script to copy Pyodide files to the public directory:
+An optional runtime remains disabled until it has its assets, a matching current browser receipt, a protocol handshake, smoke execution, and judge-contract verification. RustPython must also match Pyodide on the six-problem corpus. Its files are not present until `rustpython/runner.wasm.gz` or `rustpython/runner.wasm` is packaged. Racket lacks `racket/racket.js` and `racket/racket.wasm.gz` or `racket/racket.wasm`. Haskell lacks `haskell/ghc.wasm.gz` or `haskell/ghc.wasm`, `haskell/libdir.tar.gz` or `haskell/libdir.tar`, and `haskell/wasi-shim.js`.
 
-```bash
-pnpm install
-pnpm run setup
+## Install and local commands
+
+Use npm and the committed `package-lock.json`:
+
+```powershell
+npm ci
+npm run typecheck
+npm run lint
+npm test
+npm run runtime:manifest
+npm run runtime:check
+npm run build
+npm run smoke
+node scripts/report-runtime-capabilities.mjs
 ```
 
-`pnpm run setup` 会把 Pyodide 从 `node_modules` 复制到 `public/pyodide/`，供 Python Worker 加载。
-该步骤也会在安装依赖后通过 `postinstall` 自动执行。
+For local development, run `npm run dev`. `npm run build` prepares required assets, builds Workers, generates the manifest, runs strict checks, builds the application, then performs readiness and smoke checks. Do not read an unavailable optional runtime as a passing runtime test.
 
-### （可选）启用 Haskell（GHC/GHCi WASM）
+To inspect one optional runtime, run:
 
-Haskell 的执行由 `public/haskell-worker.js` 驱动，它会加载 **GHC/GHCi WASM** 运行时：
-
-- 元信息：`public/haskell/runner.meta.json`
-
-推荐产物（由 `build:runtimes` 从 `runtimes/haskell-ghc/dist` 复制）：
-
-- `public/haskell/ghc.wasm`
-- `public/haskell/ghci.wasm`
-- `public/haskell/libdir.tar`（uncompressed tar）
-- `public/haskell/wasi-shim.js`
-
-可通过环境变量指定路径：
-
-```
-GHC_WASM=/abs/path/to/ghc.wasm
-GHCI_WASM=/abs/path/to/ghci.wasm
-GHC_LIBDIR_TAR=/abs/path/to/libdir.tar
+```powershell
+node scripts/verify-optional-runtime.mjs <runtimeId>
 ```
 
-**压缩建议**：
+Exit `0` means `VERIFIED` and requires a current browser receipt. Exit `2` means `UNAVAILABLE` or `LOADABLE_UNVERIFIED`, so it is not a pass. Exit `1` means `BROKEN`.
 
-- `build:runtimes` 会生成 `*.wasm.gz` 与 `libdir.tar.gz`
-- Worker 会优先加载 `.gz`，若不支持再回退到未压缩版本
+## Local data and judging
 
-本仓库提供了 `runtimes/haskell-ghc/` 目录，用于分发 GHC/GHCi wasm 产物与 libdir。
+LocalCoder stores user-created data in IndexedDB database `localcoder`. Its six stores are `drafts`, `customCases`, `submissions`, `progress`, `settings`, and `meta`. The legacy `localStorage` keys are read only by the idempotent migration, which retains them for one application schema version. They are not the current persistence architecture.
 
-#### GHCi 模式协议（重要）
+If IndexedDB is unavailable or its quota is exceeded, the app keeps session-only data in memory and displays the persistent status `未保存`. It never silently presents that data as saved. Submission history is capped at 200 records, with oldest-record removal in the same transaction as an overflowing insert.
 
-当 `runner.meta.json` 指定 `protocol: "ghci"` 时：
+**Run** executes public and custom cases only. It does not save a submission or change progress. **Submit** includes judge cases. A judged Submit with a protocol-validated handshake identity writes its submission record and increments attempt progress atomically for applicable AC, WA, CE, RE, TLE, and internal-error outcomes. Cancelled, unavailable, and pre-invocation failures with no identity do not write a submission. AC also records accepted or solved metadata; later non-AC results preserve previously accepted metadata. Persisted submissions record the language, runtime, and runtime/build identity.
 
-- Worker 会通过 stdin 发送 **GHCi 命令**
-- 测试模式下，默认假设 `solution :: String -> a`，输入为 **JSON 字符串**
-- stdout 被当作日志；若输出可解析为 JSON，会尝试作为结果
+The main thread owns expected values, comparison, and verdicts. Workers return actual values or structured failures. Judge cases are concealed in normal UI details, but any case shipped to a browser can be inspected and is not secret.
 
-GHC/GHCi 运行时为必需产物，缺失会导致 Haskell 运行失败。
+## Trust boundary
 
-#### GHC 模式（ghc -e / compile-run）
+Workers provide local execution isolation and a termination boundary for a blocked task. They are not a secure sandbox, and hostile code must not be considered contained. A timeout creates a local TLE result after the Worker is terminated. Timing is device-local reference data, not an authoritative benchmark. Browser memory cannot be authoritatively measured or limited per runtime, so LocalCoder does not issue MLE verdicts.
 
-`runner.meta.json` 可以设置：
+After the application and selected runtime assets have loaded, an active browser session can execute without an application API. This does not promise offline cold-start support.
 
-- `executorMode: "ghc-e"`
-- `testMode: "ghc-compile"`
+## GitHub Pages
 
-`ghc-compile` 会在浏览器内编译生成 wasm 再运行；需要 `libdir.tar` 支持。
+Pages builds use relative asset paths (`./`), HashRouter routes, and a `404.html` fallback. The deployed application remains static. A missing required runtime blocks the build or deployment readiness path. CI uses `npm ci` and does not install Rust, Racket, Haskell, or other external runtime toolchains.
 
-### （可选）启用 RustPython（WASM）
+For the full runtime model, asset operation rules, and Task 23 browser acceptance matrix, read:
 
-RustPython 是另一个 Python 运行时（非 Pyodide），通过 WASI WebAssembly 运行。
-
-- Runtime 文件：`public/rustpython/runner.wasm`
-- Worker：`public/rustpython-worker.js`
-
-`build:runtimes` 会生成 `runner.wasm.gz`（优先加载）。
-
-### （可选）启用 Racket（官方解释器 WASM）
-
-Racket 运行时通过 **Emscripten** 编译官方解释器生成：
-
-- 产物：`public/racket/racket.js` + `public/racket/racket.wasm`
-- 构建脚本：`runtimes/racket-runtime/build.mjs`
-
-`build:runtimes` 会生成 `racket.wasm.gz`，worker 会优先加载 `.gz`。
-
-运行：
-
-```
-pnpm run build:runtimes
-```
-
-如需严格要求 Racket 产物，设置：`RACKET_WASM_STRICT=1`。
-
-本仓库在 **发布（GitHub Pages）** 时会自动编译 WASI runtimes（RustPython + Haskell）。
-本地如果你也想编译：
-
-- `pnpm run build:runtimes`
-
-> 需要本机安装 Rust，并具备 `wasm32-wasip1`（或 `wasm32-wasi`）target。
-> Haskell 需要 GHC WASM backend（`wasm32-wasi-ghc`）。
-> Racket 需要 Emscripten SDK（`emcc`, `emmake`）。
-
-### Runtime Manifest
-
-`build:runtimes` 会输出 `public/runtime-manifest.json`，统一描述各运行时来源与格式（官方/自建、WASI/非 WASI）。
-
-### WASI Shim 选项（对比）
-
-- **@bjorn3/browser_wasi_shim**：WASI Preview1，GHC/GHCi wasm 官方推荐，支持 FS/preopen/poll_oneoff。
-- **@bytecodealliance/preview2-shim（JCO）**：WASI Preview2（组件模型），**不兼容**当前的 `wasm32-wasi` 运行时。
-
-若未来将运行时 **组件化（component model）**，可以考虑引入 preview2-shim；当前项目默认使用 bjorn3。
-
-## Development
-
-```bash
-pnpm run dev
-```
-
-## 模式配置（只开启一种模式）
-
-通过 Vite 环境变量 `VITE_APP_MODE` 可以只开启「自由执行」或「题库」其中一种模式，并让首页直接进入该模式。
-
-- `VITE_APP_MODE=all`（默认）：首页展示入口卡片（自由执行/题库）
-- `VITE_APP_MODE=executor`：`/` 直接进入自由执行（并隐藏题库入口）
-- `VITE_APP_MODE=problems`：`/` 直接进入题库列表（并隐藏自由执行入口）
-
-例如（仅示例，具体写法按你的运行方式配置 env）：
-
-- `VITE_APP_MODE=executor`
-
-## Deploy (GitHub Pages)
-
-This repo includes a GitHub Actions workflow that:
-
-- Automatically deploys when pushing to `master`
-- Supports manual deployment from any branch/tag/SHA via `workflow_dispatch`
-
-Notes:
-
-- For SPA routing on GitHub Pages, `dist/404.html` is generated from `dist/index.html`.
-- The Vite `base` is set to `/<repo>/` during Pages builds.
-
-## How It Works
-
-- **Workers**: Each language runs in a dedicated Web Worker for sandboxed execution
-- **Pyodide**: Python support via WebAssembly-based CPython interpreter (loaded locally, not from CDN)
-- **CodeMirror**: Provides syntax highlighting, autocomplete, and a professional editing experience
-- **题库**：从 `src/problems/*.md` 自动加载，每个 Markdown 文件对应一个试题
-- **持久化**：使用浏览器 `localStorage` 保存每个语言/试题下的代码与自定义用例
-
-## Project Structure
-
-```text
-├── public/
-│   ├── pyodide/          # Pyodide files (copied from node_modules)
-│   ├── js-worker.js      # JavaScript/TypeScript execution worker
-│   ├── python-worker.js  # Python execution worker
-│   ├── racket-worker.js   # Racket execution worker (official WASM)
-│   ├── haskell-worker.js  # Haskell execution worker (GHC/GHCi WASM)
-│   ├── racket/            # Racket runtime artifacts
-│   └── haskell/           # ghc/ghci wasm + libdir tar
-├── scripts/
-│   └── setup-pyodide.js  # Setup script to copy Pyodide files
-├── src/
-│   ├── components/       # React components
-│   ├── hooks/           # Custom React hooks
-│   ├── problems/         # Markdown 题库（每个 .md 一个试题）
-│   └── App.tsx          # Main application component
-```
+- [`docs/architecture/runtime-kernel.md`](docs/architecture/runtime-kernel.md)
+- [`docs/operations/runtime-assets.md`](docs/operations/runtime-assets.md)
+- [`docs/qa/localcoder-browser-acceptance.md`](docs/qa/localcoder-browser-acceptance.md)
 
 ## License
 
-MIT License. See `LICENSE`.
+MIT License. See [LICENSE](LICENSE).
+
+*Author's note: Written for a developer setting up or validating LocalCoder, with the expectation that they run the listed npm checks and treat runtime states literally.*
