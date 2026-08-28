@@ -30,6 +30,15 @@ pnpm run smoke
 
 Verify `./` asset paths, `404.html`, HashRouter direct-route loading, and required manifest URLs. Do not use Bash `export` syntax.
 
+## Browser launch rules
+
+All browser debugging and QA runs drive a real browser through CDP, never a signed-in desktop browser:
+
+- Launch with `--remote-debugging-port=<port>` bound to loopback plus a throwaway `--user-data-dir` under the OS temp area.
+- Launch the browser and any dev/preview server as detached background processes with output redirected to log files; never run them as foreground shell commands that block the terminal tool.
+- Never use the default browser profile: no extensions, no signed-in accounts, no settings sync. Disable first-run and background-networking flags.
+- Terminate only the processes and ports the QA run started, verified by exact command line, then delete the temp profile directory.
+
 ## Required runtime browser matrix
 
 Start the local server with `pnpm run dev -- --host 127.0.0.1 --port 4173`. For each required runtime, `javascript-worker`, `typescript-official`, and `python-pyodide`, run the same problem contract and record route, runtime/build identity, visible verdict, console and network evidence, and recovery outcome.
