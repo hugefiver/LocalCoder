@@ -172,6 +172,51 @@ test("a nonfatal smoke failure moves a verifying runtime to failed and returns a
   assert.equal(registry.get("racket-wasm").verification, "unverified");
 });
 
+test("optional verification execution timeout remains broken, failed, and unverified", async () => {
+  const registry = RuntimeRegistry.fromManifest(manifest(true));
+  const factory = new FakeWorkerFactory();
+  const clock = new ManualClock();
+  const supervisor = new Supervisor({ registry, workerFactory: factory.create, clock });
+  const adapters = new RuntimeAdapterRegistry();
+  adapters.register(createRacketAdapter(supervisor));
+  const verification = new OptionalRuntimeVerifier({ registry, supervisor, adapters }).verify("racket-wasm");
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected verification worker");
+
+  completeInitialize(worker);
+  await flush();
+  clock.tick(5_000);
+
+  const result = await verification;
+  assert.equal(result.state, "broken");
+  if (result.state === "broken") assert.equal(result.code, "execution-timeout");
+  assert.equal(registry.get("racket-wasm").state.kind, "failed");
+  assert.equal(registry.get("racket-wasm").verification, "unverified");
+});
+
+test("optional verification cancellation remains broken, failed, and unverified", async () => {
+  const registry = RuntimeRegistry.fromManifest(manifest(true));
+  const factory = new FakeWorkerFactory();
+  const supervisor = new Supervisor({ registry, workerFactory: factory.create, clock: new ManualClock() });
+  const adapters = new RuntimeAdapterRegistry();
+  adapters.register(createRacketAdapter(supervisor));
+  const verification = new OptionalRuntimeVerifier({ registry, supervisor, adapters }).verify("racket-wasm");
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected verification worker");
+
+  completeInitialize(worker);
+  await flush();
+  const smokeRequest = worker.posted[worker.posted.length - 1];
+  if (smokeRequest === undefined || smokeRequest.type !== "execute") throw new Error("expected smoke request");
+  supervisor.cancel("racket-wasm", smokeRequest.requestId);
+
+  const result = await verification;
+  assert.equal(result.state, "broken");
+  if (result.state === "broken") assert.equal(result.code, "cancelled");
+  assert.equal(registry.get("racket-wasm").state.kind, "failed");
+  assert.equal(registry.get("racket-wasm").verification, "unverified");
+});
+
 test("a verified optional runtime preserves trust across fatal, timeout, and cancellation fresh-worker recovery", async () => {
   const registry = RuntimeRegistry.fromManifest(manifest(true));
   const factory = new FakeWorkerFactory();
@@ -205,6 +250,7 @@ test("a verified optional runtime preserves trust across fatal, timeout, and can
   const timedOut = supervisor.execute("racket-wasm", "(display 3)");
   clock.tick(5_000);
   await assert.rejects(timedOut, (error: { readonly code?: string }) => error.code === "execution-timeout");
+  assert.equal(registry.get("racket-wasm").state.kind, "loadable");
   assert.equal(registry.get("racket-wasm").verification, "verified");
 
   const recoveredAfterTimeout = supervisor.execute("racket-wasm", "(display 4)");
@@ -218,6 +264,7 @@ test("a verified optional runtime preserves trust across fatal, timeout, and can
   const cancelled = supervisor.execute("racket-wasm", "(display 5)", { signal: controller.signal });
   controller.abort();
   await assert.rejects(cancelled, (error: { readonly kind?: string }) => error.kind === "cancelled");
+  assert.equal(registry.get("racket-wasm").state.kind, "loadable");
   assert.equal(registry.get("racket-wasm").verification, "verified");
 
   const recoveredAfterCancellation = supervisor.execute("racket-wasm", "(display 6)");

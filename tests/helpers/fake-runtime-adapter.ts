@@ -1,7 +1,7 @@
 import type { JsonValue } from "../../src/domain/json-value.js";
 import type { RuntimeAdapter } from "../../src/runtime/adapters/types.js";
 import type { JudgePayload } from "../../src/runtime/protocol.js";
-import type { RuntimeInvocation, RuntimeOperationOptions } from "../../src/runtime/supervisor.js";
+import type { RuntimeInvocation, RuntimeOperationOptions, RuntimeOperationPhase } from "../../src/runtime/supervisor.js";
 
 export interface JudgeCall {
   readonly source: string;
@@ -16,6 +16,8 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
   readonly languageId = "javascript" as const;
   readonly judgeCalls: JudgeCall[] = [];
   readonly outcomes: JudgeOutcome[] = [];
+  readonly phasePlans: Array<readonly RuntimeOperationPhase[]> = [];
+  afterPhase?: (phase: RuntimeOperationPhase) => void;
 
   async execute(): Promise<never> {
     throw new Error("FakeRuntimeAdapter does not implement execute");
@@ -27,6 +29,10 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
     options?: RuntimeOperationOptions,
   ): Promise<RuntimeInvocation<JudgePayload>> {
     this.judgeCalls.push({ source, inputs, options });
+    for (const phase of this.phasePlans.shift() ?? ["executing"]) {
+      options?.onPhase?.(phase);
+      this.afterPhase?.(phase);
+    }
     const outcome = this.outcomes.shift();
     if (outcome === undefined) throw new Error("FakeRuntimeAdapter has no queued judge outcome");
     if ("rejection" in outcome) throw outcome.rejection;

@@ -1,7 +1,7 @@
 import type { RuntimeId } from "../../domain/language.js";
 import type { RuntimeAdapterRegistry } from "../../runtime/adapters/registry.js";
 import type { ExecutePayload } from "../../runtime/protocol.js";
-import type { RuntimeInvocation } from "../../runtime/supervisor.js";
+import type { RuntimeInvocation, RuntimeOperationPhase } from "../../runtime/supervisor.js";
 import { isCancellation } from "./executor-model.js";
 
 export type ExecutorCompletion =
@@ -21,12 +21,19 @@ export class ExecutorExecution {
     return this.#abortController !== undefined;
   }
 
-  async execute(runtimeId: RuntimeId, source: string): Promise<ExecutorCompletion> {
+  async execute(
+    runtimeId: RuntimeId,
+    source: string,
+    onPhase: (phase: RuntimeOperationPhase) => void,
+  ): Promise<ExecutorCompletion> {
     if (this.#abortController !== undefined) throw new Error("已有执行任务正在进行");
     const abortController = new AbortController();
     this.#abortController = abortController;
     try {
-      const invocation = await this.#adapters.get(runtimeId).execute(source, { signal: abortController.signal });
+      const invocation = await this.#adapters.get(runtimeId).execute(source, {
+        signal: abortController.signal,
+        onPhase,
+      });
       return { kind: "success", invocation };
     } catch (error) {
       return abortController.signal.aborted || isCancellation(error)

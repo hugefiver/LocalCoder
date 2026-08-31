@@ -86,13 +86,13 @@ function createRegistry(options: {
   }));
 }
 
-function setup(options: Parameters<typeof createRegistry>[0] = {}) {
+function setup(options: Parameters<typeof createRegistry>[0] = {}, now?: () => number) {
   const registry = createRegistry(options);
   const adapters = new RuntimeAdapterRegistry();
   const adapter = new FakeRuntimeAdapter();
   adapters.register(adapter);
   const ticks = [100, 109];
-  const engine = new OjEngine({ registry, adapters, now: () => ticks.shift() ?? 109 });
+  const engine = new OjEngine({ registry, adapters, now: now ?? (() => ticks.shift() ?? 109) });
   return { adapter, engine, registry };
 }
 
@@ -238,7 +238,7 @@ test("validates source, combined cases, canonical custom JSON, and problem timeo
   assert.equal(adapter.judgeCalls.length, 0);
 });
 
-test("uses one invocation with the command signal and validated problem timeout", async () => {
+test("uses one invocation with the exact command signal, timeout, and phase callback", async () => {
   const { adapter, engine } = setup();
   const controller = new AbortController();
   adapter.outcomes.push(invocation([passed(0, { answer: [1, 2] })]));
@@ -246,16 +246,86 @@ test("uses one invocation with the command signal and validated problem timeout"
   await engine.run(command({ mode: "run", signal: controller.signal, problem: problem({ timeoutMs: 25 }) }));
 
   assert.equal(adapter.judgeCalls.length, 1);
-  assert.deepEqual(adapter.judgeCalls[0]?.options, { signal: controller.signal, timeoutMs: 25 });
+  assert.equal(adapter.judgeCalls[0]?.options?.signal, controller.signal);
+  assert.equal(adapter.judgeCalls[0]?.options?.timeoutMs, 25);
+  assert.equal(typeof adapter.judgeCalls[0]?.options?.onPhase, "function");
 });
 
-test("omits absent optional adapter options", async () => {
+test("includes the phase callback when optional adapter options are absent", async () => {
   const { adapter, engine } = setup();
   adapter.outcomes.push(invocation([passed(0, { answer: [1, 2] })]));
 
   await engine.run(command({ mode: "run" }));
 
-  assert.deepEqual(adapter.judgeCalls[0]?.options, {});
+  assert.deepEqual(Object.keys(adapter.judgeCalls[0]?.options ?? {}).sort(), ["onPhase"]);
+  assert.equal(typeof adapter.judgeCalls[0]?.options?.onPhase, "function");
+});
+
+test("measures only 12ms of execution after cold initialization and for warm operations", async () => {
+  const scenarios: readonly [string, readonly ("initializing" | "executing")[], number][] = [
+    ["cold initialization", ["initializing", "executing"], 80],
+    ["warm execution", ["executing"], 0],
+  ];
+
+  for (const [, phases, initializationMs] of scenarios) {
+    let now = 0;
+    const { adapter, engine } = setup({}, () => now);
+    adapter.phasePlans.push(phases);
+    adapter.afterPhase = (phase) => {
+      now += phase === "initializing" ? initializationMs : 12;
+    };
+    adapter.outcomes.push(invocation([passed(0, { answer: [1, 2] })]));
+
+    const result = await engine.run(command({ mode: "run" }));
+
+    assert.equal(result.elapsedMs, 12);
+  }
+});
+
+test("returns zero elapsed time when initialization fails or cancellation happens before execution", async () => {
+  let now = 0;
+  const initializationFailure = setup({}, () => now);
+  initializationFailure.adapter.phasePlans.push(["initializing"]);
+  initializationFailure.adapter.afterPhase = () => {
+    now += 80;
+  };
+  initializationFailure.adapter.outcomes.push({
+    rejection: { kind: "runtime", code: "INIT_FAILED", message: "initialization failed", fatal: true },
+  });
+
+  const failed = await initializationFailure.engine.run(command({ mode: "run" }));
+  assert.equal(failed.elapsedMs, 0);
+
+  let reads = 0;
+  const cancelled = setup({}, () => reads++ * 80);
+  const controller = new AbortController();
+  controller.abort();
+  const cancelledResult = await cancelled.engine.run(command({ mode: "run", signal: controller.signal }));
+  assert.equal(cancelledResult.elapsedMs, 0);
+  assert.equal(cancelled.adapter.judgeCalls.length, 0);
+});
+
+test("timeout, runtime failure, and cancellation after execution each retain 12ms", async () => {
+  const cases: readonly [RuntimeFailure, string][] = [
+    [{ kind: "infrastructure", code: "execution-timeout", message: "late", fatal: true }, "time-limit-exceeded"],
+    [{ kind: "runtime", code: "THREW", message: "bad execution", fatal: false }, "runtime-error"],
+    [{ kind: "cancelled", code: "cancelled", message: "stopped", fatal: true }, "cancelled"],
+  ];
+
+  for (const [failure, verdict] of cases) {
+    let now = 0;
+    const { adapter, engine } = setup({}, () => now);
+    adapter.phasePlans.push(["executing"]);
+    adapter.afterPhase = () => {
+      now += 12;
+    };
+    adapter.outcomes.push({ rejection: failure });
+
+    const result = await engine.run(command({ mode: "run" }));
+
+    assert.equal(result.verdict, verdict);
+    assert.equal(result.elapsedMs, 12);
+  }
 });
 
 test("returns cancelled without invoking an already-aborted command", async () => {

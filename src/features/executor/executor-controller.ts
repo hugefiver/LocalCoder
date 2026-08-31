@@ -13,7 +13,6 @@ import { ExecutorExecution } from "./executor-execution.js";
 import {
   canAttemptExecute,
   createExecutorSnapshot,
-  executionPhase,
   executorErrorMessage,
   executorRuntimeOptions,
   immutableExecutorValue,
@@ -177,21 +176,29 @@ export class ExecutorController {
     if (!canAttemptExecute(capability)) throw new Error("当前运行时不可用于自由执行");
     const contextGeneration = this.#contextGeneration;
     const operationGeneration = ++this.#operationGeneration;
-    const startedAt = this.#deps.clock.now();
+    let executionStartedAt: number | undefined;
     this.#replace({
-      phase: executionPhase(capability),
       output: undefined,
       elapsedMs: undefined,
       error: this.#warning,
     });
 
-    const completion = await this.#execution.execute(runtimeId, this.#current.source);
+    const completion = await this.#execution.execute(runtimeId, this.#current.source, (phase) => {
+      if (!this.#isCurrentOperation(contextGeneration, operationGeneration)) return;
+      if (phase === "initializing") {
+        this.#replace({ phase: "initializing" });
+        return;
+      }
+      if (executionStartedAt === undefined) executionStartedAt = this.#deps.clock.now();
+      this.#replace({ phase: "running" });
+    });
     if (!this.#isCurrentOperation(contextGeneration, operationGeneration)) return;
+    const elapsedMs = executionStartedAt === undefined ? 0 : Math.max(0, this.#deps.clock.now() - executionStartedAt);
     if (completion.kind === "cancelled") {
       this.#replace({
         phase: "cancelled",
         output: undefined,
-        elapsedMs: undefined,
+        elapsedMs,
         error: this.#warning,
       });
       return;
@@ -200,7 +207,7 @@ export class ExecutorController {
       this.#replace({
         phase: "error",
         output: undefined,
-        elapsedMs: undefined,
+        elapsedMs,
         error: `执行失败：${executorErrorMessage(completion.error)}`,
       });
       return;
@@ -213,7 +220,7 @@ export class ExecutorController {
         value: completion.invocation.payload.value,
         truncated: completion.invocation.payload.stdout.truncated || completion.invocation.payload.stderr.truncated,
       }),
-      elapsedMs: Math.max(0, this.#deps.clock.now() - startedAt),
+      elapsedMs,
       error: this.#warning,
     });
   }
@@ -266,14 +273,7 @@ export class ExecutorController {
 
   #handleRegistryChange(): void {
     if (this.#disposed) return;
-    const patch: ExecutorSnapshotPatch = { runtimeOptions: executorRuntimeOptions(this.#deps.registry) };
-    const runtimeId = this.#current.runtimeId;
-    if (this.#execution.active && runtimeId !== undefined) {
-      const state = this.#deps.registry.get(runtimeId).state.kind;
-      if (state === "initializing") patch.phase = "initializing";
-      if (state === "running") patch.phase = "running";
-    }
-    this.#replace(patch);
+    this.#replace({ runtimeOptions: executorRuntimeOptions(this.#deps.registry) });
   }
 
   #setWarning(kind: WarningKind, label: string, error: unknown): void {

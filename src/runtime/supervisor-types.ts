@@ -19,9 +19,12 @@ export interface RuntimeInvocation<T> {
   payload: T;
 }
 
+export type RuntimeOperationPhase = "initializing" | "executing";
+
 export interface RuntimeOperationOptions {
   signal?: AbortSignal;
   timeoutMs?: number;
+  onPhase?: (phase: RuntimeOperationPhase) => void;
 }
 
 export type OperationKind = "initialize" | "execute" | "judge";
@@ -44,6 +47,7 @@ export interface QueuedOperation {
   readonly cases?: readonly JudgeCaseRequest[];
   readonly timeoutMs?: number;
   readonly signal?: AbortSignal;
+  readonly onPhase?: (phase: RuntimeOperationPhase) => void;
   readonly verificationAuthority?: object;
   readonly resolve: (value: RuntimeOperationResult) => void;
   readonly reject: (reason: unknown) => void;
@@ -67,6 +71,7 @@ export interface RuntimeOperationInput {
   cases?: readonly JudgeCaseRequest[];
   signal?: AbortSignal;
   timeoutMs?: number;
+  onPhase?: (phase: RuntimeOperationPhase) => void;
   verificationAuthority?: object;
 }
 

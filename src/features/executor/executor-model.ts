@@ -66,10 +66,6 @@ export function canAttemptExecute(capability: RuntimeCapability): boolean {
   return capability.capabilities.execute && isRuntimeExecutionEligible(capability, { allowFailed: true });
 }
 
-export function executionPhase(capability: RuntimeCapability): "initializing" | "running" {
-  return capability.state.kind === "ready" || capability.state.kind === "running" ? "running" : "initializing";
-}
-
 export function immutableExecutorValue<T>(value: T): T {
   return deepFreeze(structuredClone(value));
 }

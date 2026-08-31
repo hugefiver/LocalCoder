@@ -28,16 +28,19 @@ export class OjEngine {
     validateJudgeCommand(command);
     const selected = selectCases(command.problem, command.mode, command.customCases);
     const resolution = resolveJudgeRuntime(this.#registry, this.#adapters, command.runtimeId);
-    const startedAt = this.#now();
+    let executionStartedAt: number | undefined;
+    const onPhase = (phase: "initializing" | "executing"): void => {
+      if (phase === "executing" && executionStartedAt === undefined) executionStartedAt = this.#now();
+    };
     if (!resolution.available) {
-      return failureResult("runtime-unavailable", selected, elapsedMs(this.#now, startedAt), {
+      return failureResult("runtime-unavailable", selected, elapsedMs(this.#now, executionStartedAt), {
         code: "runtime-unavailable",
         message: "The selected runtime cannot judge this submission",
       });
     }
     validateJudgeSubmission(command, selected, resolution.capability);
     if (command.signal?.aborted) {
-      return failureResult("cancelled", selected, elapsedMs(this.#now, startedAt), {
+      return failureResult("cancelled", selected, elapsedMs(this.#now, executionStartedAt), {
         code: "cancelled",
         message: "Judge operation was cancelled",
       });
@@ -47,7 +50,7 @@ export class OjEngine {
       const invocation = await resolution.adapter.judge(
         command.source,
         selected.map(({ input }) => input),
-        judgeOperationOptions(command.signal, command.problem.timeoutMs),
+        judgeOperationOptions(command.signal, command.problem.timeoutMs, onPhase),
       );
       const parsed = parseJudgeInvocation(invocation, selected, resolution.capability.limits.outputBytes);
       if (!parsed.ok) {
@@ -56,14 +59,14 @@ export class OjEngine {
           runtimeVersion: parsed.identity.runtimeVersion,
           buildId: parsed.identity.buildId,
         } : undefined;
-        return failureResult("internal-error", selected, elapsedMs(this.#now, startedAt), {
+        return failureResult("internal-error", selected, elapsedMs(this.#now, executionStartedAt), {
           code: parsed.kind,
           message: parsed.kind === "invalid-runtime-invocation"
             ? "Runtime returned an invalid invocation result"
             : "Runtime returned an invalid judge response",
         }, runtime);
       }
-      return aggregateSubmission(selected, parsed.responses, elapsedMs(this.#now, startedAt), {
+      return aggregateSubmission(selected, parsed.responses, elapsedMs(this.#now, executionStartedAt), {
         runtimeId: command.runtimeId,
         runtimeVersion: parsed.identity.runtimeVersion,
         buildId: parsed.identity.buildId,
@@ -82,7 +85,7 @@ export class OjEngine {
       return failureResult(
         failure === undefined ? "internal-error" : verdictForFailure(failure),
         selected,
-        elapsedMs(this.#now, startedAt),
+        elapsedMs(this.#now, executionStartedAt),
         summary,
         runtime,
       );

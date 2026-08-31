@@ -165,13 +165,13 @@ function canTransition(current: RuntimeCapabilityState["kind"], next: RuntimeCap
     case "loadable":
       return next === "initializing" || next === "failed" || next === "incompatible";
     case "initializing":
-      return next === "initializing" || next === "ready" || next === "verifying" || next === "failed" || next === "incompatible";
+      return next === "initializing" || next === "loadable" || next === "ready" || next === "verifying" || next === "failed" || next === "incompatible";
     case "verifying":
       return next === "running" || next === "ready" || next === "failed" || next === "incompatible";
     case "ready":
-      return next === "running" || next === "failed" || next === "incompatible";
+      return next === "loadable" || next === "running" || next === "failed" || next === "incompatible";
     case "running":
-      return next === "ready" || next === "verifying" || next === "failed" || next === "incompatible";
+      return next === "loadable" || next === "ready" || next === "verifying" || next === "failed" || next === "incompatible";
     case "failed":
       return next === "loadable";
     case "not-packaged":

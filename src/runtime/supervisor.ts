@@ -17,6 +17,7 @@ export type {
   RuntimeIdentity,
   RuntimeInvocation,
   RuntimeOperationOptions,
+  RuntimeOperationPhase,
 } from "./supervisor-types.js";
 
 import type { RuntimeInvocation, RuntimeOperationOptions } from "./supervisor-types.js";
@@ -162,6 +163,7 @@ export class RuntimeSupervisor {
         ...(input.cases === undefined ? {} : { cases: input.cases }),
         ...(timeoutMs === undefined ? {} : { timeoutMs }),
         ...(input.signal === undefined ? {} : { signal: input.signal }),
+        ...(input.onPhase === undefined ? {} : { onPhase: input.onPhase }),
         ...(verificationAuthority === undefined ? {} : { verificationAuthority }),
         resolve: (value) => resolve(value as T),
         reject,

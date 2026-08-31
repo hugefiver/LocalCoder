@@ -12,6 +12,7 @@ import {
 import {
   type QueuedOperation,
   type RuntimeLifecycleOptions,
+  type RuntimeOperationPhase,
   type RuntimeSlot,
   type WorkerLease,
 } from "./supervisor-types.js";
@@ -74,6 +75,8 @@ export class RuntimeOperationLifecycle {
 
   fail(error: RuntimeFailure): void {
     const identity = this.#terminalFailureIdentity();
+    const failedDuringInitialization = this.#operation.transport?.operation === "initialize"
+      || (this.#slot.worker !== undefined && !this.#slot.initialized);
     const transport = this.#operation.transport;
     if (transport !== undefined) this.#clearTransport(transport);
     if (this.#slot.worker !== undefined) releaseRuntimeWorker(this.#slot, this.#slot.worker);
@@ -83,10 +86,24 @@ export class RuntimeOperationLifecycle {
     if (identity !== undefined) bindRuntimeFailureIdentity(error, identity);
 
     const state = this.registry.get(this.#runtimeId).state.kind;
-    if (state === "loadable" || state === "initializing" || state === "verifying" || state === "ready" || state === "running") {
+    if (
+      this.#isRecoverableOrdinaryOperationFailure(error)
+      && (state === "initializing" || state === "running" || (state === "ready" && failedDuringInitialization))
+    ) {
+      this.registry.transition(this.#runtimeId, { kind: "loadable" });
+    } else if (state === "loadable" || state === "initializing" || state === "verifying" || state === "ready" || state === "running") {
       this.registry.transition(this.#runtimeId, { kind: "failed", code: error.code, message: error.message });
     }
     this.#onTerminalFailure(error);
+  }
+
+  #isRecoverableOrdinaryOperationFailure(error: RuntimeFailure): boolean {
+    return this.#operation.verificationAuthority === undefined
+      && (this.#operation.kind === "execute" || this.#operation.kind === "judge")
+      && (
+        error.kind === "cancelled"
+        || (error.kind === "infrastructure" && error.code === "execution-timeout")
+      );
   }
 
   #terminalFailureIdentity() {
@@ -133,6 +150,8 @@ export class RuntimeOperationLifecycle {
   }
 
   #beginInitialization(lease: WorkerLease): void {
+    this.#emitPhase("initializing");
+    if (!this.#isActiveLease(lease)) return;
     this.#startTransport(
       lease,
       { protocolVersion: 1, requestId: this.#operation.requestId, runtimeId: this.#runtimeId, type: "initialize" },
@@ -172,7 +191,9 @@ export class RuntimeOperationLifecycle {
         type: "judge",
         source: this.#operation.source ?? "",
         cases: this.#operation.cases ?? [],
-      };
+    };
+    this.#emitPhase("executing");
+    if (!this.#isActiveLease(lease)) return;
     this.#startTransport(
       lease,
       message,
@@ -272,6 +293,21 @@ export class RuntimeOperationLifecycle {
     if (this.#operation.transport !== transport) return;
     transport.stop();
     delete this.#operation.transport;
+  }
+
+  #emitPhase(phase: RuntimeOperationPhase): void {
+    try {
+      this.#operation.onPhase?.(phase);
+    } catch {
+      // Observer failures must not alter runtime control flow.
+    }
+  }
+
+  #isActiveLease(lease: WorkerLease): boolean {
+    return this.#slot.active === this.#operation
+      && this.#slot.worker === lease
+      && this.#slot.generation === lease.generation
+      && !lease.terminated;
   }
 
   #isCurrent(transport: WorkerTransport): boolean {

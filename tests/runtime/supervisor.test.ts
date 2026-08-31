@@ -130,6 +130,118 @@ function rejectionWith(code: string) {
   };
 }
 
+test("reports initializing then executing immediately around a cold operation transport", async () => {
+  const { supervisor, factory } = setup();
+  const phases: string[] = [];
+  const postedAtPhase: number[] = [];
+  const operation = supervisor.execute(runtimeId, "code", {
+    onPhase: (phase) => {
+      phases.push(phase);
+      postedAtPhase.push(factory.workers[0]?.posted.length ?? -1);
+    },
+  });
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected worker");
+
+  assert.deepEqual(phases, ["initializing"]);
+  assert.deepEqual(postedAtPhase, [0]);
+  completeInitialize(worker);
+  assert.deepEqual(phases, ["initializing", "executing"]);
+  assert.deepEqual(postedAtPhase, [0, 1]);
+  completeExecute(worker);
+
+  await operation;
+});
+
+test("reports only executing for a warm session operation", async () => {
+  const { supervisor, factory } = setup();
+  const worker = await readySession(supervisor, factory);
+  const phases: string[] = [];
+  const operation = supervisor.execute(runtimeId, "code", {
+    onPhase: (phase) => phases.push(phase),
+  });
+
+  assert.deepEqual(phases, ["executing"]);
+  completeExecute(worker);
+  await operation;
+});
+
+test("isolates throwing phase observers from the operation lifecycle", async () => {
+  const { supervisor, factory, registry } = setup();
+  let observerCalls = 0;
+  const operation = supervisor.execute(runtimeId, "code", {
+    onPhase: () => {
+      observerCalls += 1;
+      throw new Error("observer failure");
+    },
+  });
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected worker");
+
+  completeInitialize(worker);
+  completeExecute(worker, "completed despite observer failure");
+
+  assert.equal((await operation).payload.value, "completed despite observer failure");
+  assert.equal(observerCalls, 2);
+  assert.equal(registry.get(runtimeId).state.kind, "ready");
+});
+
+test("synchronous initializing phase cancellation never starts a terminated generation transport", async () => {
+  const { supervisor, factory, clock, registry } = setup();
+  const controller = new AbortController();
+  const phases: string[] = [];
+  const operation = supervisor.execute(runtimeId, "code", {
+    signal: controller.signal,
+    onPhase: (phase) => {
+      phases.push(phase);
+      if (phase === "initializing") controller.abort();
+    },
+  });
+  const rejected = assert.rejects(operation, rejectionWith("cancelled"));
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected cancelled worker");
+
+  await rejected;
+  assert.deepEqual(phases, ["initializing"]);
+  assert.equal(worker.terminated, 1);
+  assert.equal(worker.posted.length, 0);
+  assert.equal(worker.listenerCount(), 0);
+  assert.equal(clock.pendingCount(), 0);
+  assert.equal(registry.get(runtimeId).state.kind, "loadable");
+
+  const recovered = supervisor.execute(runtimeId, "fresh");
+  const recoveredWorker = factory.workers[1];
+  if (recoveredWorker === undefined) throw new Error("expected fresh worker");
+  completeInitialize(recoveredWorker, "fresh-version", "fresh-build");
+  completeExecute(recoveredWorker, "fresh result");
+  assert.deepEqual((await recovered).identity, { runtimeVersion: "fresh-version", buildId: "fresh-build" });
+});
+
+test("synchronous executing phase cancellation never posts execute after the handshake", async () => {
+  const { supervisor, factory, clock, registry } = setup();
+  const controller = new AbortController();
+  const phases: string[] = [];
+  const operation = supervisor.execute(runtimeId, "code", {
+    signal: controller.signal,
+    onPhase: (phase) => {
+      phases.push(phase);
+      if (phase === "executing") controller.abort();
+    },
+  });
+  const rejected = assert.rejects(operation, rejectionWith("cancelled"));
+  const worker = factory.workers[0];
+  if (worker === undefined) throw new Error("expected cancelled worker");
+
+  completeInitialize(worker);
+  await rejected;
+  assert.deepEqual(phases, ["initializing", "executing"]);
+  assert.deepEqual(worker.posted.map(({ type }) => type), ["initialize"]);
+  assert.equal(worker.terminated, 1);
+  assert.equal(worker.listenerCount(), 0);
+  assert.equal(clock.pendingCount(), 0);
+  assert.equal(registry.get(runtimeId).state.kind, "loadable");
+});
+
 test("queues session runtime submissions FIFO without overlap", async () => {
   const { supervisor, factory } = setup();
   const worker = await readySession(supervisor, factory);
@@ -258,6 +370,37 @@ test("keeps a ready per-submission runtime stable through a later generation ini
   assert.equal(clock.pendingCount(), 0);
 });
 
+test("later per-submission initialization cancellation recovers a ready runtime to loadable", async () => {
+  const { supervisor, factory, registry } = setup();
+  const first = supervisor.execute(perSubmissionRuntimeId, "first");
+  const firstWorker = factory.workers[0];
+  if (firstWorker === undefined) throw new Error("expected first worker");
+  completeInitialize(firstWorker, "first-version", "first-build");
+  completeExecute(firstWorker, "first result");
+  await first;
+  assert.equal(firstWorker.terminated, 1);
+  assert.equal(registry.get(perSubmissionRuntimeId).state.kind, "ready");
+
+  const controller = new AbortController();
+  const second = supervisor.execute(perSubmissionRuntimeId, "second", { signal: controller.signal });
+  const secondRejected = assert.rejects(second, rejectionWith("cancelled"));
+  const secondWorker = factory.workers[1];
+  if (secondWorker === undefined) throw new Error("expected second worker");
+  assert.equal(request(secondWorker).type, "initialize");
+  controller.abort();
+  await secondRejected;
+  assert.equal(secondWorker.terminated, 1);
+  assert.equal(registry.get(perSubmissionRuntimeId).state.kind, "loadable");
+
+  const third = supervisor.execute(perSubmissionRuntimeId, "third");
+  const thirdWorker = factory.workers[2];
+  if (thirdWorker === undefined) throw new Error("expected third worker");
+  assert.equal(request(thirdWorker).type, "initialize");
+  completeInitialize(thirdWorker, "third-version", "third-build");
+  completeExecute(thirdWorker, "third result");
+  assert.deepEqual((await third).identity, { runtimeVersion: "third-version", buildId: "third-build" });
+});
+
 test("initialization timeout terminates once, cleans up, and marks the runtime failed", async () => {
   const { supervisor, factory, clock, registry } = setup();
   const initializing = supervisor.initialize(runtimeId);
@@ -284,7 +427,7 @@ test("initialization timeout terminates once, cleans up, and marks the runtime f
   });
 });
 
-test("execution timeout uses the authoritative short override and caps excessive overrides", async () => {
+test("ordinary execution timeout returns to loadable and requires a fresh handshake", async () => {
   const short = setup();
   const shortOperation = short.supervisor.execute(runtimeId, "code", { timeoutMs: 5 });
   const shortRejected = assert.rejects(shortOperation, rejectionWith("execution-timeout"));
@@ -296,6 +439,15 @@ test("execution timeout uses the authoritative short override and caps excessive
   short.clock.tick(1);
   await shortRejected;
   assert.equal(shortWorker.terminated, 1);
+  assert.equal(short.registry.get(runtimeId).state.kind, "loadable");
+
+  const recovered = short.supervisor.execute(runtimeId, "fresh");
+  const recoveredWorker = short.factory.workers[1];
+  if (recoveredWorker === undefined) throw new Error("expected fresh worker");
+  assert.equal(request(recoveredWorker).type, "initialize");
+  completeInitialize(recoveredWorker, "fresh-version", "fresh-build");
+  completeExecute(recoveredWorker, "fresh result");
+  assert.deepEqual((await recovered).identity, { runtimeVersion: "fresh-version", buildId: "fresh-build" });
 
   const capped = setup();
   const cappedOperation = capped.supervisor.execute(runtimeId, "code", { timeoutMs: 1_000_000 });
@@ -417,14 +569,13 @@ test("binds post-handshake terminal identity only to the active operation", asyn
   assert.equal(worker.terminated, 1);
 });
 
-test("AbortSignal cancellation is terminal, cleanup-safe, and recoverable", async () => {
+test("ordinary cancellation during initialization returns to loadable and requires a fresh handshake", async () => {
   const { supervisor, factory, clock, registry } = setup();
   const controller = new AbortController();
   const operation = supervisor.execute(runtimeId, "code", { signal: controller.signal });
   const rejected = assert.rejects(operation, rejectionWith("cancelled"));
   const worker = factory.workers[0];
   if (worker === undefined) throw new Error("expected worker");
-  completeInitialize(worker);
 
   controller.abort();
   await rejected;
@@ -432,7 +583,15 @@ test("AbortSignal cancellation is terminal, cleanup-safe, and recoverable", asyn
   assert.equal(worker.terminated, 1);
   assert.equal(worker.listenerCount(), 0);
   assert.equal(clock.pendingCount(), 0);
-  assert.equal(registry.get(runtimeId).state.kind, "failed");
+  assert.equal(registry.get(runtimeId).state.kind, "loadable");
+
+  const recovered = supervisor.execute(runtimeId, "fresh");
+  const recoveredWorker = factory.workers[1];
+  if (recoveredWorker === undefined) throw new Error("expected fresh worker");
+  assert.equal(request(recoveredWorker).type, "initialize");
+  completeInitialize(recoveredWorker, "fresh-version", "fresh-build");
+  completeExecute(recoveredWorker, "fresh result");
+  assert.deepEqual((await recovered).identity, { runtimeVersion: "fresh-version", buildId: "fresh-build" });
 });
 
 test("explicit cancel terminates the active request and clears its resources", async () => {
@@ -490,7 +649,7 @@ for (const [name, emit] of [
   });
 }
 
-test("late messages from an invalidated generation cannot affect a fresh Worker", async () => {
+test("late messages from an invalidated failed generation cannot affect a fresh Worker", async () => {
   const { supervisor, factory } = setup();
   const { operation: first, worker: firstWorker } = await executingSession(supervisor, factory);
   const firstRequest = request(firstWorker);
@@ -515,6 +674,53 @@ test("late messages from an invalidated generation cannot affect a fresh Worker"
   completeInitialize(secondWorker, "replacement-version", "replacement-build");
   completeExecute(secondWorker, "fresh");
   assert.equal((await second).payload.value, "fresh");
+});
+
+test("ordinary timeout settles active and queued requests once without replay and ignores old messages", async () => {
+  const { supervisor, factory, clock, registry } = setup();
+  const firstWorker = await readySession(supervisor, factory);
+  const settled = [0, 0];
+  const active = supervisor.execute(runtimeId, "active");
+  const queued = supervisor.judge(runtimeId, "queued", [{ index: 0, input: null }]);
+  const activeSettled = active.then(
+    () => { settled[0] = (settled[0] ?? 0) + 1; },
+    () => { settled[0] = (settled[0] ?? 0) + 1; },
+  );
+  const queuedSettled = queued.then(
+    () => { settled[1] = (settled[1] ?? 0) + 1; },
+    () => { settled[1] = (settled[1] ?? 0) + 1; },
+  );
+  const oldRequest = request(firstWorker);
+
+  clock.tick(25);
+  await Promise.all([
+    assert.rejects(active, rejectionWith("execution-timeout")),
+    assert.rejects(queued, rejectionWith("execution-timeout")),
+    activeSettled,
+    queuedSettled,
+  ]);
+  assert.deepEqual(settled, [1, 1]);
+  assert.equal(registry.get(runtimeId).state.kind, "loadable");
+  assert.equal(firstWorker.posted.filter(({ type }) => type === "execute").length, 1);
+
+  const fresh = supervisor.execute(runtimeId, "fresh");
+  const freshWorker = factory.workers[1];
+  if (freshWorker === undefined) throw new Error("expected replacement worker");
+  assert.equal(request(freshWorker).type, "initialize");
+  firstWorker.emit({
+    protocolVersion: 1,
+    requestId: oldRequest.requestId,
+    runtimeId,
+    type: "complete",
+    operation: "execute",
+    payload: { stdout: bounded(), stderr: bounded(), value: "stale" },
+  });
+  assert.equal(request(freshWorker).type, "initialize");
+
+  completeInitialize(freshWorker, "fresh-version", "fresh-build");
+  completeExecute(freshWorker, "fresh");
+  assert.equal((await fresh).payload.value, "fresh");
+  assert.deepEqual(settled, [1, 1]);
 });
 
 test("a terminal fault settles active and queued promises exactly once", async () => {

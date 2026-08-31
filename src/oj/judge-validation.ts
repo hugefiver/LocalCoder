@@ -4,7 +4,7 @@ import { RuntimeAdapterRegistry } from "../runtime/adapters/registry.js";
 import type { RuntimeAdapter } from "../runtime/adapters/types.js";
 import { MAX_CASE_COUNT, MAX_SOURCE_BYTES } from "../runtime/protocol.js";
 import { isRuntimeExecutionEligible, RuntimeRegistry, type RuntimeCapability } from "../runtime/registry.js";
-import type { RuntimeOperationOptions } from "../runtime/supervisor.js";
+import type { RuntimeOperationOptions, RuntimeOperationPhase } from "../runtime/supervisor.js";
 
 const textEncoder = new TextEncoder();
 
@@ -76,13 +76,18 @@ export function resolveJudgeRuntime(
   }
 }
 
-export function judgeOperationOptions(signal: AbortSignal | undefined, timeoutMs: number | undefined): RuntimeOperationOptions {
+export function judgeOperationOptions(
+  signal: AbortSignal | undefined,
+  timeoutMs: number | undefined,
+  onPhase: (phase: RuntimeOperationPhase) => void,
+): RuntimeOperationOptions {
   return {
+    onPhase,
     ...(signal === undefined ? {} : { signal }),
     ...(timeoutMs === undefined ? {} : { timeoutMs }),
   };
 }
 
-export function elapsedMs(now: () => number, startedAt: number): number {
-  return Math.max(0, now() - startedAt);
+export function elapsedMs(now: () => number, executionStartedAt?: number): number {
+  return executionStartedAt === undefined ? 0 : Math.max(0, now() - executionStartedAt);
 }

@@ -12,7 +12,7 @@ import type { RuntimeAdapter } from "../../src/runtime/adapters/types.js";
 import { parseRuntimeManifest } from "../../src/runtime/manifest.js";
 import type { ExecutePayload, RuntimeFailure } from "../../src/runtime/protocol.js";
 import { RuntimeRegistry } from "../../src/runtime/registry.js";
-import type { RuntimeInvocation, RuntimeOperationOptions } from "../../src/runtime/supervisor.js";
+import type { RuntimeInvocation, RuntimeOperationOptions, RuntimeOperationPhase } from "../../src/runtime/supervisor.js";
 import type { LocalCoderRepository } from "../../src/storage/repository.js";
 import type { DraftRecord, SettingsRecord, StorageState } from "../../src/storage/schema.js";
 import { ManualClock } from "../helpers/manual-clock.js";
@@ -20,9 +20,8 @@ import { ManualClock } from "../helpers/manual-clock.js";
 type ExecuteResult = RuntimeInvocation<ExecutePayload>;
 
 class FakeRuntimeAdapter implements RuntimeAdapter {
-  readonly calls: Array<{ source: string; signal?: AbortSignal }> = [];
+  readonly calls: Array<{ source: string; options: RuntimeOperationOptions | undefined }> = [];
   readonly outcomes: Array<ExecuteResult | Promise<ExecuteResult>> = [];
-  onExecute?: (options?: RuntimeOperationOptions) => void;
 
   constructor(
     readonly runtimeId: RuntimeId,
@@ -30,11 +29,14 @@ class FakeRuntimeAdapter implements RuntimeAdapter {
   ) {}
 
   async execute(source: string, options?: RuntimeOperationOptions): Promise<ExecuteResult> {
-    this.calls.push({ source, ...(options?.signal === undefined ? {} : { signal: options.signal }) });
-    this.onExecute?.(options);
+    this.calls.push({ source, options });
     const outcome = this.outcomes.shift();
     if (outcome === undefined) throw new Error(`No execute outcome queued for ${this.runtimeId}`);
     return outcome;
+  }
+
+  emitPhase(callIndex: number, phase: RuntimeOperationPhase): void {
+    this.calls[callIndex]?.options?.onPhase?.(phase);
   }
 
   async judge(): Promise<never> {
@@ -250,33 +252,51 @@ test("serialized draft saves ignore a stale failure once a newer save is queued"
   assert.equal(harness.controller.snapshot.error, undefined);
 });
 
-test("execute reports initializing and running, calls execute once with a signal, and normalizes output", async () => {
+test("cold execution publishes callback phases and measures only the 12ms user execution after 80ms initialization", async () => {
   const harness = createHarness();
   await harness.controller.load();
   const deferred = promiseWithResolvers<ExecuteResult>();
   harness.adapters.javascript.outcomes.push(deferred.promise);
 
   const execution = harness.controller.execute();
+  assert.equal(harness.controller.snapshot.phase, "ready");
+  harness.adapters.javascript.emitPhase(0, "initializing");
   assert.equal(harness.controller.snapshot.phase, "initializing");
-  harness.registry.transition("javascript-worker", { kind: "initializing", message: "启动 Worker" });
-  harness.registry.transition("javascript-worker", { kind: "ready" });
-  harness.registry.transition("javascript-worker", { kind: "running", requestId: "request-1" });
+  harness.clock.tick(80);
+  harness.adapters.javascript.emitPhase(0, "executing");
   assert.equal(harness.controller.snapshot.phase, "running");
-  harness.clock.tick(17);
+  harness.clock.tick(12);
   deferred.resolve(invocation(output("hello\n", "warning\n", { answer: [42] })));
   await execution;
 
   assert.equal(harness.adapters.javascript.calls.length, 1);
   assert.equal(harness.adapters.javascript.calls[0]?.source, EXECUTOR_PRESETS.javascript);
-  assert.ok(harness.adapters.javascript.calls[0]?.signal instanceof AbortSignal);
+  assert.ok(harness.adapters.javascript.calls[0]?.options?.signal instanceof AbortSignal);
+  assert.equal(typeof harness.adapters.javascript.calls[0]?.options?.onPhase, "function");
   assert.deepEqual(harness.controller.snapshot.output, {
     stdout: "hello\n",
     stderr: "warning\n",
     value: { answer: [42] },
     truncated: false,
   });
-  assert.equal(harness.controller.snapshot.elapsedMs, 17);
+  assert.equal(harness.controller.snapshot.elapsedMs, 12);
   assert.equal(harness.controller.snapshot.phase, "ready");
+});
+
+test("warm execution measures its 12ms executing phase without an initialization callback", async () => {
+  const harness = createHarness();
+  await harness.controller.load();
+  const deferred = promiseWithResolvers<ExecuteResult>();
+  harness.adapters.javascript.outcomes.push(deferred.promise);
+
+  const execution = harness.controller.execute();
+  harness.adapters.javascript.emitPhase(0, "executing");
+  assert.equal(harness.controller.snapshot.phase, "running");
+  harness.clock.tick(12);
+  deferred.resolve(invocation(output("warm", "", 1)));
+  await execution;
+
+  assert.equal(harness.controller.snapshot.elapsedMs, 12);
 });
 
 test("execute combines stdout and stderr truncation and clearOutput omits prior result fields", async () => {
@@ -305,6 +325,7 @@ test("a runtime user error becomes an error state without fabricating output", a
   assert.equal(harness.controller.snapshot.phase, "error");
   assert.match(harness.controller.snapshot.error ?? "", /执行失败.*boom/);
   assert.equal(hasOwn(harness.controller.snapshot, "output"), false);
+  assert.equal(harness.controller.snapshot.elapsedMs, 0);
 });
 
 test("cancel aborts the active execution and settles as cancelled", async () => {
@@ -316,12 +337,38 @@ test("cancel aborts the active execution and settles as cancelled", async () => 
   const execution = harness.controller.execute();
   harness.controller.cancel();
   assert.equal(harness.controller.snapshot.phase, "cancelling");
-  assert.equal(harness.adapters.javascript.calls[0]?.signal?.aborted, true);
+  assert.equal(harness.adapters.javascript.calls[0]?.options?.signal?.aborted, true);
   deferred.reject(runtimeFailure("cancelled", "cancelled", "Runtime operation was cancelled", true));
   await execution;
 
   assert.equal(harness.controller.snapshot.phase, "cancelled");
   assert.equal(harness.controller.snapshot.error, undefined);
+  assert.equal(harness.controller.snapshot.elapsedMs, 0);
+});
+
+test("timeout, runtime failure, and cancellation after execution each retain the 12ms user duration", async () => {
+  const cases: readonly [string, RuntimeFailure, "error" | "cancelled"][] = [
+    ["timeout", runtimeFailure("infrastructure", "execution-timeout", "late", true), "error"],
+    ["runtime failure", runtimeFailure("runtime", "user-error", "boom"), "error"],
+    ["cancellation", runtimeFailure("cancelled", "cancelled", "Runtime operation was cancelled", true), "cancelled"],
+  ];
+
+  for (const [, failure, finalPhase] of cases) {
+    const harness = createHarness();
+    await harness.controller.load();
+    const deferred = promiseWithResolvers<ExecuteResult>();
+    harness.adapters.javascript.outcomes.push(deferred.promise);
+
+    const execution = harness.controller.execute();
+    harness.adapters.javascript.emitPhase(0, "executing");
+    harness.clock.tick(12);
+    if (finalPhase === "cancelled") harness.controller.cancel();
+    deferred.reject(failure);
+    await execution;
+
+    assert.equal(harness.controller.snapshot.phase, finalPhase);
+    assert.equal(harness.controller.snapshot.elapsedMs, 12);
+  }
 });
 
 test("the selected failed runtime remains executable for cancellation recovery", async () => {
@@ -398,7 +445,7 @@ test("stale loads and executions cannot overwrite the current context", async ()
   await staleExecution;
   assert.equal(executeHarness.controller.snapshot.runtimeId, "typescript-official");
   assert.equal(hasOwn(executeHarness.controller.snapshot, "output"), false);
-  assert.equal(executeHarness.adapters.javascript.calls[0]?.signal?.aborted, true);
+  assert.equal(executeHarness.adapters.javascript.calls[0]?.options?.signal?.aborted, true);
 });
 
 test("snapshots are deeply immutable, listeners are isolated, and dispose releases subscriptions", async () => {

@@ -142,6 +142,25 @@ test("enforces lifecycle transitions, retry, and protocol incompatibility", () =
   );
 });
 
+test("allows recovery to loadable from initializing, ready, and running", () => {
+  const registry = RuntimeRegistry.fromManifest(manifestWithMissingOptionals());
+
+  registry.transition("javascript-worker", { kind: "initializing" });
+  registry.transition("javascript-worker", { kind: "loadable" });
+  assert.equal(registry.get("javascript-worker").state.kind, "loadable");
+
+  registry.transition("javascript-worker", { kind: "initializing" });
+  registry.transition("javascript-worker", { kind: "ready" });
+  registry.transition("javascript-worker", { kind: "running", requestId: "request-1" });
+  registry.transition("javascript-worker", { kind: "loadable" });
+  assert.equal(registry.get("javascript-worker").state.kind, "loadable");
+
+  registry.transition("typescript-official", { kind: "initializing" });
+  registry.transition("typescript-official", { kind: "ready" });
+  registry.transition("typescript-official", { kind: "loadable" });
+  assert.equal(registry.get("typescript-official").state.kind, "loadable");
+});
+
 test("returns deeply frozen snapshots without exposing registry state", () => {
   const document = manifestWithMissingOptionals();
   const registry = RuntimeRegistry.fromManifest(document);
