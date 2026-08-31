@@ -12,6 +12,9 @@ automatically applying `Content-Encoding: gzip` and decoding the response before
 explicitly decompresses it. The Worker falls back to the raw file when the gzip-bin asset or
 `DecompressionStream` is unavailable.
 
+Release copies are tracked through Git LFS. A checkout must materialize the real bytes before
+Worker and manifest generation; an unresolved LFS pointer is not a runtime asset.
+
 ## Protocol
 
 The runner reads one JSON request from stdin:

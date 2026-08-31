@@ -13,10 +13,11 @@ implementation evidence:
 - diff check: exit 0 (CRLF advisories only)
 
 runtime evidence:
-- receipt: artifacts/runtime-verification/python-rustpython.json
+- historical Windows receipt: artifacts/qa/rustpython-runtime/python-rustpython-d257-receipt.json
 - receipt checks: assets, handshake, smoke, judge-contract, pyodide-corpus-parity
 - runtimeVersion/buildId: rustpython-wasi/d257db92774c4cfc
-- capability report: python-rustpython verified; required runtimes packaged; brokenRuntimeIds empty
+- captured Windows capability report: python-rustpython verified; required runtimes packaged; brokenRuntimeIds empty
+- release packaging state after receipt archival: python-rustpython loadable-unverified pending current browser verification
 - harness recovery: artifacts/qa/runtime-operation-phases/harness-recovery.json
 - product recovery: artifacts/qa/runtime-operation-phases/product-recovery.json
 - synchronous phase-cancel browser recovery: artifacts/qa/runtime-operation-phases/review-fix-browser.json

@@ -28,7 +28,7 @@ The following optional asset groups remain missing. These are truthful disabled 
 | `racket-wasm` | `racket/racket.js` and one of `racket/racket.wasm.gz` or `racket/racket.wasm` |
 | `haskell-ghc-wasi` | One of `haskell/ghc.wasm.gz` or `haskell/ghc.wasm`, one of `haskell/libdir.tar.gz` or `haskell/libdir.tar`, and `haskell/wasi-shim.js` |
 
-RustPython packages `rustpython/runner.wasm.gz.bin` and `rustpython/runner.wasm`. The `.gz.bin` name contains ordinary gzip bytes but prevents HTTP servers from assigning `Content-Encoding: gzip` and transparently decoding the response before the Worker can hash and explicitly decompress it. The raw file remains the host fallback. Both variants are declared and hashed while present; a new complete browser receipt is still required before RustPython can become `VERIFIED`.
+RustPython packages `rustpython/runner.wasm.gz.bin` and `rustpython/runner.wasm`. The `.gz.bin` name contains ordinary gzip bytes but prevents HTTP servers from assigning `Content-Encoding: gzip` and transparently decoding the response before the Worker can hash and explicitly decompress it. The raw file remains the host fallback. Release copies are tracked through Git LFS, and unresolved pointer text is a broken asset rather than a packaged runtime. Both variants are declared and hashed while present; a new complete browser receipt is still required before RustPython can become `VERIFIED`.
 
 ## Worker identity v2
 

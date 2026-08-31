@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const defaultRoot = path.resolve(path.dirname(scriptPath), "..");
+const gitLfsPointerPrefix = "version https://git-lfs.github.com/spec/v1";
 
 function resolveTargetRoot(root, target) {
   const projectRoot = path.resolve(root);
@@ -31,6 +32,8 @@ function assetProblems(targetRoot, assets) {
         problems.push(`${asset.url}: not a file`);
       } else if (stat.size === 0) {
         problems.push(`${asset.url}: empty`);
+      } else if (stat.size <= 1024 && fs.readFileSync(assetPath, "utf8").startsWith(gitLfsPointerPrefix)) {
+        problems.push(`${asset.url}: unresolved Git LFS pointer`);
       } else if (stat.size !== asset.bytes) {
         problems.push(`${asset.url}: expected ${asset.bytes} bytes, found ${stat.size}`);
       }

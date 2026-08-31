@@ -183,3 +183,25 @@ test("checkRuntimeAssets reports a declared optional artifact mismatch as broken
     fs.rmSync(fixtureRoot, { recursive: true, force: true });
   }
 });
+
+test("checkRuntimeAssets rejects an unresolved Git LFS pointer as a broken optional asset", async () => {
+  const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "localcoder-runtime-manifest-"));
+  try {
+    createRequiredFixture(fixtureRoot);
+    writeAsset(fixtureRoot, "rustpython-worker.js", 67);
+    const pointer = `version https://git-lfs.github.com/spec/v1\noid sha256:${"0".repeat(64)}\nsize 9471382\n`;
+    const runnerPath = path.join(fixtureRoot, "public", "rustpython", "runner.wasm.gz.bin");
+    fs.mkdirSync(path.dirname(runnerPath), { recursive: true });
+    fs.writeFileSync(runnerPath, pointer);
+
+    const manifest = await buildManifest({ root: fixtureRoot });
+    assert.equal(byId(manifest, "python-rustpython").packaged, true);
+
+    const report = checkRuntimeAssets({ root: fixtureRoot, manifest, target: "public" });
+    const rustPython = byId({ runtimes: report.optional }, "python-rustpython");
+    assert.equal(rustPython.status, "broken");
+    assert.match(rustPython.reason, /unresolved Git LFS pointer/);
+  } finally {
+    fs.rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});

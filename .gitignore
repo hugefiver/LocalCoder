@@ -41,8 +41,6 @@ public/typescript/
 # Generated WASM runtime files (build artifacts)
 public/haskell/runner.wasm
 public/haskell/runner.meta.json
-public/rustpython/runner.wasm
-public/rustpython/runner.wasm.gz.bin
 public/racket/racket.js
 public/racket/racket.wasm
 public/racket/racket.wasm.gz
