@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "status": "BLOCKED",
+  "reportedAtUtc": "2026-08-31T09:13:15.2635917Z",
+  "authorization": {
+    "permittedInstallCommand": "pnpm install --offline --frozen-lockfile",
+    "invocationCount": 1,
+    "installAuthorizedButNotConsumed": false,
+    "installStartUtc": "2026-08-31T09:19:06.428Z",
+    "installEndUtc": "2026-08-31T09:19:47.7127171Z",
+    "installExitCode": 0,
+    "installCwd": "C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\localcoder-authorized-offline-b4826738a26e4973a50235bca7f0ff89",
+    "offlineProof": "--offline enforced; 12 progress entries reported downloaded 0; no HTTP URL was emitted."
+  },
+  "block": {
+    "phase": "post-install-dependency-proof",
+    "reason": "The first dependency-proof command failed to resolve @esbuild/win32-x64/esbuild.exe (MODULE_NOT_FOUND); per contract, no gate was run after that failure.",
+    "fullOutputLog": "authorized-offline-install.log"
+  },
+  "evidenceHistory": {
+    "priorInstallFailureLog": "authorized-offline-install-preflight-failure.log",
+    "priorFailureSummary": "authorized-offline-validation-preflight-failure.json",
+    "noteLinesPreservedThrough": 21
+  },
+  "tempRoot": {
+    "path": "C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\localcoder-authorized-offline-b4826738a26e4973a50235bca7f0ff89",
+    "created": true,
+    "cleanup": "Deleted exact validated temp root; post-delete nonexistence confirmed."
+  },
+  "commands": [
+    {
+      "name": "pnpm install --offline --frozen-lockfile",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "node scripts/generate-runtime-manifest.mjs",
+      "status": "not-run",
+      "exitCode": null
+    },
+    {
+      "name": "node scripts/check-runtime-assets.mjs public",
+      "status": "not-run",
+      "exitCode": null
+    },
+    {
+      "name": "node scripts/build-app.mjs",
+      "status": "not-run",
+      "exitCode": null,
+      "testCount": null
+    },
+    {
+      "name": "node scripts/smoke-check.mjs",
+      "status": "not-run",
+      "exitCode": null
+    }
+  ],
+  "generatedOutputComparison": {
+    "manifestSha256": null,
+    "rustpythonWorkerSha256": null,
+    "rustpythonExpectedBuildId": "d257db92774c4cfc",
+    "extractedBuildId": null,
+    "reason": "Not evaluated because direct gates were not run."
+  },
+  "mainTree": {
+    "protectedProductSnapshotFiles": 336,
+    "unchangedAtPreflight": true
+  },
+  "residual": "ENVIRONMENT_BLOCKED remains open: after the single successful offline install, dependency proof failed before the first gate. No install retry or gate continuation is permitted.",
+  "dependencyResolution": {
+    "status": "failed",
+    "failedSpecifier": "@esbuild/win32-x64/esbuild.exe",
+    "error": "MODULE_NOT_FOUND from the main-worktree node eval process"
+  }
+}

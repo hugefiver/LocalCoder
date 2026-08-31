@@ -1,0 +1,29 @@
+Historical baseline evidence gap remains: protected-baseline-hashes.json is absent, so checkpoint validation can only prove this run did not overwrite settled bytes.
+Isolation deviation ruling: dependency mirror used robocopy /E without /SL. Directory-link targets were dereferenced and physically copied under the fresh temp root; symlink shape was intentionally not preserved.
+Sampled vite, esbuild, and typescript realpaths were all under the isolated root before gates. The larger physical mirror completed without external node_modules linkage.
+Observed cost: the first isolated pnpm run automatically rehydrated the lockfile (Packages: +429), ran postinstall, and completed in 2m 9.9s before runtime:manifest. This occurred only in the disposable root, which was deleted; no explicit pnpm install command or main-worktree write occurred.
+Compliance consequence: this install-like automatic pnpm behavior prevents treating the literal no-install requirement as satisfied, despite all isolated command exits being zero.
+Clean direct-entrypoint rerun: FAIL. Fresh root localcoder-phase-validation-e3f34a4ab6c5497aaf7715ec7a9615a5 used direct node entrypoints only; packageManagerBefore=none.
+Direct runtime manifest exit 0 and direct runtime check exit 0. Direct build exit 1 before smoke.
+First failure: worker identity could not resolve @esbuild/win32-x64/esbuild.exe from the physically dereferenced isolated node_modules mirror.
+The direct root was fail-closed deleted. No package-manager command was invoked in this rerun; post-run marker scan, generated-output comparison, checkpoint recompare, and later reusable checks did not run because build failed.
+Final automatic correction: FAIL before platform-package copy and before any direct gate.
+Fresh root localcoder-phase-validation-1ec352ff0af54f0dba69f6d2cb200d15 resolved the unique installed @esbuild/win32-x64 source root and observed packageManagerBefore=none.
+Failure: the validation PowerShell condition used Test-Path ... -and without parenthesizing Test-Path, so PowerShell treated -and as an unsupported Test-Path parameter.
+The exact fresh root was fail-closed deleted. No package-manager command, install, platform copy, direct manifest/check/build/smoke gate, hash comparison, or product write occurred in this round. No further automatic correction will be attempted.
+Correction 5 direct-entrypoint proof: FAIL at direct build.
+Fresh root completed source/dependency physical copies and the explicit @esbuild/win32-x64 platform copy; build progressed past the esbuild platform-resolution blocker.
+Direct build-app.mjs exited 2 during its local TypeScript phase with widespread React/Router/UI declaration incompatibilities in the physically dereferenced dependency mirror.
+Direct smoke, forbidden-marker scan, post-run package-manager check, generated-output hash comparison, checkpoint/report/ports/diff rechecks did not run after this first failure.
+The exact correction-five root was fail-closed deleted. No further automatic correction will be attempted under the hard ceiling.
+
+19. Authorized offline validation attempt: BLOCKED before the one permitted installation command. The generated candidate `C:\Users\hugefiver\AppData\Local\Temp\localcoder-authorized-offline-c39f96548cdc4daab3c68a71aa6bc8eb` matched the required basename and OS-temp parent but was never created because the initial creation command used unsupported PowerShell parameter combinations.
+20. The candidate was confirmed nonexistent after the failed creation command. `pnpm install --offline --frozen-lockfile` was invoked zero times; no package manager, manifest, runtime-check, build, or smoke command was run, and no retry is permitted by the one-time contract.
+
+21. Orchestrator ruling: the preserved prior evidence records invocationCount=0 and installAuthorizedButNotConsumed=true. The prior install log and summary were retained as authorized-offline-install-preflight-failure.log and authorized-offline-validation-preflight-failure.json; the same one-time authorization remains active for one corrected pre-install setup attempt.
+
+22. Corrected pre-install setup: BLOCKED before temp-root creation. The backup-destination guard used Test-Path -LiteralPath ... -or Test-Path -LiteralPath ... without parenthesizing each call; PowerShell emitted a duplicate-LiteralPath parameter-binding error. The prior evidence had already been preserved, but no temp root, package-manager command, install invocation, or direct gate followed.
+
+23. Correction round 2: the single authorized `pnpm install --offline --frozen-lockfile` ran once and exited 0 with every recorded downloaded field equal to 0. The first post-install dependency-proof command failed with MODULE_NOT_FOUND for `@esbuild/win32-x64/esbuild.exe`; by contract no direct gate ran, and the exact validated temp root was deleted.
+
+24. Second and final explicit authorization: one fresh temp-root `pnpm install --offline --frozen-lockfile` completed with exit 0 and downloaded 0 throughout. Direct manifest, runtime check, build-app (285 tests), and smoke gates all exited 0; generated manifest/worker hashes and RustPython build identity matched main. The exact root was deleted; parent owns final-status and review/identity updates.

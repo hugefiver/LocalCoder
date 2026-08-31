@@ -1,0 +1,20 @@
+{
+  "timeoutPhases": [
+    "executing"
+  ],
+  "timeoutFailure": {
+    "kind": "infrastructure",
+    "code": "execution-timeout",
+    "message": "Runtime execution timed out"
+  },
+  "recoveryPhases": [
+    "initializing",
+    "executing"
+  ],
+  "recoveredIdentity": {
+    "runtimeVersion": "rustpython-wasi",
+    "buildId": "d257db92774c4cfc"
+  },
+  "recoveredStdout": "runtime recovered\n",
+  "equivalentEligibilityProof": "same verified harness session recovered without re-verification"
+}

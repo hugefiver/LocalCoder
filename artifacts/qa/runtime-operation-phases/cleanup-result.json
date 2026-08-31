@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "recordedPids": {
+    "vite": 58124,
+    "verifier": 52152,
+    "browser": 61232,
+    "automation": 74892
+  },
+  "termination": {
+    "vite": "command line verified and stopped",
+    "verifier": "exited after verified receipt",
+    "browser": "command line and exact profile verified; profile-bound Chromium processes stopped",
+    "automation": "exited after writing terminal failure JSON"
+  },
+  "deletedProfile": "C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\localcoder-runtime-phases-7fa581a16ad91e9e478b46d15e0972dd",
+  "deletedTempScripts": [
+    "C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\opencode\\localcoder-task3-qa-20260831.cjs",
+    "C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\opencode\\localcoder-task3-dom-snapshot.cjs"
+  ],
+  "finalChecks": {
+    "recordedPidsStopped": true,
+    "profileAndTempScriptsDeleted": true,
+    "ports": {
+      "4181": "free",
+      "5173": "free",
+      "9222": "free"
+    },
+    "netstatResult": "QA_PORTS_FREE"
+  }
+}

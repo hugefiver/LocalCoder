@@ -1,0 +1,50 @@
+{
+  "status": "blocked",
+  "automationPid": 74892,
+  "startedAt": "2026-08-30T22:51:18.438Z",
+  "finishedAt": "2026-08-30T22:52:14.080Z",
+  "requestedUrl": "http://127.0.0.1:5173/#/executor",
+  "effectiveUrl": "http://127.0.0.1:5173/executor",
+  "routeModeEquivalent": "Vite dev uses BrowserRouter, so /executor is the executable equivalent; /#/executor renders Home in this launch mode.",
+  "functionalAssertionsPassedBeforeNetworkAudit": {
+    "productInMemoryVerification": "RustPython reached verified/ready without relying on the file receipt",
+    "selectedRuntimeId": "python-rustpython",
+    "checkedInPresetStdout": [
+      "本地求和: 29",
+      "翻倍: [6, 10, 16, 26]"
+    ],
+    "timeout": {
+      "failureText": "执行失败：Runtime execution timed out",
+      "elapsedAssertion": "at least 29000 ms and at most 35000 ms"
+    },
+    "retainedAfterTimeout": {
+      "selected": true,
+      "optionEnabled": true,
+      "executeAvailable": true,
+      "reverified": false
+    },
+    "retry": {
+      "phaseSequence": [
+        "正在初始化运行时",
+        "正在本地执行"
+      ],
+      "elapsedMs": 227.0,
+      "stdout": [
+        "本地求和: 29",
+        "翻倍: [6, 10, 16, 26]"
+      ],
+      "reverified": false
+    }
+  },
+  "blocker": {
+    "kind": "forbidden-cdn-network",
+    "message": "Product QA rejected external CDN requests after all runtime recovery assertions passed.",
+    "urls": [
+      "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+      "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2",
+      "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2"
+    ]
+  },
+  "screenshot": "artifacts/qa/runtime-operation-phases/product-recovery.png",
+  "terminalResult": "artifacts/qa/runtime-operation-phases/automation-result.json"
+}

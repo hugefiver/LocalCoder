@@ -1,0 +1,4 @@
+Historical baseline evidence gap: artifacts/qa/runtime-operation-phases/protected-baseline-hashes.json does not exist.
+This current settled RustPython checkpoint was captured before the isolated write-producing gates.
+It can prove that this validation run did not overwrite the listed settled bytes; it cannot prove equivalence to a pre-implementation baseline.
+The protected list includes .debug-journal.md and the RustPython inputs/outputs specified for Task 4.

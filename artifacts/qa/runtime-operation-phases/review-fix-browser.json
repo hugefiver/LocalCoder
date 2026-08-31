@@ -1,0 +1,2759 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "startedAt": "2026-08-31T01:06:09.714Z",
+  "finishedAt": "2026-08-31T01:06:18.455Z",
+  "url": "http://127.0.0.1:5173/runtime-harness.html",
+  "receiptRegenerated": false,
+  "browser": {
+    "playwrightVersion": "1.59.0",
+    "cdpPort": 9222,
+    "executable": "C:/Users/hugefiver/AppData/Local/ms-playwright/chromium-1217/chrome-win64/chrome.exe",
+    "profile": "C:/Users/hugefiver/AppData/Local/Temp/localcoder-review-fix-148c01a991674bfa9d6a7cffec2cf135"
+  },
+  "pids": {
+    "vite": 23504,
+    "browser": 55688,
+    "automation": 6720
+  },
+  "verification": {
+    "state": "verified",
+    "runtimeId": "python-rustpython",
+    "runtimeVersion": "rustpython-wasi",
+    "checks": [
+      "assets",
+      "handshake",
+      "smoke",
+      "judge-contract",
+      "pyodide-corpus-parity"
+    ]
+  },
+  "initializingCallbackAbort": {
+    "phases": [
+      "initializing"
+    ],
+    "outcome": {
+      "status": "rejected",
+      "failure": {
+        "kind": "cancelled",
+        "code": "cancelled",
+        "message": "Runtime operation was cancelled"
+      }
+    }
+  },
+  "initializingRecovery": {
+    "phases": [
+      "initializing",
+      "executing"
+    ],
+    "stdout": "initializing recovery\n",
+    "stderr": "",
+    "identity": {
+      "runtimeVersion": "rustpython-wasi",
+      "buildId": "d257db92774c4cfc"
+    }
+  },
+  "executingCallbackAbort": {
+    "phases": [
+      "executing"
+    ],
+    "outcome": {
+      "status": "rejected",
+      "failure": {
+        "kind": "cancelled",
+        "code": "cancelled",
+        "message": "Runtime operation was cancelled"
+      }
+    }
+  },
+  "executingRecovery": {
+    "phases": [
+      "initializing",
+      "executing"
+    ],
+    "stdout": "executing recovery\n",
+    "stderr": "",
+    "identity": {
+      "runtimeVersion": "rustpython-wasi",
+      "buildId": "d257db92774c4cfc"
+    }
+  },
+  "events": {
+    "console": {
+      "count": 279,
+      "entries": [
+        {
+          "type": "debug",
+          "text": "[vite] connecting...",
+          "location": {
+            "url": "http://127.0.0.1:5173/@vite/client",
+            "lineNumber": 732,
+            "columnNumber": 8
+          }
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected.",
+          "location": {
+            "url": "http://127.0.0.1:5173/@vite/client",
+            "lineNumber": 826,
+            "columnNumber": 11
+          }
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "location": {
+            "url": "http://127.0.0.1:5173/favicon.ico",
+            "lineNumber": 0,
+            "columnNumber": 0
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 0 0",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 943,
+            "columnNumber": 14
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Modules",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: Lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: lib",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: usr",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 1910,
+            "columnNumber": 16
+          }
+        },
+        {
+          "type": "log",
+          "text": "%c%s color: #265BA0 wasi: 1 18",
+          "location": {
+            "url": "http://127.0.0.1:5173/rustpython-worker.js",
+            "lineNumber": 917,
+            "columnNumber": 14
+          }
+        }
+      ]
+    },
+    "pageerror": {
+      "count": 0,
+      "entries": []
+    },
+    "requestfailed": {
+      "count": 0,
+      "ignoredGoogleFontsCount": 0,
+      "ignoredGoogleFonts": [],
+      "unexpectedCount": 0,
+      "unexpected": []
+    }
+  },
+  "screenshot": "artifacts/qa/runtime-operation-phases/review-fix-browser.png",
+  "assertions": [
+    {
+      "label": "verification state is verified",
+      "passed": true,
+      "actual": "verified"
+    },
+    {
+      "label": "initializing callback abort rejects",
+      "passed": true,
+      "actual": "rejected"
+    },
+    {
+      "label": "initializing callback rejection kind",
+      "passed": true,
+      "actual": "cancelled"
+    },
+    {
+      "label": "initializing callback rejection code",
+      "passed": true,
+      "actual": "cancelled"
+    },
+    {
+      "label": "initializing callback phases",
+      "passed": true,
+      "actual": [
+        "initializing"
+      ]
+    },
+    {
+      "label": "initializing recovery phases",
+      "passed": true,
+      "actual": [
+        "initializing",
+        "executing"
+      ]
+    },
+    {
+      "label": "initializing recovery stdout",
+      "passed": true,
+      "actual": "initializing recovery\n"
+    },
+    {
+      "label": "initializing recovery stderr",
+      "passed": true,
+      "actual": ""
+    },
+    {
+      "label": "initializing recovery identity",
+      "passed": true,
+      "actual": {
+        "runtimeVersion": "rustpython-wasi",
+        "buildId": "d257db92774c4cfc"
+      }
+    },
+    {
+      "label": "executing callback abort rejects",
+      "passed": true,
+      "actual": "rejected"
+    },
+    {
+      "label": "executing callback rejection kind",
+      "passed": true,
+      "actual": "cancelled"
+    },
+    {
+      "label": "executing callback rejection code",
+      "passed": true,
+      "actual": "cancelled"
+    },
+    {
+      "label": "executing callback phases",
+      "passed": true,
+      "actual": [
+        "executing"
+      ]
+    },
+    {
+      "label": "executing recovery phases",
+      "passed": true,
+      "actual": [
+        "initializing",
+        "executing"
+      ]
+    },
+    {
+      "label": "executing recovery stdout",
+      "passed": true,
+      "actual": "executing recovery\n"
+    },
+    {
+      "label": "executing recovery stderr",
+      "passed": true,
+      "actual": ""
+    },
+    {
+      "label": "executing recovery identity",
+      "passed": true,
+      "actual": {
+        "runtimeVersion": "rustpython-wasi",
+        "buildId": "d257db92774c4cfc"
+      }
+    },
+    {
+      "label": "no pageerror events",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "label": "no unexpected requestfailed events",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "label": "harness screenshot is non-empty",
+      "passed": true,
+      "actual": 20814
+    }
+  ],
+  "cleanup": {
+    "status": "completed",
+    "ownershipVerifiedBeforeTermination": true,
+    "stoppedPids": {
+      "vite": [
+        45484,
+        69376,
+        23504
+      ],
+      "browser": [
+        65804,
+        63824,
+        42588,
+        22412,
+        44012,
+        57736,
+        64188,
+        19260,
+        55688
+      ],
+      "automationExited": 6720
+    },
+    "profileDeleted": "C:/Users/hugefiver/AppData/Local/Temp/localcoder-review-fix-148c01a991674bfa9d6a7cffec2cf135",
+    "tempLauncherAndLogsDeleted": true,
+    "ports": {
+      "5173": "free",
+      "9222": "free"
+    },
+    "parentOwnedAgentMoveUntouched": true
+  }
+}

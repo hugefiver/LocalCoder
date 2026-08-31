@@ -1,0 +1,32 @@
+{
+  "suite": "optional-v1",
+  "runtimeId": "python-rustpython",
+  "protocolVersion": 1,
+  "verification": {
+    "state": "verified",
+    "runtimeId": "python-rustpython",
+    "runtimeVersion": "rustpython-wasi",
+    "checks": [
+      "assets",
+      "handshake",
+      "smoke",
+      "judge-contract",
+      "pyodide-corpus-parity"
+    ]
+  },
+  "manifestSha256": "78c8cef547698a71b23c1e810a1d6401d5289ccd88d7126f124aff5217b81d51",
+  "assets": [
+    {
+      "url": "rustpython-worker.js",
+      "sha256": "39fe07aaf16dd4228eecf41a87d1ff9223fe3ebf32c238e7fbb0b60259e16398"
+    },
+    {
+      "url": "rustpython/runner.wasm.gz.bin",
+      "sha256": "139f72810f85e573f2ae14162fd52c13cf8dc5e3e532271d374f503dc30df444"
+    },
+    {
+      "url": "rustpython/runner.wasm",
+      "sha256": "6a131b678b60d7f5972faf68eee0f7a75888a3209a9166a1f48f1a9d4df94127"
+    }
+  ]
+}

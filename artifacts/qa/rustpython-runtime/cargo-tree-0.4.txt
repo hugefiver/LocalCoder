@@ -1,0 +1,383 @@
+rustpython-runner v0.1.0 (C:\Users\hugefiver\source\LocalCoder\runtimes\rustpython-runner)
+rustpython-vm v0.4.0
+ahash v0.8.12
+cfg-if v1.0.4
+getrandom v0.3.4
+cfg-if v1.0.4
+once_cell v1.21.3
+zerocopy v0.8.33
+version_check v0.9.5
+ascii v1.1.0
+atty v0.2.14
+bitflags v2.10.0
+bstr v0.2.17
+lazy_static v1.5.0
+memchr v2.7.6
+regex-automata v0.1.10
+caseless v0.2.2
+unicode-normalization v0.1.25
+tinyvec v1.10.0
+tinyvec_macros v0.1.1
+cfg-if v1.0.4
+chrono v0.4.43
+num-traits v0.2.19
+autocfg v1.5.0
+crossbeam-utils v0.8.21
+getrandom v0.2.17
+cfg-if v1.0.4
+wasi v0.11.1+wasi-snapshot-preview1
+half v1.8.3
+hex v0.4.3
+indexmap v2.13.0
+equivalent v1.0.2
+hashbrown v0.16.1
+is-macro v0.3.7 (proc-macro)
+heck v0.5.0
+proc-macro2 v1.0.105
+unicode-ident v1.0.22
+quote v1.0.43
+proc-macro2 v1.0.105 (*)
+syn v2.0.114
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+unicode-ident v1.0.22
+itertools v0.11.0
+either v1.15.0
+libc v0.2.180
+log v0.4.29
+malachite-bigint v0.2.3
+derive_more v1.0.0
+derive_more-impl v1.0.0 (proc-macro)
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v2.0.114 (*)
+unicode-xid v0.2.6
+malachite v0.4.22
+malachite-base v0.4.22
+hashbrown v0.14.5
+ahash v0.8.12 (*)
+itertools v0.11.0 (*)
+libm v0.2.15
+ryu v1.0.22
+malachite-nz v0.4.22
+itertools v0.11.0 (*)
+libm v0.2.15
+malachite-base v0.4.22 (*)
+malachite-q v0.4.22
+itertools v0.11.0 (*)
+malachite-base v0.4.22 (*)
+malachite-nz v0.4.22 (*)
+num-integer v0.1.46
+num-traits v0.2.19 (*)
+num-traits v0.2.19 (*)
+paste v1.0.15 (proc-macro)
+memchr v2.7.6
+memoffset v0.9.1
+autocfg v1.5.0
+nix v0.27.1
+bitflags v2.10.0
+cfg-if v1.0.4
+libc v0.2.180
+memoffset v0.9.1 (*)
+num-complex v0.4.6
+num-traits v0.2.19 (*)
+num-integer v0.1.46 (*)
+num-traits v0.2.19 (*)
+num_cpus v1.17.0
+libc v0.2.180
+num_enum v0.7.5
+num_enum_derive v0.7.5 (proc-macro)
+proc-macro-crate v3.4.0
+toml_edit v0.23.10+spec-1.0.0
+indexmap v2.13.0
+equivalent v1.0.2
+hashbrown v0.16.1
+toml_datetime v0.7.5+spec-1.1.0
+toml_parser v1.0.6+spec-1.1.0
+winnow v0.7.14
+winnow v0.7.14
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v2.0.114 (*)
+rustversion v1.0.22 (proc-macro)
+once_cell v1.21.3
+optional v0.5.0
+parking_lot v0.12.5
+lock_api v0.4.14
+scopeguard v1.2.0
+parking_lot_core v0.9.12
+cfg-if v1.0.4
+smallvec v1.15.1
+paste v1.0.15 (proc-macro)
+rand v0.8.5
+rand_chacha v0.3.1
+ppv-lite86 v0.2.21
+zerocopy v0.8.33
+rand_core v0.6.4
+getrandom v0.2.17 (*)
+rand_core v0.6.4 (*)
+result-like v0.4.6
+result-like-derive v0.4.6 (proc-macro)
+pmutil v0.5.3
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v1.0.109
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+unicode-ident v1.0.22
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v1.0.109 (*)
+syn-ext v0.4.0
+syn v1.0.109 (*)
+rustpython-common v0.4.0
+ascii v1.1.0
+bitflags v2.10.0
+bstr v0.2.17 (*)
+cfg-if v1.0.4
+itertools v0.11.0 (*)
+libc v0.2.180
+lock_api v0.4.14 (*)
+malachite-base v0.4.22 (*)
+malachite-bigint v0.2.3 (*)
+malachite-q v0.4.22 (*)
+num-complex v0.4.6 (*)
+num-traits v0.2.19 (*)
+once_cell v1.21.3
+radium v0.7.0
+rand v0.8.5 (*)
+rustpython-format v0.4.0
+bitflags v2.10.0
+itertools v0.11.0 (*)
+malachite-bigint v0.2.3 (*)
+num-traits v0.2.19 (*)
+rustpython-literal v0.4.0
+hexf-parse v0.2.1
+is-macro v0.3.7 (proc-macro) (*)
+lexical-parse-float v0.8.5
+lexical-parse-integer v0.8.6
+lexical-util v0.8.5
+static_assertions v1.1.0
+static_assertions v1.1.0
+lexical-util v0.8.5 (*)
+static_assertions v1.1.0
+num-traits v0.2.19 (*)
+unic-ucd-category v0.9.0
+matches v0.1.10
+unic-char-property v0.9.0
+unic-char-range v0.9.0
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0
+unic-common v0.9.0
+siphasher v0.3.11
+volatile v0.3.0
+rustpython-compiler-core v0.4.0
+bitflags v2.10.0
+itertools v0.11.0 (*)
+lz4_flex v0.11.5
+twox-hash v2.1.2
+malachite-bigint v0.2.3 (*)
+num-complex v0.4.6 (*)
+rustpython-parser-core v0.4.0
+is-macro v0.3.7 (proc-macro) (*)
+memchr v2.7.6
+rustpython-parser-vendored v0.4.0
+memchr v2.7.6
+once_cell v1.21.3
+rustpython-derive v0.4.0 (proc-macro)
+rustpython-compiler v0.4.0
+rustpython-codegen v0.4.0
+ahash v0.8.12
+cfg-if v1.0.4
+getrandom v0.3.4
+cfg-if v1.0.4
+once_cell v1.21.3
+zerocopy v0.8.33
+version_check v0.9.5
+bitflags v2.10.0
+indexmap v2.13.0 (*)
+itertools v0.11.0
+either v1.15.0
+log v0.4.29
+num-complex v0.4.6
+num-traits v0.2.19
+autocfg v1.5.0
+num-traits v0.2.19 (*)
+rustpython-ast v0.4.0
+is-macro v0.3.7 (proc-macro) (*)
+malachite-bigint v0.2.3
+derive_more v1.0.0
+derive_more-impl v1.0.0 (proc-macro) (*)
+malachite v0.4.22
+malachite-base v0.4.22
+hashbrown v0.14.5
+ahash v0.8.12 (*)
+itertools v0.11.0 (*)
+libm v0.2.15
+ryu v1.0.22
+malachite-nz v0.4.22
+itertools v0.11.0 (*)
+libm v0.2.15
+malachite-base v0.4.22 (*)
+malachite-q v0.4.22
+itertools v0.11.0 (*)
+malachite-base v0.4.22 (*)
+malachite-nz v0.4.22 (*)
+num-integer v0.1.46
+num-traits v0.2.19 (*)
+num-traits v0.2.19 (*)
+paste v1.0.15 (proc-macro)
+rustpython-literal v0.4.0
+hexf-parse v0.2.1
+is-macro v0.3.7 (proc-macro) (*)
+lexical-parse-float v0.8.5
+lexical-parse-integer v0.8.6
+lexical-util v0.8.5
+static_assertions v1.1.0
+static_assertions v1.1.0
+lexical-util v0.8.5 (*)
+static_assertions v1.1.0
+num-traits v0.2.19 (*)
+unic-ucd-category v0.9.0
+matches v0.1.10
+unic-char-property v0.9.0
+unic-char-range v0.9.0
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0
+unic-common v0.9.0
+rustpython-parser-core v0.4.0
+is-macro v0.3.7 (proc-macro) (*)
+memchr v2.7.6
+rustpython-parser-vendored v0.4.0
+memchr v2.7.6
+once_cell v1.21.3
+static_assertions v1.1.0
+rustpython-compiler-core v0.4.0
+bitflags v2.10.0
+itertools v0.11.0 (*)
+lz4_flex v0.11.5
+twox-hash v2.1.2
+malachite-bigint v0.2.3 (*)
+num-complex v0.4.6 (*)
+rustpython-parser-core v0.4.0 (*)
+rustpython-parser-core v0.4.0 (*)
+rustpython-compiler-core v0.4.0 (*)
+rustpython-parser v0.4.0
+is-macro v0.3.7 (proc-macro) (*)
+itertools v0.11.0 (*)
+lalrpop-util v0.20.2
+log v0.4.29
+malachite-bigint v0.2.3 (*)
+num-traits v0.2.19 (*)
+phf v0.11.3
+phf_shared v0.11.3
+siphasher v1.0.1
+rustc-hash v1.1.0
+rustpython-ast v0.4.0 (*)
+rustpython-parser-core v0.4.0 (*)
+unic-emoji-char v0.9.0
+unic-char-property v0.9.0 (*)
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0 (*)
+unic-ucd-ident v0.9.0
+unic-char-property v0.9.0 (*)
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0 (*)
+unicode_names2 v1.3.0
+phf v0.11.3 (*)
+unicode_names2_generator v1.3.0
+getopts v0.2.24
+unicode-width v0.2.2
+log v0.4.29
+phf_codegen v0.11.3
+phf_generator v0.11.3
+phf_shared v0.11.3 (*)
+rand v0.8.5
+rand_chacha v0.3.1
+ppv-lite86 v0.2.21
+zerocopy v0.8.33
+rand_core v0.6.4
+getrandom v0.2.17
+cfg-if v1.0.4
+rand_core v0.6.4 (*)
+phf_shared v0.11.3 (*)
+rand v0.8.5 (*)
+anyhow v1.0.100
+phf_codegen v0.11.3 (*)
+tiny-keccak v2.0.2
+crunchy v0.2.4
+rustpython-derive-impl v0.4.0
+itertools v0.11.0 (*)
+maplit v1.0.2
+once_cell v1.21.3
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+rustpython-compiler-core v0.4.0 (*)
+rustpython-doc v0.3.0
+once_cell v1.21.3
+rustpython-parser-core v0.4.0 (*)
+syn v1.0.109 (*)
+syn-ext v0.4.0 (*)
+textwrap v0.15.2
+syn v1.0.109 (*)
+rustpython-format v0.4.0 (*)
+rustpython-literal v0.4.0 (*)
+rustpython-parser-core v0.4.0 (*)
+rustpython-sre_engine v0.4.0
+bitflags v2.10.0
+num_enum v0.7.5 (*)
+optional v0.5.0
+static_assertions v1.1.0
+thiserror v1.0.69
+thiserror-impl v1.0.69 (proc-macro)
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v2.0.114 (*)
+thread_local v1.1.9
+cfg-if v1.0.4
+timsort v0.1.3
+unic-ucd-bidi v0.9.0
+unic-char-property v0.9.0 (*)
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0 (*)
+unic-ucd-category v0.9.0 (*)
+unic-ucd-ident v0.9.0
+unic-char-property v0.9.0 (*)
+unic-char-range v0.9.0
+unic-ucd-version v0.9.0 (*)
+unicode-casing v0.1.1
+unicode_names2 v1.3.0
+phf v0.11.3
+phf_shared v0.11.3
+siphasher v1.0.1
+unicode_names2_generator v1.3.0 (*)
+wasm-bindgen v0.2.108
+cfg-if v1.0.4
+once_cell v1.21.3
+wasm-bindgen-macro v0.2.108 (proc-macro)
+quote v1.0.43 (*)
+wasm-bindgen-macro-support v0.2.108
+bumpalo v3.19.1
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v2.0.114 (*)
+wasm-bindgen-shared v0.2.108
+unicode-ident v1.0.22
+wasm-bindgen-shared v0.2.108
+unicode-ident v1.0.22
+rustversion v1.0.22 (proc-macro)
+glob v0.3.3
+itertools v0.11.0 (*)
+rustc_version v0.4.1
+semver v1.0.27
+serde v1.0.228
+serde_core v1.0.228
+serde_derive v1.0.228 (proc-macro)
+proc-macro2 v1.0.105 (*)
+quote v1.0.43 (*)
+syn v2.0.114 (*)
+serde_json v1.0.149
+itoa v1.0.17
+memchr v2.7.6
+serde_core v1.0.228
+zmij v1.0.15

@@ -1,0 +1,11 @@
+{
+  "status": "failed",
+  "pid": 74892,
+  "startedAt": "2026-08-30T22:51:18.438Z",
+  "finishedAt": "2026-08-30T22:52:14.080Z",
+  "error": {
+    "name": "Error",
+    "message": "Unexpected non-local network URLs: [\"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap\",\"https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2\",\"https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2\"]",
+    "stack": "Error: Unexpected non-local network URLs: [\"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap\",\"https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2\",\"https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2\"]\n    at productQa (C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\opencode\\localcoder-task3-qa-20260831.cjs:344:41)\n    at async main (C:\\Users\\HUGEFI~1\\AppData\\Local\\Temp\\opencode\\localcoder-task3-qa-20260831.cjs:431:19)"
+  }
+}

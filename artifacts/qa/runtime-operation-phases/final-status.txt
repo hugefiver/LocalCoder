@@ -1,0 +1,61 @@
+VERIFIED
+identity: sha256:38a72f12eabf641b8f3febb773c9d2092d40c3dae385e3cc9a5a570d69b9aad7 (7019 files)
+head: e56dbcd docs: add hierarchical agents knowledge base
+
+implementation evidence:
+- Task 1 runtime lifecycle tests: 43 passed, 0 failed
+- Task 2 executor/OJ tests: 54 passed, 0 failed
+- typecheck: exit 0
+- lint: exit 0, zero warnings
+- final-review lifecycle fix RED: 42 passed, 4 failed
+- final-review lifecycle fix GREEN: 46 passed, 0 failed
+- full test after review fix: 285 passed, 0 failed
+- diff check: exit 0 (CRLF advisories only)
+
+runtime evidence:
+- receipt: artifacts/runtime-verification/python-rustpython.json
+- receipt checks: assets, handshake, smoke, judge-contract, pyodide-corpus-parity
+- runtimeVersion/buildId: rustpython-wasi/d257db92774c4cfc
+- capability report: python-rustpython verified; required runtimes packaged; brokenRuntimeIds empty
+- harness recovery: artifacts/qa/runtime-operation-phases/harness-recovery.json
+- product recovery: artifacts/qa/runtime-operation-phases/product-recovery.json
+- synchronous phase-cancel browser recovery: artifacts/qa/runtime-operation-phases/review-fix-browser.json
+- process cleanup: artifacts/qa/runtime-operation-phases/cleanup-result.json; ports 4181/5173/9222 free; throwaway profile removed
+
+protected-work evidence:
+- historical protected-baseline-hashes.json was never created; this is an explicit evidence gap
+- protected-validation-checkpoint.json proves the settled RustPython bytes were unchanged by the first isolated gate run
+- .debug-journal.md was removed and src/problems/AGENTS.md restored after QA as required cleanup
+
+isolated build evidence:
+- authorization sequence 2 invoked `pnpm install --offline --frozen-lockfile` exactly once in a disposable OS-temp root; exit 0, all 16 progress entries downloaded 0, and no HTTP URL was emitted
+- direct manifest, runtime-check, build-app, and smoke gates all exited 0; isolated build-app passed 285 tests with 0 failures
+- isolated/main manifest SHA256 matched `78c8cef547698a71b23c1e810a1d6401d5289ccd88d7126f124aff5217b81d51`
+- isolated/main RustPython Worker SHA256 matched `39fe07aaf16dd4228eecf41a87d1ff9223fe3ebf32c238e7fbb0b60259e16398`; build ID matched `d257db92774c4cfc`
+- 336/336 protected main-worktree paths and hashes were unchanged; the exact temp root was deleted and ports remained free
+- authoritative result: artifacts/qa/runtime-operation-phases/authorized-offline-validation.json; prior failed proof attempts remain preserved as historical evidence and no longer block acceptance
+
+final-review correction:
+- synchronous `onPhase` cancellation is guarded before transport creation for both initializing and executing boundaries
+- a later per-submission generation cancelled during initialization recovers ready -> loadable only for an actual recoverable ordinary initialization
+- browser proof: initializing cancel phases [initializing], executing cancel phases [executing], and both subsequent operations fresh-handshake through [initializing, executing] with expected RustPython output
+
+phase implementation files:
+- src/runtime/supervisor-types.ts
+- src/runtime/supervisor.ts
+- src/runtime/supervisor-lifecycle.ts
+- src/runtime/registry.ts
+- src/features/executor/executor-execution.ts
+- src/features/executor/executor-controller.ts
+- src/features/executor/executor-model.ts
+- src/oj/engine.ts
+- src/oj/judge-validation.ts
+- tests/runtime/registry.test.ts
+- tests/runtime/supervisor.test.ts
+- tests/runtime/optional-verification.test.ts
+- tests/ui/executor-controller.test.ts
+- tests/helpers/fake-runtime-adapter.ts
+- tests/oj/engine.test.ts
+
+unrelated residual:
+- browser network audit detected existing Google Fonts CDN requests; no font/UI scope change was made

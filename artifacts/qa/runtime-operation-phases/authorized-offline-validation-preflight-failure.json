@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "status": "BLOCKED",
+  "reportedAtUtc": "2026-08-31T09:08:40.4583516Z",
+  "authorization": {
+    "permittedInstallCommand": "pnpm install --offline --frozen-lockfile",
+    "invocationCount": 0,
+    "installAuthorizedButNotConsumed": true,
+    "installStartUtc": null,
+    "installEndUtc": null,
+    "installExitCode": null,
+    "offlineProof": "No install was reached. The permitted command was not invoked; no download, HTTP, package-manager, or rehydration output exists."
+  },
+  "block": {
+    "phase": "temp-root-creation",
+    "reason": "The first unique-temp-root creation command used unsupported PowerShell parameter combinations, so fail-closed policy stopped the validation before install.",
+    "fullOutputLog": "authorized-offline-install.log"
+  },
+  "preflight": {
+    "osTempParent": "C:\\Users\\hugefiver\\AppData\\Local\\Temp",
+    "evidenceParent": "artifacts/qa/runtime-operation-phases",
+    "concurrentPnpmOrTestProcesses": [],
+    "protectedPortsListening": []
+  },
+  "tempRoot": {
+    "candidate": "C:\\Users\\hugefiver\\AppData\\Local\\Temp\\localcoder-authorized-offline-c39f96548cdc4daab3c68a71aa6bc8eb",
+    "resolvedPath": null,
+    "basenameMatchesRequiredRegex": true,
+    "parentMatchesOsTemp": true,
+    "existedAfterCreationFailure": false,
+    "cleanup": "No deletion was required because the candidate was never created; final nonexistence was confirmed."
+  },
+  "commands": [
+    {
+      "name": "pnpm install --offline --frozen-lockfile",
+      "status": "not-invoked",
+      "exitCode": null
+    },
+    {
+      "name": "node scripts/generate-runtime-manifest.mjs",
+      "status": "not-run",
+      "exitCode": null
+    },
+    {
+      "name": "node scripts/check-runtime-assets.mjs public",
+      "status": "not-run",
+      "exitCode": null
+    },
+    {
+      "name": "node scripts/build-app.mjs",
+      "status": "not-run",
+      "exitCode": null,
+      "testCount": null
+    },
+    {
+      "name": "node scripts/smoke-check.mjs",
+      "status": "not-run",
+      "exitCode": null
+    }
+  ],
+  "dependencyResolution": {
+    "vite": "not-run",
+    "esbuild": "not-run",
+    "typescript": "not-run",
+    "esbuildPlatformBinary": "not-run"
+  },
+  "generatedOutputComparison": {
+    "manifestSha256": null,
+    "rustpythonWorkerSha256": null,
+    "equal": null,
+    "rustpythonExpectedBuildId": "d257db92774c4cfc",
+    "extractedBuildId": null,
+    "reason": "Not evaluated because no isolated installation or gate ran."
+  },
+  "mainTree": {
+    "protectedProductSnapshot": {
+      "files": 336,
+      "pathDifferences": [],
+      "hashDifferences": [],
+      "unchanged": true,
+      "evidence": "authorized-main-prehashes.json"
+    },
+    "gitDiffCheckExitCode": 0,
+    "productDiffComparedToStart": "unchanged",
+    "onlyNewOrUpdatedMaterial": "authorization QA evidence under artifacts/qa/runtime-operation-phases/"
+  },
+  "logs": [
+    "authorized-offline-install.log",
+    "authorized-runtime-manifest.log",
+    "authorized-runtime-check.log",
+    "authorized-build.log",
+    "authorized-smoke.log",
+    "authorized-main-prehashes.json",
+    "isolated-dependency-mirror-note.txt"
+  ],
+  "residual": "ENVIRONMENT_BLOCKED remains open: the authorized install was not attempted after the first temp-root-creation failure. A fresh explicit authorization is required before any new install attempt."
+}

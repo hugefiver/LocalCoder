@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-08-30T23:01:52.8688406Z",
+  "sourceHead": "e56dbcd3fa43e38d84537c47a4367a2e90126760",
+  "historicalBaseline": {
+    "path": "artifacts/qa/runtime-operation-phases/protected-baseline-hashes.json",
+    "exists": false,
+    "status": "missing",
+    "limitation": "No historical pre-implementation baseline is available."
+  },
+  "protectedFiles": [
+    {
+      "path": ".gitignore",
+      "sha256": "2d1885728347a5f058070d763e85547dc995bf3912dec74e99d368d44f9ce96c"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ed8cf1e5a64b42fe66d58527e0895e40d0ccf1a468ad5b74b5dd24fd3cdb5eb8"
+    },
+    {
+      "path": "docs/operations/runtime-assets.md",
+      "sha256": "3e91f2289b4f3e18237ba4f13d8e2c505ef86f4e99d67ad0f319d1a55a7345b7"
+    },
+    {
+      "path": "public/runtime-manifest.json",
+      "sha256": "78c8cef547698a71b23c1e810a1d6401d5289ccd88d7126f124aff5217b81d51"
+    },
+    {
+      "path": "public/rustpython-worker.js",
+      "sha256": "39fe07aaf16dd4228eecf41a87d1ff9223fe3ebf32c238e7fbb0b60259e16398"
+    },
+    {
+      "path": "public/rustpython/README.md",
+      "sha256": "50cadd2c02d6e38d82dd5adb6b628e460ffde1a26781e3ab252e7c9d3ec8d6f1"
+    },
+    {
+      "path": "runtimes/rustpython-runner/Cargo.lock",
+      "sha256": "d9567665da2acc030bbb09a038dc15163ba1b05e386f43701ded6994e3a01927"
+    },
+    {
+      "path": "runtimes/rustpython-runner/Cargo.toml",
+      "sha256": "a2cd4ebf799c911a3f05368570353ee1bfc5d904c588ad4726eaa47a0543867d"
+    },
+    {
+      "path": "runtimes/rustpython-runner/src/main.rs",
+      "sha256": "bceb6de611113eea497d326c83111287aabd3da272a0e520f069b725e7424eca"
+    },
+    {
+      "path": "scripts/build-runtimes.mjs",
+      "sha256": "c9340569913e940c9444cc13177db9de10d374796c985ce264fa097bdc08a303"
+    },
+    {
+      "path": "scripts/lib/runtime-catalog.mjs",
+      "sha256": "a7685a521793f71cc8a9155361d0d17a8953d2cd4d86429527f43be4907410ef"
+    },
+    {
+      "path": "scripts/lib/worker-build-identity.mjs",
+      "sha256": "4ae996230db13f83b34a90ff5fdf9cbff05601a7da17b93c1aea3db9fbb44ee4"
+    },
+    {
+      "path": "src/workers/rustpython/host.ts",
+      "sha256": "3472d3b7acf6c5173d79e54f0509e931b60972f7230af4a0daf4e1de385de2f7"
+    },
+    {
+      "path": "tests/integration/build-worker-assets.test.ts",
+      "sha256": "4d374e95a25c4aaae561ccf59ae1a9f5160129b59dd7aebbe2c0732724343911"
+    },
+    {
+      "path": "tests/scripts/runtime-manifest-generation.test.mjs",
+      "sha256": "db5a0490b7f91b76faf342cb3ee5bbc3bea95e715f9911893968bd10fe6d09a5"
+    },
+    {
+      "path": "tests/workers/rustpython-host.test.ts",
+      "sha256": "6941c2ff7efb3da3b7a6104fda2da562744d69defb98f05830202b47b888c65c"
+    },
+    {
+      "path": ".debug-journal.md",
+      "sha256": "42fc6921983776784aa4d381f3933b57dc6d14ad648d3266c428e1050818efd0"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-28-rustpython-runtime.md",
+      "sha256": "db8c058578136a5d0f72a6e46a9ceb567f736d5631970df58dfe0f1afefd25e5"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-30-runtime-operation-phases-design.md",
+      "sha256": "654229bb85044034521a7afc435b00ae30da35c93e479b15281c107cc5184eb8"
+    }
+  ]
+}

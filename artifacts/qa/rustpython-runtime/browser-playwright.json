@@ -1,0 +1,299 @@
+{
+  "startedAt": "2026-08-30T08:01:30.358Z",
+  "playwright": {
+    "version": "1.59.0",
+    "module": "C:\\Users\\hugefiver\\scoop\\persist\\nodejs\\bin\\node_modules\\playwright",
+    "browserType": "chromium",
+    "executablePath": "C:\\Users\\hugefiver\\AppData\\Local\\ms-playwright\\chromium-1217\\chrome-win64\\chrome.exe",
+    "headed": true,
+    "persistentProfile": false,
+    "browserVersion": "147.0.7727.15"
+  },
+  "diskAssets": [
+    {
+      "url": "rustpython-worker.js",
+      "file": "public/rustpython-worker.js",
+      "bytes": 79717,
+      "sha256": "14a955066f31ec1bb5f295e47cd80dabbd8c32eda51772cf89b68858c1112cd3"
+    },
+    {
+      "url": "rustpython/runner.wasm.gz.bin",
+      "file": "public/rustpython/runner.wasm.gz.bin",
+      "bytes": 9505403,
+      "sha256": "baeac65c6dacc96131224a05937b57a390d47774c23c713159eeee2a8133a7c5"
+    },
+    {
+      "url": "rustpython/runner.wasm",
+      "file": "public/rustpython/runner.wasm",
+      "bytes": 21937361,
+      "sha256": "98c90ef0431852f2850aec15961f08e4457ba8eb4004a46f42614fccf33139e7"
+    }
+  ],
+  "harness": {
+    "url": "http://127.0.0.1:5173/runtime-harness.html?runtimeId=python-rustpython&receiptPort=4181&suite=optional-v1",
+    "receipt": {
+      "method": "POST",
+      "url": "http://127.0.0.1:4181/receipt",
+      "status": 400,
+      "statusText": "Bad Request",
+      "responseBody": "{\"status\":\"BROKEN\",\"reason\":\"Receipt does not contain a verified runtime result\"}"
+    },
+    "screenshot": "artifacts/qa/rustpython-runtime/browser-harness.png",
+    "resultText": null,
+    "status": "failed",
+    "postedReceipt": {
+      "suite": "optional-v1",
+      "runtimeId": "python-rustpython",
+      "protocolVersion": 1,
+      "verification": {
+        "state": "broken",
+        "runtimeId": "python-rustpython",
+        "code": "python-runtime-error",
+        "message": "Optional runtime verification failed"
+      },
+      "manifestSha256": "fa57d1c256c35aa9a5089b9db9e62afb96c60234f6f778b44f72cea11a707061",
+      "assets": [
+        {
+          "url": "rustpython-worker.js",
+          "sha256": "14a955066f31ec1bb5f295e47cd80dabbd8c32eda51772cf89b68858c1112cd3"
+        },
+        {
+          "url": "rustpython/runner.wasm.gz.bin",
+          "sha256": "baeac65c6dacc96131224a05937b57a390d47774c23c713159eeee2a8133a7c5"
+        },
+        {
+          "url": "rustpython/runner.wasm",
+          "sha256": "98c90ef0431852f2850aec15961f08e4457ba8eb4004a46f42614fccf33139e7"
+        }
+      ]
+    },
+    "workerTraffic": [
+      {
+        "direction": "construct",
+        "payload": "{\"url\":\"http://127.0.0.1:5173/rustpython-worker.js\"}"
+      },
+      {
+        "direction": "outbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:1\",\"runtimeId\":\"python-rustpython\",\"type\":\"initialize\"}"
+      },
+      {
+        "direction": "inbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:1\",\"runtimeId\":\"python-rustpython\",\"type\":\"status\",\"phase\":\"initializing\",\"message\":\"Initializing runtime\"}"
+      },
+      {
+        "direction": "inbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:1\",\"runtimeId\":\"python-rustpython\",\"type\":\"complete\",\"operation\":\"initialize\",\"payload\":{\"runtimeVersion\":\"rustpython-wasi\",\"buildId\":\"82cc667720a30f19\",\"capabilities\":{\"execute\":true,\"judge\":true}}}"
+      },
+      {
+        "direction": "outbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:2\",\"runtimeId\":\"python-rustpython\",\"type\":\"execute\",\"source\":\"print('runtime smoke')\"}"
+      },
+      {
+        "direction": "inbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:2\",\"runtimeId\":\"python-rustpython\",\"type\":\"status\",\"phase\":\"executing\",\"message\":\"Executing runtime\"}"
+      },
+      {
+        "direction": "inbound",
+        "payload": "{\"protocolVersion\":1,\"requestId\":\"python-rustpython:2\",\"runtimeId\":\"python-rustpython\",\"type\":\"failure\",\"error\":{\"kind\":\"runtime\",\"code\":\"python-runtime-error\",\"message\":\"Python execution failed\",\"fatal\":false,\"details\":\"Traceback (most recent call last):\\n  File \\\"<localcoder-runner>\\\", line 2, in <module>\\n  File \\\"io\\\", line 57, in <module>\\nImportError: cannot import name 'FileIO' from '_io' (unknown location)\\n\"}}"
+      }
+    ],
+    "error": "Error: Receipt POST returned 400 Bad Request",
+    "screenshotWritten": true
+  },
+  "productExecutor": {
+    "url": "http://127.0.0.1:5173/#/executor",
+    "status": "not-attempted",
+    "verificationText": null,
+    "readyStateText": null,
+    "selectedRuntime": null,
+    "stdout": null,
+    "identity": null
+  },
+  "events": {
+    "console": [
+      {
+        "type": "debug",
+        "text": "[vite] connecting...",
+        "location": {
+          "url": "http://127.0.0.1:5173/@vite/client",
+          "lineNumber": 732,
+          "columnNumber": 8
+        }
+      },
+      {
+        "type": "debug",
+        "text": "[vite] connected.",
+        "location": {
+          "url": "http://127.0.0.1:5173/@vite/client",
+          "lineNumber": 826,
+          "columnNumber": 11
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "location": {
+          "url": "http://127.0.0.1:5173/favicon.ico",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: 1 18",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 917,
+          "columnNumber": 14
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: 0 0",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 943,
+          "columnNumber": 14
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: pyvenv.cfg",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: pybuilddir.txt",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: Modules",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: Lib",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: lib",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: lib",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: lib",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: lib",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: usr",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: 1 18",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 917,
+          "columnNumber": 14
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: <localcoder-runner>",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1302,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: <localcoder-runner>",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: io",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1302,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "log",
+        "text": "%c%s color: #265BA0 wasi: io",
+        "location": {
+          "url": "http://127.0.0.1:5173/rustpython-worker.js",
+          "lineNumber": 1910,
+          "columnNumber": 16
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "location": {
+          "url": "http://127.0.0.1:4181/receipt",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      }
+    ],
+    "pageerror": [],
+    "requestfailed": []
+  },
+  "completedAt": "2026-08-30T08:01:39.269Z"
+}
