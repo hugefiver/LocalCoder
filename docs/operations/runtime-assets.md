@@ -6,7 +6,7 @@
 
 Required runtime IDs are `javascript-worker`, `typescript-official`, and `python-pyodide`. Their assets must be present, non-empty, and match the generated manifest. A required asset or byte mismatch fails closed and blocks build or deployment readiness.
 
-Optional runtime IDs are `python-rustpython`, `racket-wasm`, and `haskell-ghc-wasi`. They are disabled unless current artifacts and a successful verification session establish support. Current optionals are `UNAVAILABLE`; that is a disabled state, not a verification pass.
+Optional runtime IDs are `python-rustpython`, `racket-wasm`, and `haskell-ghc-wasi`. They are disabled unless current artifacts and a successful verification session establish support. `python-rustpython` is currently `LOADABLE_UNVERIFIED`: that is a disabled state, not a verification pass.
 
 ## Capability states
 
@@ -21,13 +21,14 @@ Adding files can move an optional runtime from `UNAVAILABLE` to `LOADABLE_UNVERI
 
 ## Current asset reality
 
-The following are current missing optional asset groups. These conditions are truthful disabled product states, not passing execution results.
+The following optional asset groups remain missing. These are truthful disabled product states, not passing execution results.
 
 | Runtime ID | Missing group |
 |---|---|
-| `python-rustpython` | One of `rustpython/runner.wasm.gz` or `rustpython/runner.wasm` |
 | `racket-wasm` | `racket/racket.js` and one of `racket/racket.wasm.gz` or `racket/racket.wasm` |
 | `haskell-ghc-wasi` | One of `haskell/ghc.wasm.gz` or `haskell/ghc.wasm`, one of `haskell/libdir.tar.gz` or `haskell/libdir.tar`, and `haskell/wasi-shim.js` |
+
+RustPython packages `rustpython/runner.wasm.gz.bin` and `rustpython/runner.wasm`. The `.gz.bin` name contains ordinary gzip bytes but prevents HTTP servers from assigning `Content-Encoding: gzip` and transparently decoding the response before the Worker can hash and explicitly decompress it. The raw file remains the host fallback. Both variants are declared and hashed while present; a new complete browser receipt is still required before RustPython can become `VERIFIED`.
 
 ## Worker identity v2
 

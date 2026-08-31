@@ -220,7 +220,7 @@ function createFixture(): string {
   writeAsset(fixture, "racket/racket.js", "racket javascript fixture");
   writeAsset(fixture, "racket/racket.wasm.gz", "racket wasm gzip fixture");
   writeAsset(fixture, "racket/racket.wasm", "racket wasm raw fixture");
-  writeAsset(fixture, "rustpython/runner.wasm.gz", "rustpython wasm gzip fixture");
+  writeAsset(fixture, "rustpython/runner.wasm.gz.bin", "rustpython wasm gzip-bin fixture");
   writeAsset(fixture, "rustpython/runner.wasm", "rustpython wasm raw fixture");
   writeAsset(fixture, "haskell/runner.meta.json", JSON.stringify({
     protocol: "ghc-wasi-v1",
@@ -435,10 +435,10 @@ test("worker identity binds exact build inputs without emitted-output self hashi
     assertOnlyChanged(racketRawOnly, await builder.workerBuildIds({ root: fixture }), "racketBuildId");
     writeFileSync(racketWasmRaw, "racket wasm raw fixture");
 
-    const rustPythonWasm = path.join(fixture, "public", "rustpython", "runner.wasm.gz");
+    const rustPythonWasm = path.join(fixture, "public", "rustpython", "runner.wasm.gz.bin");
     appendFileSync(rustPythonWasm, "\nmutation");
     assertOnlyChanged(firstIds, await builder.workerBuildIds({ root: fixture }), "rustPythonBuildId");
-    writeFileSync(rustPythonWasm, "rustpython wasm gzip fixture");
+    writeFileSync(rustPythonWasm, "rustpython wasm gzip-bin fixture");
     const rustPythonWasmRaw = path.join(fixture, "public", "rustpython", "runner.wasm");
     appendFileSync(rustPythonWasmRaw, "\nmutation");
     assertOnlyChanged(firstIds, await builder.workerBuildIds({ root: fixture }), "rustPythonBuildId");

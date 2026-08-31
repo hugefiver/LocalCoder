@@ -223,9 +223,9 @@ async function main() {
         copyFile(rustWasm, path.join(root, "public", "rustpython", "runner.wasm"));
         await gzipIfExists(
           path.join(root, "public", "rustpython", "runner.wasm"),
-          path.join(root, "public", "rustpython", "runner.wasm.gz"),
+          path.join(root, "public", "rustpython", "runner.wasm.gz.bin"),
         );
-        console.log("  ✓ public/rustpython/runner.wasm(.gz)");
+        console.log("  ✓ public/rustpython/runner.wasm(.gz.bin)");
       } else {
         throw new Error("cargo build failed for all targets");
       }

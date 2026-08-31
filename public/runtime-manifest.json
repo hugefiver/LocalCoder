@@ -133,16 +133,23 @@
       "assets": [
         {
           "url": "rustpython-worker.js",
-          "bytes": 79713
+          "bytes": 79717
+        },
+        {
+          "url": "rustpython/runner.wasm.gz.bin",
+          "bytes": 9471382
+        },
+        {
+          "url": "rustpython/runner.wasm",
+          "bytes": 23487045
         }
       ],
       "required": false,
-      "packaged": false,
-      "unavailableReason": "Missing asset groups: one of rustpython/runner.wasm.gz or rustpython/runner.wasm",
+      "packaged": true,
       "reuse": "session",
       "capabilities": {
-        "execute": false,
-        "judge": false
+        "execute": true,
+        "judge": true
       },
       "timeouts": {
         "initializeMs": 90000,

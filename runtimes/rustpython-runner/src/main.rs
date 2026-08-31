@@ -1,5 +1,6 @@
 use std::io::{self, Read};
 
+use rustpython::{InterpreterBuilder, InterpreterBuilderExt};
 use serde::Deserialize;
 use serde_json::{json, Value};
 
@@ -72,14 +73,14 @@ fn bridge_program(request: &Request) -> Result<String, serde_json::Error> {
     }))?);
     Ok(format!(
         r#"import base64
-import io
+from _io import StringIO
 import json
 import sys
 
 _payload = json.loads(base64.b64decode("{carrier}").decode("utf-8"))
 _namespace = {{"__name__": "__main__"}}
-_captured_stdout = io.StringIO()
-_captured_stderr = io.StringIO()
+_captured_stdout = StringIO()
+_captured_stderr = StringIO()
 _old_stdout, _old_stderr = sys.stdout, sys.stderr
 _result = None
 _failure = None
@@ -147,11 +148,15 @@ fn main() {
         }
     };
 
-    let interpreter = rustpython_vm::Interpreter::default();
-    interpreter.enter(|vm| {
+    let interpreter = InterpreterBuilder::new().init_stdlib().interpreter();
+    interpreter.run(|vm| -> rustpython::vm::PyResult<()> {
         let scope = vm.new_scope_with_builtins();
-        if let Err(error) = vm.run_code_string(scope, program, "<localcoder-runner>".to_owned()) {
-            failure("python-runtime-error", error.to_string());
+        if let Err(error) = vm.run_string(scope, &program, "<localcoder-runner>".to_owned()) {
+            let mut details = String::new();
+            vm.write_exception(&mut details, &error)
+                .expect("formatting into String cannot fail");
+            failure("python-runtime-error", details);
         }
+        Ok(())
     });
 }

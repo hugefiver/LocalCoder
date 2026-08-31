@@ -11,13 +11,13 @@ The runtime manifest is generated from packaged assets. It is the source of trut
 | JavaScript | `javascript-worker` | Required |
 | TypeScript | `typescript-official` | Required, using the packaged official TypeScript compiler |
 | Python | `python-pyodide` | Required, using packaged Pyodide |
-| Python | `python-rustpython` | Optional and currently unavailable |
+| Python | `python-rustpython` | Optional, `LOADABLE_UNVERIFIED` pending a current browser receipt |
 | Racket | `racket-wasm` | Optional and currently unavailable |
 | Haskell | `haskell-ghc-wasi` | Optional and currently unavailable |
 
 Runtime identities are generated from the current executable build inputs. Read the current values from `public/runtime-manifest.json` and `docs/qa/2026-08-24-localcoder-rebuild-results.md`; they are evidence for one build, not permanent runtime versions.
 
-An optional runtime remains disabled until it has its assets, a matching current browser receipt, a protocol handshake, smoke execution, and judge-contract verification. RustPython must also match Pyodide on the six-problem corpus. Its files are not present until `rustpython/runner.wasm.gz` or `rustpython/runner.wasm` is packaged. Racket lacks `racket/racket.js` and `racket/racket.wasm.gz` or `racket/racket.wasm`. Haskell assets are packaged, but the runtime remains `LOADABLE_UNVERIFIED` and disabled until a matching browser receipt completes its verification contract.
+An optional runtime remains disabled until it has its assets, a matching current browser receipt, a protocol handshake, smoke execution, and judge-contract verification. RustPython must also match Pyodide on the six-problem corpus. Its packaged `rustpython/runner.wasm.gz.bin` contains gzip bytes under a `.bin` suffix so HTTP servers do not transparently decode it; the Worker explicitly decompresses it and retains `rustpython/runner.wasm` as the raw fallback. It remains `LOADABLE_UNVERIFIED` until a new receipt completes its verification contract. Racket lacks `racket/racket.js` and `racket/racket.wasm.gz` or `racket/racket.wasm`. Haskell assets are packaged, but the runtime remains `LOADABLE_UNVERIFIED` and disabled until a matching browser receipt completes its verification contract.
 
 ## Install and local commands
 

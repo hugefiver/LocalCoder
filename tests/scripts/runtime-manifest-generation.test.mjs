@@ -77,7 +77,7 @@ test("buildManifest declares every present optional fallback variant and readine
     writeAsset(fixtureRoot, "racket/racket.wasm.gz", 59);
     writeAsset(fixtureRoot, "racket/racket.wasm", 61);
     writeAsset(fixtureRoot, "rustpython-worker.js", 67);
-    writeAsset(fixtureRoot, "rustpython/runner.wasm.gz", 71);
+    writeAsset(fixtureRoot, "rustpython/runner.wasm.gz.bin", 71);
     writeAsset(fixtureRoot, "rustpython/runner.wasm", 73);
     writeAsset(fixtureRoot, "haskell-worker.js", 79);
     writeAsset(fixtureRoot, "haskell/ghc.wasm.gz", 83);
@@ -110,7 +110,7 @@ test("buildManifest declares every present optional fallback variant and readine
     ]);
     assert.deepEqual(byId(manifest, "python-rustpython").assets, [
       { url: "rustpython-worker.js", bytes: 67 },
-      { url: "rustpython/runner.wasm.gz", bytes: 71 },
+      { url: "rustpython/runner.wasm.gz.bin", bytes: 71 },
       { url: "rustpython/runner.wasm", bytes: 73 },
     ]);
     assert.deepEqual(byId(manifest, "haskell-ghc-wasi").assets, [

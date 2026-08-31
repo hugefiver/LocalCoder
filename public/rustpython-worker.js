@@ -494,7 +494,7 @@
   }
   async function loadWasm(fetchBytes) {
     try {
-      const gzip = await fetchBytes("rustpython/runner.wasm.gz");
+      const gzip = await fetchBytes("rustpython/runner.wasm.gz.bin");
       return await decompressGzip(gzip);
     } catch {
       try {
@@ -565,7 +565,7 @@
     return error instanceof Error ? error.message : typeof error === "string" ? error : void 0;
   }
   function injectedBuildId() {
-    return true ? "45d9ed70763d6775" : "development";
+    return true ? "d257db92774c4cfc" : "development";
   }
 
   // src/workers/shared/endpoint.ts
@@ -2089,7 +2089,7 @@
     });
   }
   function injectedBuildId2() {
-    return true ? "45d9ed70763d6775" : "development";
+    return true ? "d257db92774c4cfc" : "development";
   }
   var workerScope = globalThis;
   if (isRustPythonWorkerScope(workerScope)) {

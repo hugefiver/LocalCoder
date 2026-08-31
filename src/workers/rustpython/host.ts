@@ -119,7 +119,7 @@ function appendOutput(output: OutputBuffer, result: InvocationResult): void {
 
 async function loadWasm(fetchBytes: AssetFetcher): Promise<ArrayBuffer> {
   try {
-    const gzip = await fetchBytes("rustpython/runner.wasm.gz");
+    const gzip = await fetchBytes("rustpython/runner.wasm.gz.bin");
     return await decompressGzip(gzip);
   } catch {
     try {

@@ -2,11 +2,15 @@
 
 This directory contains the RustPython WASI runtime used by `public/rustpython-worker.js`.
 
-## Required file
+## Required files
 
-- `runner.wasm`
+- `runner.wasm.gz.bin` (preferred gzip transport bytes)
+- `runner.wasm` (raw fallback)
 
-`pnpm run build:runtimes` produces this file.
+`pnpm run build:runtimes` produces both files. The `.gz.bin` suffix prevents HTTP servers from
+automatically applying `Content-Encoding: gzip` and decoding the response before the Worker
+explicitly decompresses it. The Worker falls back to the raw file when the gzip-bin asset or
+`DecompressionStream` is unavailable.
 
 ## Protocol
 
@@ -20,5 +24,6 @@ stdout contains exactly one JSON bridge envelope. Its fields and error kinds are
 `stdout`, and `stderr`; failed requests contain `ok: false`, `kind`, `details`, `stdout`,
 and `stderr`.
 
-If `runner.wasm` has not been packaged, RustPython remains `UNAVAILABLE`. That state does
-not indicate that execution has passed.
+If neither runner file has been packaged, RustPython remains `UNAVAILABLE`. If both are packaged
+without a current browser receipt, it remains `LOADABLE_UNVERIFIED`. Neither disabled state
+indicates that execution has passed.

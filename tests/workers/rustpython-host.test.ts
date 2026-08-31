@@ -40,23 +40,31 @@ test("RustPython payload serializes source and Unicode judge input without raw i
   assert.throws(() => makeRustPythonPayload({ mode: "judge", source, input: Number.NaN }), /canonical JSON/i);
 });
 
-test("the Rust runner source has no triple-quoted raw input carrier", () => {
+test("the Rust runner source captures streams through direct _io StringIO without host_env", () => {
   const source = readFileSync(path.resolve("runtimes/rustpython-runner/src/main.rs"), "utf8");
+  const cargoToml = readFileSync(path.resolve("runtimes/rustpython-runner/Cargo.toml"), "utf8");
   assert.doesNotMatch(source, /r'''\{/);
+  assert.match(cargoToml, /rustpython = \{ version = "=0\.5\.0", default-features = false, features = \["freeze-stdlib", "stdio"\] \}/);
+  assert.match(source, /interpreter\.run\(\|vm\| -> rustpython::vm::PyResult<\(\)> \{/);
+  assert.match(source, /vm\.write_exception\(&mut details, &error\)\s*\.expect\("formatting into String cannot fail"\)/);
+  assert.match(source, /\n\s*Ok\(\(\)\)\n\s*}\);/);
+  assert.match(source, /\nfrom _io import StringIO\r?\n/);
+  assert.doesNotMatch(source, /\nimport io\r?\n/);
+  assert.doesNotMatch(source, /\bio\.StringIO\b/);
 });
 
-test("RustPython host falls back from missing gzip and missing DecompressionStream to raw WASM", async () => {
+test("RustPython host falls back from missing gzip-bin and missing DecompressionStream to raw WASM", async () => {
   const fetched: string[] = [];
   const host = hostFor({
     fetchBytes: async (url) => {
       fetched.push(url);
-      if (url.endsWith(".gz")) throw new Error("missing gzip");
+      if (url.endsWith(".gz.bin")) throw new Error("missing gzip-bin");
       return new ArrayBuffer(8);
     },
   });
 
   await host.initialize();
-  assert.deepEqual(fetched, ["rustpython/runner.wasm.gz", "rustpython/runner.wasm"]);
+  assert.deepEqual(fetched, ["rustpython/runner.wasm.gz.bin", "rustpython/runner.wasm"]);
 
   const descriptor = Object.getOwnPropertyDescriptor(globalThis, "DecompressionStream");
   Object.defineProperty(globalThis, "DecompressionStream", { configurable: true, value: undefined });
@@ -69,7 +77,7 @@ test("RustPython host falls back from missing gzip and missing DecompressionStre
       },
     });
     await rawHost.initialize();
-    assert.deepEqual(rawFetched, ["rustpython/runner.wasm.gz", "rustpython/runner.wasm"]);
+    assert.deepEqual(rawFetched, ["rustpython/runner.wasm.gz.bin", "rustpython/runner.wasm"]);
   } finally {
     if (descriptor === undefined) delete (globalThis as { DecompressionStream?: unknown }).DecompressionStream;
     else Object.defineProperty(globalThis, "DecompressionStream", descriptor);

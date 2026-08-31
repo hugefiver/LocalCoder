@@ -55,7 +55,7 @@ export const runtimeCatalog = Object.freeze([
   ], "session", { initializeMs: 90_000 }),
   runtime("python-rustpython", "python", false, "rustpython-worker.js", [
     file("rustpython-worker.js"),
-    oneOf("rustpython/runner.wasm.gz", "rustpython/runner.wasm"),
+    oneOf("rustpython/runner.wasm.gz.bin", "rustpython/runner.wasm"),
   ], "session", { initializeMs: 90_000 }),
   runtime("racket-wasm", "racket", false, "racket-worker.js", [
     file("racket-worker.js"),

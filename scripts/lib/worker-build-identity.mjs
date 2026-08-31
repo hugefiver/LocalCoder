@@ -239,7 +239,7 @@ export function racketRuntimeIdentityRecords(root) {
 }
 
 export function rustPythonRuntimeIdentityRecords(root) {
-  return optionalGroupRecords(root, "runtime-asset", "rustpython/runner", ["public/rustpython/runner.wasm.gz", "public/rustpython/runner.wasm"]);
+  return optionalGroupRecords(root, "runtime-asset", "rustpython/runner", ["public/rustpython/runner.wasm.gz.bin", "public/rustpython/runner.wasm"]);
 }
 
 export function haskellRuntimeIdentityRecords(root) {
