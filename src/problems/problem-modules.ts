@@ -1,7 +1,7 @@
 import type { Problem } from "../domain/problem.js";
 import { createProblemRepository } from "./problem-repository.js";
 
-const modules = import.meta.glob("./*.md", {
+const modules = import.meta.glob("./[0-9][0-9][0-9]-*.md", {
   query: "?raw",
   import: "default",
 });

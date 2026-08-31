@@ -6,6 +6,7 @@ import { LANGUAGE_IDS } from "../../src/domain/language.js";
 import { parseProblemDocument, validateProblemCorpus } from "../../src/problems/problem-schema.js";
 
 const problemsDirectory = path.resolve(process.cwd(), "src/problems");
+const problemDocumentPattern = /^[0-9]{3}-.*\.md$/;
 const expectedSlugs = [
   "two-sum",
   "reverse-string",
@@ -17,7 +18,7 @@ const expectedSlugs = [
 
 test("the disk corpus is exactly the stable six validated problems", async () => {
   const filenames = (await readdir(problemsDirectory))
-    .filter((filename) => filename.endsWith(".md"))
+    .filter((filename) => problemDocumentPattern.test(filename))
     .sort();
 
   assert.equal(filenames.length, 6);

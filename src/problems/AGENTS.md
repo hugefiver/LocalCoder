@@ -8,10 +8,10 @@ Keep a problem's identity stable after it is introduced.
 
 ## FILES
 
-- `*.md`: one problem document per file, with YAML frontmatter followed by a Markdown body.
+- `NNN-*.md`: one problem document per file, with YAML frontmatter followed by a Markdown body.
 - `problem-schema.ts`: parses frontmatter, validates the corpus, and renders safe Markdown.
 - `problem-repository.ts`: loads documents and caches only a successfully validated corpus.
-- `problem-modules.ts`: discovers `./*.md` with Vite's raw-content glob.
+- `problem-modules.ts`: discovers `./[0-9][0-9][0-9]-*.md` with Vite's raw-content glob.
 
 ## SCHEMA/CORPUS RULES
 
