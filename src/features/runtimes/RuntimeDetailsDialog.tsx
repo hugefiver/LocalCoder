@@ -14,7 +14,7 @@ import type { RuntimeCapability, RuntimeCapabilityState } from "../../runtime/re
 import type { RuntimeVerification } from "../../runtime/optional-verification.js";
 import { Button } from "../../components/ui/button.js";
 import { RuntimeStatusIcon } from "./RuntimeRail.js";
-import { toRuntimeRailItem } from "./runtime-view-model.js";
+import { canVerifyOptionalRuntime, toRuntimeRailItem } from "./runtime-view-model.js";
 
 export function RuntimeDetailsDialog({ trigger }: { trigger: ReactElement }) {
   const capabilities = useRuntimeRegistry();
@@ -67,7 +67,7 @@ function OptionalVerificationAction({ capability }: { capability: RuntimeCapabil
   const { optionalRuntimes } = useAppServices();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RuntimeVerification | undefined>();
-  const canVerify = !capability.required && capability.packaged && capability.state.kind === "loadable";
+  const canVerify = canVerifyOptionalRuntime(capability);
   if (!canVerify && result === undefined) return null;
 
   const verify = async (): Promise<void> => {

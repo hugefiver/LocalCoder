@@ -152,24 +152,42 @@ test("a real supervisor keeps an optional runtime verifying and unselectable unt
   assert.equal(registry.get("racket-wasm").verification, "verified");
 });
 
-test("a nonfatal smoke failure moves a verifying runtime to failed and returns a broken verification", async () => {
+test("a failed optional verification releases its Worker and a single later verify uses a fresh generation", async () => {
   const registry = RuntimeRegistry.fromManifest(manifest(true));
   const factory = new FakeWorkerFactory();
   const supervisor = new Supervisor({ registry, workerFactory: factory.create, clock: new ManualClock() });
   const adapters = new RuntimeAdapterRegistry();
   adapters.register(createRacketAdapter(supervisor));
-  const verification = new OptionalRuntimeVerifier({ registry, supervisor, adapters }).verify("racket-wasm");
-  const worker = factory.workers[0];
-  if (worker === undefined) throw new Error("expected worker");
+  const verifier = new OptionalRuntimeVerifier({ registry, supervisor, adapters });
+  const firstVerification = verifier.verify("racket-wasm");
+  const firstWorker = factory.workers[0];
+  if (firstWorker === undefined) throw new Error("expected first verification worker");
 
-  completeInitialize(worker);
+  completeInitialize(firstWorker);
   await flush();
-  completeSmokeFailure(worker);
+  completeSmokeFailure(firstWorker);
 
-  const result = await verification;
-  assert.equal(result.state, "broken");
+  const firstResult = await firstVerification;
+  assert.equal(firstResult.state, "broken");
+  assert.equal(firstWorker.terminated, 1);
   assert.equal(registry.get("racket-wasm").state.kind, "failed");
   assert.equal(registry.get("racket-wasm").verification, "unverified");
+  assert.equal(factory.workers.length, 1);
+
+  const secondVerification = verifier.verify("racket-wasm");
+  const secondWorker = factory.workers[1];
+  if (secondWorker === undefined) throw new Error("expected fresh verification worker");
+  assert.notStrictEqual(secondWorker, firstWorker);
+  assert.equal(factory.workers.length, 2);
+  completeInitialize(secondWorker);
+  await flush();
+  completeExecute(secondWorker);
+  await flush();
+  completeJudge(secondWorker);
+
+  assert.equal((await secondVerification).state, "verified");
+  assert.equal(registry.get("racket-wasm").state.kind, "ready");
+  assert.equal(registry.get("racket-wasm").verification, "verified");
 });
 
 test("optional verification execution timeout remains broken, failed, and unverified", async () => {
@@ -471,6 +489,7 @@ function bounded(text = "") {
 
 function verificationSupervisor<T extends object>(registry: RuntimeRegistry, supervisor: T): T & Pick<RuntimeSupervisor, "beginOptionalVerification"> {
   return Object.assign(supervisor, {
+    async dispose(): Promise<void> {},
     beginOptionalVerification(runtimeId: Parameters<RuntimeSupervisor["beginOptionalVerification"]>[0]) {
       return {
         operationOptions: () => ({}),

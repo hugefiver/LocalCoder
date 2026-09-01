@@ -8,6 +8,7 @@ import type {
   RuntimeVerificationState,
 } from "../../src/runtime/registry.js";
 import {
+  canVerifyOptionalRuntime,
   toRuntimeOption,
   toRuntimeRailItem,
   toStorageBanner,
@@ -184,7 +185,7 @@ test("unverified optional runtimes are disabled while verified optional runtimes
   assert.equal(toRuntimeOption(verified, "execute").disabled, false);
 });
 
-test("terminal runtime option reasons include exact registry diagnostics", () => {
+test("failed verified and required runtimes remain selectable for a fresh Supervisor worker", () => {
   assert.deepEqual(toRuntimeOption(capability({
     kind: "failed",
     code: "asset-load",
@@ -192,10 +193,56 @@ test("terminal runtime option reasons include exact registry diagnostics", () =>
   }), "execute"), {
     value: "javascript-worker",
     label: "JavaScript",
+    statusLabel: "失败，可重试",
+    disabled: false,
+  });
+
+  const verifiedOptional = capability({
+    kind: "failed",
+    code: "worker-crash",
+    message: "Worker 已退出",
+  }, { runtimeId: "racket-wasm", verification: "verified" });
+  assert.deepEqual(toRuntimeOption(verifiedOptional, "execute"), {
+    value: "racket-wasm",
+    label: "Racket",
+    statusLabel: "失败，可重试",
+    disabled: false,
+  });
+  assert.equal(canVerifyOptionalRuntime(verifiedOptional), false);
+});
+
+test("a failed unverified optional runtime remains disabled but can be verified again", () => {
+  const unverifiedOptional = capability({
+    kind: "failed",
+    code: "smoke-failed",
+    message: "Smoke test failed",
+  }, { runtimeId: "racket-wasm" });
+  assert.deepEqual(toRuntimeOption(unverifiedOptional, "execute"), {
+    value: "racket-wasm",
+    label: "Racket",
     statusLabel: "失败",
     disabled: true,
-    reason: "asset-load：缺少 worker 文件",
+    reason: "smoke-failed：Smoke test failed",
   });
+  assert.equal(canVerifyOptionalRuntime(unverifiedOptional), true);
+});
+
+test("purpose capability remains the selection gate for failed runtimes", () => {
+  const unsupported = capability({
+    kind: "failed",
+    code: "worker-crash",
+    message: "Worker 已退出",
+  }, { runtimeId: "racket-wasm", verification: "verified", execute: false });
+  assert.deepEqual(toRuntimeOption(unsupported, "execute"), {
+    value: "racket-wasm",
+    label: "Racket",
+    statusLabel: "不支持运行",
+    disabled: true,
+    reason: "此运行时不提供本地执行能力",
+  });
+});
+
+test("terminal runtime option reasons include exact registry diagnostics", () => {
 
   assert.deepEqual(toRuntimeOption(capability({
     kind: "incompatible",

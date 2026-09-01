@@ -55,9 +55,11 @@ export function toRuntimeOption(
     value: capability.runtimeId,
     label: runtimeLabel(capability.runtimeId),
   };
-  const unavailable = unavailableState(capability.state);
-  if (unavailable !== null) {
-    return { ...base, statusLabel: unavailable.statusLabel, disabled: true, reason: unavailable.reason };
+  if (capability.state.kind !== "failed") {
+    const unavailable = unavailableState(capability.state);
+    if (unavailable !== null) {
+      return { ...base, statusLabel: unavailable.statusLabel, disabled: true, reason: unavailable.reason };
+    }
   }
   if (!capability.capabilities[purpose]) {
     return {
@@ -66,7 +68,18 @@ export function toRuntimeOption(
       disabled: true,
       reason: purpose === "execute"
         ? "此运行时不提供本地执行能力"
-      : "此运行时不提供本地判题能力",
+        : "此运行时不提供本地判题能力",
+    };
+  }
+  if (capability.state.kind === "failed") {
+    if (isRuntimeExecutionEligible(capability, { allowFailed: true })) {
+      return { ...base, statusLabel: "失败，可重试", disabled: false };
+    }
+    return {
+      ...base,
+      statusLabel: "失败",
+      disabled: true,
+      reason: `${capability.state.code}：${capability.state.message}`,
     };
   }
   if (!isRuntimeExecutionEligible(capability)) {
@@ -82,6 +95,13 @@ export function toRuntimeOption(
     statusLabel: statusFor(capability).label,
     disabled: false,
   };
+}
+
+export function canVerifyOptionalRuntime(capability: RuntimeCapability): boolean {
+  return !capability.required
+    && capability.packaged
+    && capability.verification === "unverified"
+    && (capability.state.kind === "loadable" || capability.state.kind === "failed");
 }
 
 export function toRuntimeRailItem(capability: RuntimeCapability): RuntimeRailItemModel {

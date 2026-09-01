@@ -129,6 +129,7 @@ export class OptionalRuntimeVerifier {
       session.complete();
       return { state: "verified", runtimeId, runtimeVersion: handshake.runtimeVersion, checks: Object.freeze(checks) };
     } catch (error) {
+      if (session !== undefined) await this.#supervisor.dispose(runtimeId);
       return this.fail(runtimeId, errorCode(error), errorMessage(error));
     } finally {
       session?.close();
