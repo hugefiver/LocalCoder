@@ -76,8 +76,8 @@ export function isCancellation(error: unknown): boolean {
 }
 
 export function executorErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.message.trim().length > 0) return boundedText(error.message);
-  if (isRuntimeFailure(error) && error.message.trim().length > 0) return boundedText(error.message);
+  if (error instanceof Error) return error.message.trim().length > 0 ? boundedText(error.message) : "未知错误";
+  if (isRuntimeFailure(error)) return boundedText(runtimeFailureMessage(error));
   if (typeof error === "string" && error.trim().length > 0) return boundedText(error);
   return "未知错误";
 }
@@ -91,16 +91,40 @@ function deepFreeze<T>(value: T): T {
   return Object.freeze(value);
 }
 
+const RUNTIME_FAILURE_KINDS: ReadonlySet<string> = new Set([
+  "compile",
+  "runtime",
+  "infrastructure",
+  "protocol",
+  "cancelled",
+]);
+
 function isRuntimeFailure(error: unknown): error is RuntimeFailure {
-  return error !== null
-    && typeof error === "object"
-    && "kind" in error
-    && typeof error.kind === "string"
-    && "message" in error
-    && typeof error.message === "string";
+  if (error === null || typeof error !== "object") return false;
+  const candidate = error as {
+    readonly kind?: unknown;
+    readonly code?: unknown;
+    readonly message?: unknown;
+    readonly fatal?: unknown;
+    readonly details?: unknown;
+  };
+  return typeof candidate.kind === "string"
+    && RUNTIME_FAILURE_KINDS.has(candidate.kind)
+    && typeof candidate.code === "string"
+    && typeof candidate.message === "string"
+    && typeof candidate.fatal === "boolean"
+    && (candidate.details === undefined || typeof candidate.details === "string");
+}
+
+function runtimeFailureMessage(error: RuntimeFailure): string {
+  const message = error.message.trim();
+  const details = typeof error.details === "string" ? error.details.trim() : "";
+  if (details.length > 0 && details !== message) return message.length > 0 ? `${message}：${details}` : details;
+  return message;
 }
 
 function boundedText(value: string): string {
   const normalized = value.trim();
-  return normalized.length <= 240 ? normalized : `${normalized.slice(0, 239)}…`;
+  const characters = Array.from(normalized);
+  return characters.length <= 240 ? normalized : `${characters.slice(0, 239).join("")}…`;
 }

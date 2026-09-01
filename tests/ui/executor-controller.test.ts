@@ -150,7 +150,7 @@ test("load restores the exact runtime draft and falls back within a preferred la
   assert.equal(fallback.controller.snapshot.source, EXECUTOR_PRESETS.python);
 });
 
-test("invalid and disabled runtime selections are blocked without changing state", async () => {
+test("invalid and disabled runtime selections are blocked, while a failed required runtime remains selectable", async () => {
   const harness = createHarness();
   await harness.controller.load();
   const initial = harness.controller.snapshot;
@@ -163,11 +163,12 @@ test("invalid and disabled runtime selections are blocked without changing state
     code: "worker-failed",
     message: "worker crashed",
   });
-  await assert.rejects(harness.controller.selectRuntime("typescript-official"), /失败|worker crashed/);
+  await harness.controller.selectRuntime("typescript-official");
 
-  assert.equal(harness.controller.snapshot.runtimeId, initial.runtimeId);
-  assert.equal(harness.controller.snapshot.languageId, initial.languageId);
-  assert.equal(harness.controller.snapshot.source, initial.source);
+  assert.equal(initial.runtimeId, "javascript-worker");
+  assert.equal(harness.controller.snapshot.runtimeId, "typescript-official");
+  assert.equal(harness.controller.snapshot.languageId, "typescript");
+  assert.equal(harness.controller.snapshot.source, EXECUTOR_PRESETS.typescript);
 });
 
 test("drafts debounce for 300ms and flush before switching runtimes and disposing", async () => {
@@ -326,6 +327,84 @@ test("a runtime user error becomes an error state without fabricating output", a
   assert.match(harness.controller.snapshot.error ?? "", /执行失败.*boom/);
   assert.equal(hasOwn(harness.controller.snapshot, "output"), false);
   assert.equal(harness.controller.snapshot.elapsedMs, 0);
+});
+
+test("runtime failures expose distinct diagnostic details without repeating duplicates", async () => {
+  const detailed = createHarness();
+  await detailed.controller.load();
+  detailed.adapters.javascript.outcomes.push(Promise.reject(runtimeFailure(
+    "runtime",
+    "user-error",
+    "Execution failed",
+    false,
+    "ReferenceError: missingValue is not defined",
+  )));
+
+  await detailed.controller.execute();
+
+  assert.equal(
+    detailed.controller.snapshot.error,
+    "执行失败：Execution failed：ReferenceError: missingValue is not defined",
+  );
+
+  const duplicate = createHarness();
+  await duplicate.controller.load();
+  duplicate.adapters.javascript.outcomes.push(Promise.reject(runtimeFailure(
+    "runtime",
+    "user-error",
+    "same diagnostic",
+    false,
+    "same diagnostic",
+  )));
+
+  await duplicate.controller.execute();
+
+  assert.equal(duplicate.controller.snapshot.error, "执行失败：same diagnostic");
+});
+
+test("runtime failure detail display remains bounded", async () => {
+  const harness = createHarness();
+  await harness.controller.load();
+  harness.adapters.javascript.outcomes.push(Promise.reject(runtimeFailure(
+    "compile",
+    "source-error",
+    "Compilation failed",
+    false,
+    "d".repeat(1_000),
+  )));
+
+  await harness.controller.execute();
+
+  assert.ok((harness.controller.snapshot.error?.length ?? 0) <= 240);
+  assert.match(harness.controller.snapshot.error ?? "", /^执行失败：Compilation failed：/);
+  assert.match(harness.controller.snapshot.error ?? "", /…$/);
+});
+
+test("ordinary Errors and malformed objects do not expose runtime failure details", async () => {
+  const ordinaryError = createHarness();
+  await ordinaryError.controller.load();
+  ordinaryError.adapters.javascript.outcomes.push(Promise.reject(Object.assign(
+    new Error("ordinary error"),
+    { kind: "runtime", code: "user-error", details: "must not display", fatal: false },
+  )));
+
+  await ordinaryError.controller.execute();
+
+  assert.equal(ordinaryError.controller.snapshot.error, "执行失败：ordinary error");
+
+  const malformed = createHarness();
+  await malformed.controller.load();
+  malformed.adapters.javascript.outcomes.push(Promise.reject({
+    kind: "not-a-runtime-failure",
+    code: "user-error",
+    message: "must not display",
+    details: "must not display",
+    fatal: false,
+  }));
+
+  await malformed.controller.execute();
+
+  assert.equal(malformed.controller.snapshot.error, "执行失败：未知错误");
 });
 
 test("cancel aborts the active execution and settles as cancelled", async () => {
@@ -573,8 +652,9 @@ function runtimeFailure(
   code: string,
   message: string,
   fatal = false,
+  details?: string,
 ): RuntimeFailure {
-  return { kind, code, message, fatal };
+  return { kind, code, message, fatal, ...(details === undefined ? {} : { details }) };
 }
 
 function draftKey(workspaceId: string, languageId: LanguageId, runtimeId: RuntimeId): string {
